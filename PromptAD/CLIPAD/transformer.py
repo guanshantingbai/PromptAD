@@ -84,7 +84,7 @@ class PatchDropout(nn.Module):
         return x
 
 
-# V2V attention
+# V2V attention (original dual-path version)
 class Attention(nn.Module):
     def __init__(self, out_dim, dim, num_heads=8, qkv_bias=False, qk_scale=None, attn_drop=0., proj_drop=0.,
                  settings=''):
@@ -133,6 +133,56 @@ class Attention(nn.Module):
         x = self.proj_drop(self.proj(x))
         x_ori = self.proj_drop(self.proj(x_ori))
         return [x, x_ori]
+
+
+# New single-path attention variants for experiments
+class ModifiedAttention(nn.Module):
+    """
+    Modified attention mechanism with configurable QKV replacement.
+    Args:
+        attn_type: 'qq' (Q replaces both Q and K), 'kk' (K replaces both), 'vv' (V replaces both)
+    """
+    def __init__(self, out_dim, dim, num_heads=8, qkv_bias=False, qk_scale=None, 
+                 attn_drop=0., proj_drop=0., attn_type='qq'):
+        super().__init__()
+        self.num_heads = num_heads
+        head_dim = dim // num_heads
+        self.scale = qk_scale or head_dim ** -0.5
+        self.attn_type = attn_type.lower()
+
+        self.qkv = nn.Linear(dim, dim * 3, bias=qkv_bias)
+        self.attn_drop = nn.Dropout(attn_drop)
+        self.proj = nn.Linear(out_dim, dim)
+        self.proj_drop = nn.Dropout(proj_drop)
+
+    def forward(self, x):
+        B, N, C = x.shape
+        qkv = self.qkv(x).reshape(B, N, 3, self.num_heads, C // self.num_heads).permute(2, 0, 3, 1, 4)
+        q, k, v = qkv[0], qkv[1], qkv[2]
+
+        # Apply QKV replacement based on attn_type
+        if self.attn_type == 'qq':
+            # Replace both Q and K with Q
+            k = q
+        elif self.attn_type == 'kk':
+            # Replace both Q and K with K
+            q = k
+        elif self.attn_type == 'vv':
+            # Replace both Q and K with V
+            q = v
+            k = v
+        else:
+            raise ValueError(f"Unknown attention type: {self.attn_type}")
+
+        # Compute attention
+        attn = (q @ k.transpose(-2, -1)) * self.scale
+        attn = attn.softmax(dim=-1)
+        attn = self.attn_drop(attn)
+
+        # Apply attention to values
+        x = (attn @ v).transpose(1, 2).reshape(B, N, C)
+        x = self.proj_drop(self.proj(x))
+        return x
 
 
 class AttentionalPooler(nn.Module):
@@ -262,6 +312,76 @@ class ResidualAttentionBlock(nn.Module):
         return x
 
 
+class ModifiedResidualAttentionBlock(nn.Module):
+    """
+    Modified Residual Attention Block for experimental variants.
+    Supports:
+    - Custom attention types (QQ, KK, VV)
+    - Optional FFN removal (use_ffn=False)
+    - Optional residual connection removal (use_residual=False)
+    """
+    def __init__(
+            self,
+            d_model: int,
+            n_head: int,
+            mlp_ratio: float = 4.0,
+            ls_init_value: float = None,
+            act_layer: Callable = nn.GELU,
+            norm_layer: Callable = LayerNorm,
+            attn_type: str = 'qq',  # 'qq', 'kk', or 'vv'
+            use_ffn: bool = True,   # Whether to use FFN layer
+            use_residual: bool = True,  # Whether to use residual connections
+    ):
+        super().__init__()
+
+        self.use_ffn = use_ffn
+        self.use_residual = use_residual
+
+        self.ln_1 = norm_layer(d_model)
+        self.attn = ModifiedAttention(d_model, d_model, n_head, qkv_bias=True, attn_type=attn_type)
+        self.ls_1 = LayerScale(d_model, ls_init_value) if ls_init_value is not None else nn.Identity()
+
+        if use_ffn:
+            self.ln_2 = norm_layer(d_model)
+            mlp_width = int(d_model * mlp_ratio)
+            self.mlp = nn.Sequential(OrderedDict([
+                ("c_fc", nn.Linear(d_model, mlp_width)),
+                ("gelu", act_layer()),
+                ("c_proj", nn.Linear(mlp_width, d_model))
+            ]))
+            self.ls_2 = LayerScale(d_model, ls_init_value) if ls_init_value is not None else nn.Identity()
+        else:
+            self.ln_2 = None
+            self.mlp = None
+            self.ls_2 = None
+
+    def forward(
+            self,
+            x: torch.Tensor,
+            attn_mask: Optional[torch.Tensor] = None,
+    ):
+        # Attention
+        x_ln = self.ln_1(x)
+        x_ln = x_ln.transpose(0, 1)  # LND -> NLD for ModifiedAttention
+        attn_out = self.attn(x_ln)
+        attn_out = attn_out.transpose(0, 1)  # NLD -> LND
+        
+        if self.use_residual:
+            x = x + self.ls_1(attn_out)
+        else:
+            x = self.ls_1(attn_out)
+
+        # FFN
+        if self.use_ffn:
+            mlp_out = self.mlp(self.ln_2(x))
+            if self.use_residual:
+                x = x + self.ls_2(mlp_out)
+            else:
+                x = self.ls_2(mlp_out)
+
+        return x
+
+
 class CustomResidualAttentionBlock(nn.Module):
     def __init__(
             self,
@@ -334,6 +454,57 @@ class Transformer(nn.Module):
             if self.grad_checkpointing and not torch.jit.is_scripting():
                 # TODO: handle kwargs https://github.com/pytorch/pytorch/issues/79887#issuecomment-1161758372
                 x = checkpoint(r, x, None, None, attn_mask)
+            else:
+                x = r(x, attn_mask=attn_mask)
+        return x
+
+
+class ModifiedTransformer(nn.Module):
+    """
+    Modified Transformer for single-path experimental variants.
+    """
+    def __init__(
+            self,
+            width: int,
+            layers: int,
+            heads: int,
+            mlp_ratio: float = 4.0,
+            ls_init_value: float = None,
+            act_layer: Callable = nn.GELU,
+            norm_layer: Callable = LayerNorm,
+            attn_type: str = 'qq',
+            use_ffn: bool = True,
+            use_residual: bool = True,
+    ):
+        super().__init__()
+        self.width = width
+        self.layers = layers
+        self.grad_checkpointing = False
+        self.use_ffn = use_ffn
+
+        self.resblocks = nn.ModuleList([
+            ModifiedResidualAttentionBlock(
+                width, heads, mlp_ratio, 
+                ls_init_value=ls_init_value, 
+                act_layer=act_layer, 
+                norm_layer=norm_layer,
+                attn_type=attn_type,
+                use_ffn=use_ffn,
+                use_residual=use_residual,
+            )
+            for _ in range(layers)
+        ])
+
+    def get_cast_dtype(self) -> torch.dtype:
+        if self.use_ffn:
+            return self.resblocks[0].mlp.c_fc.weight.dtype
+        else:
+            return self.resblocks[0].attn.qkv.weight.dtype
+
+    def forward(self, x: torch.Tensor, attn_mask: Optional[torch.Tensor] = None):
+        for r in self.resblocks:
+            if self.grad_checkpointing and not torch.jit.is_scripting():
+                x = checkpoint(r, x, attn_mask)
             else:
                 x = r(x, attn_mask=attn_mask)
         return x
@@ -739,6 +910,186 @@ class V2VTransformer(nn.Module):
 
         # return pooled, tokens, x_ori[:, 1:, :], self.mid_feature
         return pooled, tokens, self.mid_feature1, self.mid_feature2
+
+
+class SinglePathTransformer(nn.Module):
+    """
+    Single-path Vision Transformer for experimental variants (QQ, KK, VV).
+    Removes dual-path architecture and uses modified attention mechanisms.
+    """
+    output_tokens: torch.jit.Final[bool]
+
+    def __init__(
+            self,
+            image_size: int,
+            patch_size: int,
+            width: int,
+            layers: int,
+            heads: int,
+            mlp_ratio: float,
+            ls_init_value: float = None,
+            global_average_pool: bool = False,
+            attentional_pool: bool = False,
+            n_queries: int = 256,
+            attn_pooler_heads: int = 8,
+            output_dim: int = 512,
+            patch_dropout: float = 0.,
+            input_patchnorm: bool = False,
+            act_layer: Callable = nn.GELU,
+            norm_layer: Callable = LayerNorm,
+            output_tokens: bool = False,
+            attn_type: str = 'qq',  # 'qq', 'kk', or 'vv'
+            use_ffn: bool = True,
+            use_residual: bool = True,
+    ):
+        super().__init__()
+        self.output_tokens = output_tokens
+        image_height, image_width = self.image_size = to_2tuple(image_size)
+        patch_height, patch_width = self.patch_size = to_2tuple(patch_size)
+        self.grid_size = (image_height // patch_height, image_width // patch_width)
+        self.output_dim = output_dim
+        self.embed_dim = width
+        self.num_heads = heads
+
+        # whether to layernorm each patch, as done in dual patchnorm paper - https://arxiv.org/abs/2302.01327v1
+        self.input_patchnorm = input_patchnorm
+
+        if input_patchnorm:
+            patch_input_dim = patch_height * patch_width * 3
+            self.patchnorm_pre_ln = LayerNorm(patch_input_dim)
+            self.conv1 = nn.Linear(patch_input_dim, width)
+        else:
+            self.patchnorm_pre_ln = nn.Identity()
+            self.conv1 = nn.Conv2d(in_channels=3, out_channels=width, kernel_size=patch_size, stride=patch_size,
+                                   bias=False)
+
+        # class embeddings and positional embeddings
+        scale = width ** -0.5
+        self.class_embedding = nn.Parameter(scale * torch.randn(width))
+        self.positional_embedding = nn.Parameter(scale * torch.randn(self.grid_size[0] * self.grid_size[1] + 1, width))
+
+        # setting a patch_dropout of 0. would mean it is disabled and this function would be the identity fn
+        self.patch_dropout = PatchDropout(patch_dropout) if patch_dropout > 0. else nn.Identity()
+
+        self.ln_pre = norm_layer(width)
+        self.transformer = ModifiedTransformer(
+            width,
+            layers,
+            heads,
+            mlp_ratio,
+            ls_init_value=ls_init_value,
+            act_layer=act_layer,
+            norm_layer=norm_layer,
+            attn_type=attn_type,
+            use_ffn=use_ffn,
+            use_residual=use_residual,
+        )
+
+        self.global_average_pool = global_average_pool
+        if attentional_pool:
+            self.attn_pool = AttentionalPooler(output_dim, width, n_head=attn_pooler_heads, n_queries=n_queries)
+            self.ln_post = norm_layer(output_dim)
+            self.proj = nn.Parameter(scale * torch.randn(output_dim, output_dim))
+        else:
+            self.attn_pool = None
+            self.ln_post = norm_layer(width)
+            self.proj = nn.Parameter(scale * torch.randn(width, output_dim))
+
+        self.init_parameters()
+
+    def lock(self, unlocked_groups=0, freeze_bn_stats=False):
+        for param in self.parameters():
+            param.requires_grad = False
+
+        if unlocked_groups != 0:
+            groups = [
+                [
+                    self.conv1,
+                    self.class_embedding,
+                    self.positional_embedding,
+                    self.ln_pre,
+                ],
+                *self.transformer.resblocks[:-1],
+                [
+                    self.transformer.resblocks[-1],
+                    self.ln_post,
+                ],
+                self.proj,
+            ]
+
+            def _unlock(x):
+                if isinstance(x, Sequence):
+                    for g in x:
+                        _unlock(g)
+                else:
+                    if isinstance(x, torch.nn.Parameter):
+                        x.requires_grad = True
+                    else:
+                        for p in x.parameters():
+                            p.requires_grad = True
+
+            _unlock(groups[-unlocked_groups:])
+
+    def init_parameters(self):
+        pass
+
+    @torch.jit.ignore
+    def set_grad_checkpointing(self, enable=True):
+        self.transformer.grad_checkpointing = enable
+
+    def _global_pool(self, x: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
+        if self.global_average_pool:
+            return x.mean(dim=1), x
+        else:
+            return x[:, 0], x[:, 1:]
+
+    def forward(self, x: torch.Tensor):
+        # to patches - whether to use dual patchnorm
+        if self.input_patchnorm:
+            x = x.reshape(x.shape[0], x.shape[1], self.grid_size[0], self.patch_size[0], self.grid_size[1],
+                          self.patch_size[1])
+            x = x.permute(0, 2, 4, 1, 3, 5)
+            x = x.reshape(x.shape[0], self.grid_size[0] * self.grid_size[1], -1)
+            x = self.patchnorm_pre_ln(x)
+            x = self.conv1(x)
+        else:
+            x = self.conv1(x)  # shape = [*, width, grid, grid]
+            x = x.reshape(x.shape[0], x.shape[1], -1)  # shape = [*, width, grid ** 2]
+            x = x.permute(0, 2, 1)  # shape = [*, grid ** 2, width]
+
+        # class embeddings and positional embeddings
+        x = torch.cat(
+            [self.class_embedding.to(x.dtype) + torch.zeros(x.shape[0], 1, x.shape[-1], dtype=x.dtype, device=x.device),
+             x], dim=1)  # shape = [*, grid ** 2 + 1, width]
+        x = x + self.positional_embedding.to(x.dtype)
+
+        # patch dropout
+        x = self.patch_dropout(x)
+        x = self.ln_pre(x)
+
+        x = x.permute(1, 0, 2)  # NLD -> LND
+        x = self.transformer(x)
+        x = x.permute(1, 0, 2)  # LND -> NLD
+
+        if self.attn_pool is not None:
+            x = self.attn_pool(x)
+            x = self.ln_post(x)
+            pooled, tokens = self._global_pool(x)
+        else:
+            pooled, tokens = self._global_pool(x)
+            pooled = self.ln_post(pooled)
+            tokens = self.ln_post(tokens)
+
+        if self.proj is not None:
+            pooled = pooled @ self.proj
+            tokens = tokens @ self.proj
+
+        if self.output_tokens:
+            return pooled, tokens
+
+        # Return format compatible with original: (pooled, tokens, None, None)
+        # We don't have mid_features in single-path version
+        return pooled, tokens, None, None
 
 
 class TextTransformer(nn.Module):
