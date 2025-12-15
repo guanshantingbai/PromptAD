@@ -16,7 +16,7 @@ from torch.utils.checkpoint import checkpoint
 from .hf_model import HFTextEncoder
 from .modified_resnet import ModifiedResNet
 from .timm_model import TimmModel
-from .transformer import LayerNormFp32, LayerNorm, QuickGELU, Attention, TextTransformer, V2VTransformer
+from .transformer import LayerNormFp32, LayerNorm, QuickGELU, Attention, ModifiedAttention, TextTransformer, V2VTransformer, SinglePathTransformer
 from .utils import to_2tuple
 
 
@@ -43,6 +43,11 @@ class CLIPVisionCfg:
     timm_drop: float = 0.  # head dropout
     timm_drop_path: Optional[float] = None  # backbone stochastic depth
     output_tokens: bool = False
+    # New experimental parameters
+    use_single_path: bool = False  # Use SinglePathTransformer instead of V2VTransformer
+    attn_type: str = 'qq'  # Attention type: 'qq', 'kk', or 'vv'
+    use_ffn: bool = True  # Whether to use FFN layer
+    use_residual: bool = True  # Whether to use residual connections
 
 
 @dataclass
@@ -111,25 +116,51 @@ def _build_vision_tower(
     else:
         vision_heads = vision_cfg.width // vision_cfg.head_width
         norm_layer = LayerNormFp32 if cast_dtype in (torch.float16, torch.bfloat16) else LayerNorm
-        visual = V2VTransformer(
-            image_size=vision_cfg.image_size,
-            patch_size=vision_cfg.patch_size,
-            width=vision_cfg.width,
-            layers=vision_cfg.layers,
-            heads=vision_heads,
-            mlp_ratio=vision_cfg.mlp_ratio,
-            ls_init_value=vision_cfg.ls_init_value,
-            patch_dropout=vision_cfg.patch_dropout,
-            input_patchnorm=vision_cfg.input_patchnorm,
-            global_average_pool=vision_cfg.global_average_pool,
-            attentional_pool=vision_cfg.attentional_pool,
-            n_queries=vision_cfg.n_queries,
-            attn_pooler_heads=vision_cfg.attn_pooler_heads,
-            output_tokens=vision_cfg.output_tokens,
-            output_dim=embed_dim,
-            act_layer=act_layer,
-            norm_layer=norm_layer,
-        )
+        
+        # Choose between V2VTransformer (dual-path) and SinglePathTransformer (experimental)
+        if vision_cfg.use_single_path:
+            visual = SinglePathTransformer(
+                image_size=vision_cfg.image_size,
+                patch_size=vision_cfg.patch_size,
+                width=vision_cfg.width,
+                layers=vision_cfg.layers,
+                heads=vision_heads,
+                mlp_ratio=vision_cfg.mlp_ratio,
+                ls_init_value=vision_cfg.ls_init_value,
+                patch_dropout=vision_cfg.patch_dropout,
+                input_patchnorm=vision_cfg.input_patchnorm,
+                global_average_pool=vision_cfg.global_average_pool,
+                attentional_pool=vision_cfg.attentional_pool,
+                n_queries=vision_cfg.n_queries,
+                attn_pooler_heads=vision_cfg.attn_pooler_heads,
+                output_tokens=vision_cfg.output_tokens,
+                output_dim=embed_dim,
+                act_layer=act_layer,
+                norm_layer=norm_layer,
+                attn_type=vision_cfg.attn_type,
+                use_ffn=vision_cfg.use_ffn,
+                use_residual=vision_cfg.use_residual,
+            )
+        else:
+            visual = V2VTransformer(
+                image_size=vision_cfg.image_size,
+                patch_size=vision_cfg.patch_size,
+                width=vision_cfg.width,
+                layers=vision_cfg.layers,
+                heads=vision_heads,
+                mlp_ratio=vision_cfg.mlp_ratio,
+                ls_init_value=vision_cfg.ls_init_value,
+                patch_dropout=vision_cfg.patch_dropout,
+                input_patchnorm=vision_cfg.input_patchnorm,
+                global_average_pool=vision_cfg.global_average_pool,
+                attentional_pool=vision_cfg.attentional_pool,
+                n_queries=vision_cfg.n_queries,
+                attn_pooler_heads=vision_cfg.attn_pooler_heads,
+                output_tokens=vision_cfg.output_tokens,
+                output_dim=embed_dim,
+                act_layer=act_layer,
+                norm_layer=norm_layer,
+            )
 
     return visual
 
@@ -314,16 +345,16 @@ def convert_weights_to_lp(model: nn.Module, dtype=torch.float16):
             if l.bias is not None:
                 l.bias.data = l.bias.data.to(dtype)
 
-        if isinstance(l, (nn.MultiheadAttention, Attention)):
+        if isinstance(l, (nn.MultiheadAttention, Attention, ModifiedAttention)):
             for attr in [*[f"{s}_proj_weight" for s in ["in", "q", "k", "v"]], "in_proj_bias", "bias_k", "bias_v"]:
-                tensor = getattr(l, attr)
-                if tensor is not None:
+                tensor = getattr(l, attr, None)
+                if tensor is not None and hasattr(tensor, 'data'):
                     tensor.data = tensor.data.to(dtype)
 
         for name in ["text_projection", "proj"]:
             if hasattr(l, name):
                 attr = getattr(l, name)
-                if attr is not None:
+                if attr is not None and hasattr(attr, 'data'):
                     attr.data = attr.data.to(dtype)
 
     model.apply(_convert_weights)

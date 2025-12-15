@@ -180,6 +180,7 @@ def main(args):
 
     kwargs['out_size_h'] = kwargs['resolution']
     kwargs['out_size_w'] = kwargs['resolution']
+    kwargs['exp_config'] = args.exp_config  # Pass experimental config
 
     # get the model
     model = PromptAD(**kwargs)
@@ -242,6 +243,12 @@ def get_args():
 
     # loss hyper parameter
     parser.add_argument("--lambda1", type=float, default=0.001)
+
+    # experimental architecture configuration
+    parser.add_argument("--exp_config", type=str, default='original',
+                        choices=['original', 'qq_residual', 'kk_residual', 'vv_residual',
+                                'qq_no_residual', 'kk_no_residual', 'vv_no_residual'],
+                        help='Experimental architecture configuration')
 
     args = parser.parse_args()
 

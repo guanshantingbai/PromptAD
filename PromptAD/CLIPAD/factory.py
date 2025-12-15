@@ -120,6 +120,8 @@ def create_model(
         cache_dir: Optional[str] = None,
         output_dict: Optional[bool] = None,
         require_pretrained: bool = False,
+        vision_cfg: Optional[Dict[str, Any]] = None,
+        force_custom_clip: bool = False,
 ):
     has_hf_hub_prefix = model_name.startswith(HF_HUB_PREFIX)
     if has_hf_hub_prefix:
@@ -172,6 +174,12 @@ def create_model(
         if force_image_size is not None:
             # override model config's image size
             model_cfg["vision_cfg"]["image_size"] = force_image_size
+
+        # Apply experimental vision configuration override
+        if vision_cfg is not None:
+            if "vision_cfg" not in model_cfg:
+                model_cfg["vision_cfg"] = {}
+            model_cfg["vision_cfg"].update(vision_cfg)
 
         if pretrained_image:
             if 'timm_model_name' in model_cfg.get('vision_cfg', {}):
@@ -289,6 +297,8 @@ def create_model_and_transforms(
         aug_cfg: Optional[Union[Dict[str, Any], AugmentationCfg]] = None,
         cache_dir: Optional[str] = None,
         output_dict: Optional[bool] = None,
+        vision_cfg: Optional[Dict[str, Any]] = None,
+        force_custom_clip: bool = False,
 ):
     model = create_model(
         model_name,
@@ -304,6 +314,8 @@ def create_model_and_transforms(
         pretrained_hf=pretrained_hf,
         cache_dir=cache_dir,
         output_dict=output_dict,
+        vision_cfg=vision_cfg,
+        force_custom_clip=force_custom_clip,
     )
 
     image_mean = image_mean or getattr(model.visual, 'image_mean', None)
