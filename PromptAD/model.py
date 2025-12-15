@@ -323,10 +323,26 @@ class PromptAD(torch.nn.Module):
 
     def build_image_feature_gallery(self, features1, features2):
         b1, n1, d1 = features1.shape
-        self.feature_gallery1.copy_(F.normalize(features1.reshape(-1, d1), dim=-1))
+        features1_flat = F.normalize(features1.reshape(-1, d1), dim=-1)
+        
+        # Dynamically resize gallery if needed
+        if self.feature_gallery1.shape[0] != features1_flat.shape[0]:
+            self.feature_gallery1 = torch.zeros_like(features1_flat)
+            if self.precision == 'fp16':
+                self.feature_gallery1 = self.feature_gallery1.half()
+        
+        self.feature_gallery1.copy_(features1_flat)
 
         b2, n2, d2 = features2.shape
-        self.feature_gallery2.copy_(F.normalize(features2.reshape(-1, d2), dim=-1))
+        features2_flat = F.normalize(features2.reshape(-1, d2), dim=-1)
+        
+        # Dynamically resize gallery if needed
+        if self.feature_gallery2.shape[0] != features2_flat.shape[0]:
+            self.feature_gallery2 = torch.zeros_like(features2_flat)
+            if self.precision == 'fp16':
+                self.feature_gallery2 = self.feature_gallery2.half()
+        
+        self.feature_gallery2.copy_(features2_flat)
 
     def calculate_textual_anomaly_score(self, visual_features, task):
         # t = 100
@@ -342,8 +358,12 @@ class PromptAD(torch.nn.Module):
 
             local_abnormality_score = local_normality_and_abnormality_score[:, :, 1]
 
-            local_abnormality_score = torch.zeros((N, self.grid_size[0] * self.grid_size[1])) + local_abnormality_score.cpu()
-            local_abnormality_score = local_abnormality_score.reshape((N, self.grid_size[0], self.grid_size[1])).unsqueeze(1)
+            # Dynamically get grid size from actual feature shape  
+            num_patches = visual_features[1].shape[1]
+            grid_h = grid_w = int(num_patches ** 0.5)
+            
+            local_abnormality_score = torch.zeros((N, num_patches)) + local_abnormality_score.cpu()
+            local_abnormality_score = local_abnormality_score.reshape((N, grid_h, grid_w)).unsqueeze(1)
 
             return local_abnormality_score.detach()
 
@@ -371,9 +391,13 @@ class PromptAD(torch.nn.Module):
         score2, _ = (1.0 - visual_features[3] @ self.feature_gallery2.t()).min(dim=-1)
         score2 /= 2.0
 
-        score = torch.zeros((N, self.grid_size[0] * self.grid_size[1])) + 0.5 * (score1 + score2).cpu()
+        # Dynamically get grid size from actual feature shape
+        num_patches = visual_features[2].shape[1]
+        grid_h = grid_w = int(num_patches ** 0.5)
 
-        return score.reshape((N, self.grid_size[0], self.grid_size[1])).unsqueeze(1)
+        score = torch.zeros((N, num_patches)) + 0.5 * (score1 + score2).cpu()
+
+        return score.reshape((N, grid_h, grid_w)).unsqueeze(1)
 
     def forward(self, images, task):
 

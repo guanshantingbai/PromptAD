@@ -996,6 +996,27 @@ class SinglePathTransformer(nn.Module):
             self.proj = nn.Parameter(scale * torch.randn(width, output_dim))
 
         self.init_parameters()
+        
+        # Initialize mid feature storage for hooks
+        self.mid_feature1 = None
+        self.mid_feature2 = None
+        
+        # Register hooks to capture intermediate features (similar to V2VTransformer)
+        @torch.no_grad()
+        def hook_t1(module, input, output):
+            # output is (L, N, D), permute to (N, L, D) and remove class token
+            self.mid_feature1 = output.permute(1, 0, 2)[:, 1:, :]
+        
+        @torch.no_grad()
+        def hook_t2(module, input, output):
+            # output is (L, N, D), permute to (N, L, D) and remove class token
+            self.mid_feature2 = output.permute(1, 0, 2)[:, 1:, :]
+        
+        # Register hooks at layers 3 and 8 (same as V2VTransformer uses layers 2 and 7, 0-indexed)
+        if layers > 3:
+            self.transformer.resblocks[2].register_forward_hook(hook_t1)
+        if layers > 8:
+            self.transformer.resblocks[7].register_forward_hook(hook_t2)
 
     def lock(self, unlocked_groups=0, freeze_bn_stats=False):
         for param in self.parameters():
@@ -1061,7 +1082,35 @@ class SinglePathTransformer(nn.Module):
         x = torch.cat(
             [self.class_embedding.to(x.dtype) + torch.zeros(x.shape[0], 1, x.shape[-1], dtype=x.dtype, device=x.device),
              x], dim=1)  # shape = [*, grid ** 2 + 1, width]
-        x = x + self.positional_embedding.to(x.dtype)
+        
+        # Dynamically resize positional embedding if input size doesn't match
+        pos_embed = self.positional_embedding
+        if x.shape[1] != pos_embed.shape[0]:
+            # Interpolate positional embedding to match input size
+            pos_embed_tok = pos_embed[:1]  # class token embedding
+            pos_embed_img = pos_embed[1:]  # spatial embeddings
+            
+            # Calculate current grid size from input
+            current_grid_len = x.shape[1] - 1
+            current_grid_size = int(current_grid_len ** 0.5)
+            
+            # Original grid size
+            orig_grid_len = pos_embed_img.shape[0]
+            orig_grid_size = int(orig_grid_len ** 0.5)
+            
+            if current_grid_size != orig_grid_size:
+                # Reshape and interpolate
+                pos_embed_img = pos_embed_img.reshape(1, orig_grid_size, orig_grid_size, -1).permute(0, 3, 1, 2)
+                pos_embed_img = torch.nn.functional.interpolate(
+                    pos_embed_img,
+                    size=(current_grid_size, current_grid_size),
+                    mode='bicubic',
+                    align_corners=False,
+                )
+                pos_embed_img = pos_embed_img.permute(0, 2, 3, 1).reshape(1, current_grid_len, -1)[0]
+                pos_embed = torch.cat([pos_embed_tok, pos_embed_img], dim=0)
+        
+        x = x + pos_embed.to(x.dtype)
 
         # patch dropout
         x = self.patch_dropout(x)
@@ -1087,9 +1136,8 @@ class SinglePathTransformer(nn.Module):
         if self.output_tokens:
             return pooled, tokens
 
-        # Return format compatible with original: (pooled, tokens, None, None)
-        # We don't have mid_features in single-path version
-        return pooled, tokens, None, None
+        # Return format compatible with original: (pooled, tokens, mid_feature1, mid_feature2)
+        return pooled, tokens, self.mid_feature1, self.mid_feature2
 
 
 class TextTransformer(nn.Module):
