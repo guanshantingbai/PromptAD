@@ -11,7 +11,7 @@
 
 **结果：6 个实验配置 + 1 个原始配置（对照组）**
 
-## ✅ 测试状态
+## ✅ 测试状态 
 
 ```bash
 $ python test_experimental.py --config all
