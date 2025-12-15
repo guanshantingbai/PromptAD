@@ -878,7 +878,35 @@ class V2VTransformer(nn.Module):
         x = torch.cat(
             [self.class_embedding.to(x.dtype) + torch.zeros(x.shape[0], 1, x.shape[-1], dtype=x.dtype, device=x.device),
              x], dim=1)  # shape = [*, grid ** 2 + 1, width]
-        x = x + self.positional_embedding.to(x.dtype)
+        
+        # Dynamically resize positional embedding if input size doesn't match
+        pos_embed = self.positional_embedding
+        if x.shape[1] != pos_embed.shape[0]:
+            # Interpolate positional embedding to match input size
+            pos_embed_tok = pos_embed[:1]  # class token embedding
+            pos_embed_img = pos_embed[1:]  # spatial embeddings
+            
+            # Calculate current grid size from input
+            current_grid_len = x.shape[1] - 1
+            current_grid_size = int(current_grid_len ** 0.5)
+            
+            # Original grid size
+            orig_grid_len = pos_embed_img.shape[0]
+            orig_grid_size = int(orig_grid_len ** 0.5)
+            
+            if current_grid_size != orig_grid_size:
+                # Reshape and interpolate
+                pos_embed_img = pos_embed_img.reshape(1, orig_grid_size, orig_grid_size, -1).permute(0, 3, 1, 2)
+                pos_embed_img = torch.nn.functional.interpolate(
+                    pos_embed_img,
+                    size=(current_grid_size, current_grid_size),
+                    mode='bicubic',
+                    align_corners=False,
+                )
+                pos_embed_img = pos_embed_img.permute(0, 2, 3, 1).reshape(1, current_grid_len, -1)[0]
+                pos_embed = torch.cat([pos_embed_tok, pos_embed_img], dim=0)
+        
+        x = x + pos_embed.to(x.dtype)
 
         # a patch_dropout of 0. would mean it is disabled and this function would do nothing but return what was passed in
         x = self.patch_dropout(x)
