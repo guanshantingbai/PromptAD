@@ -121,8 +121,9 @@ def fit(model,
             # data is already transformed by Dataset
             for d, n, l, m in zip(data, name, label, mask):
                 test_imgs += [denormalization(d.cpu().numpy())]
-                l = l.numpy()
-                m = m.numpy()
+                # Convert to numpy if it's a tensor, otherwise keep as is
+                l = l.cpu().numpy() if torch.is_tensor(l) else l
+                m = m.cpu().numpy() if torch.is_tensor(m) else m
                 m[m > 0] = 1
 
                 names += [n]
