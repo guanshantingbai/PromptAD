@@ -16,3 +16,8 @@ venv/
 
 # Logs & checkpoints (按需保留)
 *.log
+
+# 权重&日志
+*.pt
+*.log
+
