@@ -63,6 +63,12 @@ ls -lht
 tail -f cls_mvtec_bottle_k2_qq_residual_gpu1.log
 ```
 
+### 4.终止
+```bash
+pkill -f run_all_experiments.sh
+pkill -u "$USER" -f "train_cls"
+pkill -u "$USER" -f "train_seg"
+```
 ---
 
 ## 总任务量统计
