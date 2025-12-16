@@ -6,10 +6,11 @@ from torch.utils.data import Dataset
 
 
 class CLIPDataset(Dataset):
-    def __init__(self, load_function, category, phase, k_shot):
+    def __init__(self, load_function, category, phase, k_shot, transform=None):
 
         self.load_function = load_function
         self.phase = phase
+        self.transform = transform
 
         self.category = category
 
@@ -43,8 +44,15 @@ class CLIPDataset(Dataset):
             gt = cv2.imread(gt, cv2.IMREAD_GRAYSCALE)
             gt[gt > 0] = 255
 
-        img = cv2.resize(img, (1024, 1024))
-        gt = cv2.resize(gt, (1024, 1024), interpolation=cv2.INTER_NEAREST)
+        img = cv2.resize(img, (256, 256))
+        gt = cv2.resize(gt, (256, 256), interpolation=cv2.INTER_NEAREST)
+
+        # 如果提供了 transform，在这里应用（避免训练循环中重复转换）
+        if self.transform is not None:
+            from PIL import Image
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            img = Image.fromarray(img)
+            img = self.transform(img)
 
         img_name = f'{self.category}-{img_type}-{os.path.basename(img_path[:-4])}'
 

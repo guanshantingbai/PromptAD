@@ -41,9 +41,8 @@ def fit(model,
     features1 = []
     features2 = []
     for (data, mask, label, name, img_type) in train_data:
-
-        data = [model.transform(Image.fromarray(cv2.cvtColor(f.numpy(), cv2.COLOR_BGR2RGB))) for f in data]
-        data = torch.stack(data, dim=0).to(device)
+        # data is already transformed by Dataset
+        data = data.to(device)
         _, _, feature_map1, feature_map2 = model.encode_image(data)
         features1.append(feature_map1)
         features2.append(feature_map2)
@@ -60,10 +59,7 @@ def fit(model,
     best_result_dict = None
     for epoch in range(args.Epoch):
         for (data, mask, label, name, img_type) in train_data:
-            data = [model.transform(Image.fromarray(cv2.cvtColor(f.numpy(), cv2.COLOR_BGR2RGB))) for f in data]
-            data = torch.stack(data, dim=0).to(device)
-
-            # data = data[0:1, :, :, :].to(device)
+            # data is already transformed by Dataset
             data = data.to(device)
 
             normal_text_prompt, abnormal_text_prompt_handle, abnormal_text_prompt_learned = model.prompt_learner()
@@ -122,10 +118,7 @@ def fit(model,
         names = []
 
         for (data, mask, label, name, img_type) in dataloader:
-
-            data = [model.transform(Image.fromarray(f.numpy())) for f in data]
-            data = torch.stack(data, dim=0)
-
+            # data is already transformed by Dataset
             for d, n, l, m in zip(data, name, label, mask):
                 test_imgs += [denormalization(d.cpu().numpy())]
                 l = l.numpy()
@@ -172,19 +165,19 @@ def main(args):
     # prepare the experiment dir
     _, csv_path, check_path = get_dir_from_args(TASK, **kwargs)
 
-    # get the train dataloader
-    train_dataloader, train_dataset_inst = get_dataloader_from_args(phase='train', perturbed=False, **kwargs)
-
-    # get the test dataloader
-    test_dataloader, test_dataset_inst = get_dataloader_from_args(phase='test', perturbed=False, **kwargs)
-
+    # get the model first (need model.transform for dataset)
     kwargs['out_size_h'] = kwargs['resolution']
     kwargs['out_size_w'] = kwargs['resolution']
     kwargs['exp_config'] = args.exp_config  # Pass experimental config
 
-    # get the model
     model = PromptAD(**kwargs)
     model = model.to(device)
+
+    # get the train dataloader (pass model.transform to avoid repeat conversion)
+    train_dataloader, train_dataset_inst = get_dataloader_from_args(phase='train', perturbed=False, transform=model.transform, **kwargs)
+
+    # get the test dataloader
+    test_dataloader, test_dataset_inst = get_dataloader_from_args(phase='test', perturbed=False, transform=model.transform, **kwargs)
 
     # as the pro metric calculation is costly, we only calculate it in the last evaluation
     metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
