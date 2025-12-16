@@ -237,6 +237,10 @@ def get_args():
     # loss hyper parameter
     parser.add_argument("--lambda1", type=float, default=0.001)
 
+    # dataloader configuration
+    parser.add_argument("--num-workers", type=int, default=0,
+                        help='Number of data loading workers (0=main process only, 2=+2 cores)')
+
     # experimental architecture configuration
     parser.add_argument("--exp_config", type=str, default='original',
                         choices=['original', 'qq_residual', 'kk_residual', 'vv_residual',
