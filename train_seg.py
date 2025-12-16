@@ -57,6 +57,9 @@ def fit(model,
     criterion_tip = TripletLoss(margin=0.0)
 
     best_result_dict = None
+    # 方向 5: 缓存测试集预处理结果
+    cached_test_data = None
+    
     for epoch in range(args.Epoch):
         for (data, mask, label, name, img_type) in train_data:
             # data is already transformed by Dataset
@@ -111,40 +114,70 @@ def fit(model,
         scheduler.step()
         model.build_text_feature_gallery()
 
-        score_maps = []
-        test_imgs = []
-        gt_mask_list = []
-        names = []
+        # 方向 1: 降低评估频率（每 5 个 epoch 或最后一个 epoch）
+        if (epoch + 1) % 5 == 0 or epoch == args.Epoch - 1:
+            score_maps = []
+            test_imgs = [] if args.vis else None  # 方向 2 + 3.3: 仅在可视化时收集
+            gt_mask_list = []
+            names = []
 
-        for (data, mask, label, name, img_type) in dataloader:
-            # data is already transformed by Dataset
-            for d, n, l, m in zip(data, name, label, mask):
-                test_imgs += [denormalization(d.cpu().numpy())]
-                # Convert to numpy if it's a tensor, otherwise keep as is
-                m = m.cpu().numpy() if torch.is_tensor(m) else m
-                m[m > 0] = 1
+            # 方向 5: 使用缓存或第一次收集
+            if cached_test_data is None:
+                for (data, mask, label, name, img_type) in dataloader:
+                    # data is already transformed by Dataset
+                    for d, n, l, m in zip(data, name, label, mask):
+                        # 方向 2: 仅在可视化时 denormalize
+                        if args.vis:
+                            test_imgs.append(denormalization(d.cpu().numpy()))
+                        # Convert to numpy if it's a tensor, otherwise keep as is
+                        m = m.cpu().numpy() if torch.is_tensor(m) else m
+                        m[m > 0] = 1
 
-                names += [n]
-                gt_mask_list += [m]
+                        names.append(n)
+                        gt_mask_list.append(m)
 
-            data = data.to(device)
-            score_map = model(data, 'seg')
-            score_maps += score_map
+                    data = data.to(device)
+                    score_map = model(data, 'seg')
+                    score_maps += score_map
 
-        test_imgs, score_maps, gt_mask_list = specify_resolution(test_imgs, score_maps, gt_mask_list, resolution=(args.resolution, args.resolution))
-        result_dict = metric_cal_pix(np.array(score_maps), gt_mask_list)
+                # 方向 3.1 + 3.2: 只 resize gt_mask，降低到 256
+                import cv2
+                gt_mask_list = [cv2.resize(mask, (args.resolution, args.resolution), 
+                                          interpolation=cv2.INTER_NEAREST) for mask in gt_mask_list]
+                if args.vis:
+                    test_imgs = [cv2.resize(img, (args.resolution, args.resolution), 
+                                           interpolation=cv2.INTER_CUBIC) for img in test_imgs]
+                
+                # 方向 5: 缓存预处理结果
+                cached_test_data = {
+                    'test_imgs': test_imgs,
+                    'gt_mask_list': gt_mask_list,
+                    'names': names
+                }
+            else:
+                # 使用缓存数据，只重新计算 scores
+                for (data, mask, label, name, img_type) in dataloader:
+                    data = data.to(device)
+                    score_map = model(data, 'seg')
+                    score_maps += score_map
+                
+                test_imgs = cached_test_data['test_imgs']
+                gt_mask_list = cached_test_data['gt_mask_list']
+                names = cached_test_data['names']
 
-        if best_result_dict is None:
-            best_result_dict = result_dict
-            save_check_point(model, check_path)
-            if args.vis:
-                plot_sample_cv2(names, test_imgs, {'PromptAD': score_maps}, gt_mask_list, save_folder=img_dir)
+            result_dict = metric_cal_pix(np.array(score_maps), gt_mask_list)
 
-        elif best_result_dict['p_roc'] < result_dict['p_roc']:
-            best_result_dict = result_dict
-            save_check_point(model, check_path)
-            if args.vis:
-                plot_sample_cv2(names, test_imgs, {'PromptAD': score_maps}, gt_mask_list, save_folder=img_dir)
+            if best_result_dict is None:
+                best_result_dict = result_dict
+                save_check_point(model, check_path)
+                if args.vis:
+                    plot_sample_cv2(names, test_imgs, {'PromptAD': score_maps}, gt_mask_list, save_folder=img_dir)
+
+            elif best_result_dict['p_roc'] < result_dict['p_roc']:
+                best_result_dict = result_dict
+                save_check_point(model, check_path)
+                if args.vis:
+                    plot_sample_cv2(names, test_imgs, {'PromptAD': score_maps}, gt_mask_list, save_folder=img_dir)
 
     return best_result_dict
 
@@ -202,7 +235,7 @@ def get_args():
 
     parser.add_argument('--img-resize', type=int, default=240)
     parser.add_argument('--img-cropsize', type=int, default=240)
-    parser.add_argument('--resolution', type=int, default=400)
+    parser.add_argument('--resolution', type=int, default=256)  # 优化: 从 400 降到 256
 
     parser.add_argument('--batch-size', type=int, default=400)
     parser.add_argument('--vis', type=str2bool, choices=[True, False], default=True)
