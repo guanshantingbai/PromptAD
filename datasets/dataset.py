@@ -49,10 +49,14 @@ class CLIPDataset(Dataset):
 
         # 如果提供了 transform，在这里应用（避免训练循环中重复转换）
         if self.transform is not None:
+            import torch
             from PIL import Image
             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
             img = Image.fromarray(img)
             img = self.transform(img)
+            # 将 gt 也转换为 Tensor，保持类型一致
+            gt = torch.from_numpy(gt).long()
+            label = torch.tensor(label, dtype=torch.long)
 
         img_name = f'{self.category}-{img_type}-{os.path.basename(img_path[:-4])}'
 
