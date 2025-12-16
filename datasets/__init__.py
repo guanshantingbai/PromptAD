@@ -34,12 +34,17 @@ def get_dataloader_from_args(phase, transform=None, **kwargs):
         transform=transform
     )
 
+    # 可配置的 num_workers（默认 0，可通过参数传入）
+    num_workers = kwargs.get('num_workers', 0)
+    
     if phase == 'train':
         data_loader = DataLoader(dataset_inst, batch_size=kwargs['batch_size'], shuffle=True,
-                                  num_workers=0, pin_memory=True)
+                                  num_workers=num_workers, pin_memory=True,
+                                  persistent_workers=(num_workers > 0))
     else:
         data_loader = DataLoader(dataset_inst, batch_size=kwargs['batch_size'], shuffle=False,
-                                 num_workers=0, pin_memory=True)
+                                 num_workers=num_workers, pin_memory=True,
+                                 persistent_workers=(num_workers > 0))
 
 
     # debug_str = f"===> datasets: {kwargs['dataset']}, class name/len: {kwargs['class_name']}/{len(dataset_inst)}, batch size: {kwargs['batch_size']}"
