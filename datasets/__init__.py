@@ -35,7 +35,7 @@ def get_dataloader_from_args(phase, transform=None, **kwargs):
     )
 
     # 可配置的 num_workers（默认 0，可通过参数传入）
-    num_workers = kwargs.get('num_workers', 0)
+    num_workers = kwargs.get('num_workers', 1)
     
     if phase == 'train':
         data_loader = DataLoader(dataset_inst, batch_size=kwargs['batch_size'], shuffle=True,
