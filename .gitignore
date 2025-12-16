@@ -20,4 +20,6 @@ venv/
 # 权重&日志
 *.pt
 *.log
+*.lock
+
 
