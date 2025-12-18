@@ -203,7 +203,6 @@ def main(args):
     # get the model first (need model.transform for dataset)
     kwargs['out_size_h'] = kwargs['resolution']
     kwargs['out_size_w'] = kwargs['resolution']
-    kwargs['exp_config'] = args.exp_config  # Pass experimental config
 
     model = PromptAD(**kwargs)
     model = model.to(device)
@@ -275,12 +274,6 @@ def get_args():
     # dataloader configuration
     parser.add_argument("--num-workers", type=int, default=0,
                         help='Number of data loading workers (0=main process only, 2=+2 cores)')
-
-    # experimental architecture configuration
-    parser.add_argument("--exp_config", type=str, default='original',
-                        choices=['original', 'qq_residual', 'kk_residual', 'vv_residual',
-                                'qq_no_residual', 'kk_no_residual', 'vv_no_residual'],
-                        help='Experimental architecture configuration')
 
     args = parser.parse_args()
 

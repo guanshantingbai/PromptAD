@@ -156,7 +156,7 @@ class PromptLearner(nn.Module):
 
 
 class PromptAD(torch.nn.Module):
-    def __init__(self, out_size_h, out_size_w, device, backbone, pretrained_dataset, n_ctx, n_pro, n_ctx_ab, n_pro_ab, class_name,  precision='fp16', exp_config='original', **kwargs):
+    def __init__(self, out_size_h, out_size_w, device, backbone, pretrained_dataset, n_ctx, n_pro, n_ctx_ab, n_pro_ab, class_name,  precision='fp16', **kwargs):
         '''
 
         :param out_size_h:
@@ -164,7 +164,6 @@ class PromptAD(torch.nn.Module):
         :param device:
         :param backbone:
         :param pretrained_dataset:
-        :param exp_config: experimental configuration name
         '''
         super(PromptAD, self).__init__()
 
@@ -173,7 +172,6 @@ class PromptAD(torch.nn.Module):
         self.out_size_h = out_size_h
         self.out_size_w = out_size_w
         self.precision = 'fp16' #precision  -40% GPU memory (2.8G->1.6G) with slight performance drop
-        self.exp_config = exp_config
 
         self.device = device
         self.get_model(n_ctx, n_pro, n_ctx_ab, n_pro_ab, class_name, backbone, pretrained_dataset)
@@ -202,38 +200,10 @@ class PromptAD(torch.nn.Module):
         assert backbone in valid_backbones
         assert pretrained_dataset in valid_pretrained_datasets
 
-        # Load experimental configuration
-        from experimental_configs import get_config
-        config = get_config(self.exp_config)
-        
-        # Determine if using experimental configuration
-        use_experimental = config['use_single_path']
-        
-        if use_experimental:
-            print(f"\n{'='*60}")
-            print(f"⚠️  EXPERIMENTAL CONFIG: {self.exp_config}")
-            print(f"{'='*60}")
-            print(f"  Attention type: {config['attn_type'].upper()}")
-            print(f"  Use FFN: {config['use_ffn']}")
-            print(f"  Use Residual: {config['use_residual']}")
-            print(f"  ⚠️  Training from scratch (no pretrained weights)")
-            print(f"{'='*60}\n")
-            pretrained_to_use = None  # Train from scratch for experimental configs
-        else:
-            pretrained_to_use = pretrained_dataset
-        
-        # Apply experimental configuration to vision model
         model, _, _ = CLIPAD.create_model_and_transforms(
             model_name=backbone, 
-            pretrained=pretrained_to_use,  # None for experimental, pretrained otherwise
-            precision=self.precision,
-            force_custom_clip=use_experimental,
-            vision_cfg={
-                'use_single_path': config['use_single_path'],
-                'attn_type': config['attn_type'],
-                'use_ffn': config['use_ffn'],
-                'use_residual': config['use_residual'],
-            } if use_experimental else None
+            pretrained=pretrained_dataset,
+            precision=self.precision
         )
         tokenizer = CLIPAD.get_tokenizer(backbone)
         model.eval()
