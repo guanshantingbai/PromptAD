@@ -6,8 +6,8 @@ visa_classes = ['candle', 'capsules', 'cashew', 'chewinggum',
                    'fryum', 'macaroni1', 'macaroni2',
                 'pcb1', 'pcb2', 'pcb3','pcb4', 'pipe_fryum']
 
-# VISA_DIR = '/data2/grj/pro_visa/1cls/'
-VISA_DIR = '/home/zju/datasets/pro_visa/1cls/'
+VISA_DIR = '/data2/grj/pro_visa/1cls/'
+# VISA_DIR = '/home/zju/datasets/pro_visa/1cls/'
 
 
 def load_visa(category, k_shot):
