@@ -28,7 +28,7 @@ def load_visa(category, k_shot):
                 tot_types.extend(['good'] * len(img_paths))
             else:
                 img_paths = glob.glob(os.path.join(root_path, defect_type) + "/*.JPG")
-                gt_paths = [os.path.join(gt_path, defect_type, os.path.basename(s)[:-4] + '.png') for s in
+                gt_paths = [os.path.join(gt_path, defect_type, os.path.basename(s)[:-4] + '.JPG') for s in
                             img_paths]
                 img_paths.sort()
                 gt_paths.sort()

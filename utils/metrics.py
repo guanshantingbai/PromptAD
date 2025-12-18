@@ -21,7 +21,7 @@ def metric_cal_img(img_scores, gt_list, map_scores=None):
     # calculate image-level ROC AUC score
     max_map_scores = map_scores.reshape(map_scores.shape[0], -1).max(axis=1)
 
-    img_scores = 1.0 / (1.0 / max_map_scores + 1.0 / img_scores)
+    img_scores = np.maximum(max_map_scores, img_scores)
     # img_scores = img_scores
 
     gt_list = np.asarray(gt_list, dtype=int)

@@ -377,7 +377,7 @@ class PromptAD(torch.nn.Module):
 
             visual_anomaly_map = self.calculate_visual_anomaly_score(visual_features)
             #
-            anomaly_map = 1. / (1. / textual_anomaly_map + 1. / visual_anomaly_map)
+            anomaly_map = torch.maximum(textual_anomaly_map, visual_anomaly_map)
             # anomaly_map = 0.5 * (textual_anomaly_map + visual_anomaly_map)
             # anomaly_map = visual_anomaly_map
             # anomaly_map = textual_anomaly_map
