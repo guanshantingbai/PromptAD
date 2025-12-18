@@ -7,8 +7,8 @@ mvtec_classes = ['carpet', 'grid', 'leather', 'tile', 'wood',
                    'screw', 'toothbrush', 'transistor', 'zipper']
 
 
-# MVTEC2D_DIR = '/data2/grj/mvtec/'
-MVTEC2D_DIR = '/home/zju/datasets/mvtec/'
+MVTEC2D_DIR = '/data2/grj/mvtec/'
+# MVTEC2D_DIR = '/home/zju/datasets/mvtec/'
 
 
 def load_mvtec(category, k_shot):
