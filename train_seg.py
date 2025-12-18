@@ -11,6 +11,7 @@ from PromptAD import *
 from utils.eval_utils import *
 from torchvision import transforms
 from tqdm import tqdm
+from datetime import datetime
 
 TASK = 'SEG'
 
@@ -183,6 +184,9 @@ def fit(model,
 
 
 def main(args):
+    # 记录进程起始时间
+    process_start_time = datetime.now()
+    
     kwargs = vars(args)
 
     if kwargs['seed'] is None:
@@ -217,10 +221,32 @@ def main(args):
 
     p_roc = round(metrics['p_roc'], 2)
     object = kwargs['class_name']
-    print(f'Object:{object} =========================== Pixel-AUROC:{p_roc}\n')
+    
+    # 记录进程终止时间和用时
+    process_end_time = datetime.now()
+    process_elapsed_time = process_end_time - process_start_time
+    hours, remainder = divmod(process_elapsed_time.total_seconds(), 3600)
+    minutes, seconds = divmod(remainder, 60)
+    
+    print(f'\n{"="*80}')
+    print(f'Object:{object} =========================== Pixel-AUROC:{p_roc}')
+    print(f'进程起始时间: {process_start_time.strftime("%Y-%m-%d %H:%M:%S")}')
+    print(f'进程终止时间: {process_end_time.strftime("%Y-%m-%d %H:%M:%S")}')
+    print(f'进程用时: {int(hours)}小时 {int(minutes)}分钟 {int(seconds)}秒')
+    print(f'{"="*80}\n')
 
     save_metric(metrics, dataset_classes[kwargs['dataset']], kwargs['class_name'],
                 kwargs['dataset'], csv_path)
+    
+    # 保存时间信息到单独的日志文件
+    timing_log = csv_path.replace('.csv', '_timing.log')
+    with open(timing_log, 'w') as f:
+        f.write(f"Object: {object}\n")
+        f.write(f"Dataset: {kwargs['dataset']}, K-shot: {kwargs['k_shot']}\n")
+        f.write(f"进程起始时间: {process_start_time.strftime('%Y-%m-%d %H:%M:%S')}\n")
+        f.write(f"进程终止时间: {process_end_time.strftime('%Y-%m-%d %H:%M:%S')}\n")
+        f.write(f"进程用时: {int(hours)}小时 {int(minutes)}分钟 {int(seconds)}秒\n")
+        f.write(f"Pixel-AUROC: {p_roc}\n")
 
 
 def str2bool(v):
