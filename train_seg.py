@@ -17,8 +17,6 @@ TASK = 'SEG'
 
 def save_check_point(model, path):
     selected_keys = [
-        'feature_gallery1',
-        'feature_gallery2',
         'text_features',
     ]
     state_dict = model.state_dict()
@@ -39,18 +37,7 @@ def fit(model,
     # change the model into eval mode
     model.eval_mode()
 
-    features1 = []
-    features2 = []
-    for (data, mask, label, name, img_type) in train_data:
-        # data is already transformed by Dataset
-        data = data.to(device)
-        _, _, feature_map1, feature_map2 = model.encode_image(data)
-        features1.append(feature_map1)
-        features2.append(feature_map2)
-
-    features1 = torch.cat(features1, dim=0)
-    features2 = torch.cat(features2, dim=0)
-    model.build_image_feature_gallery(features1, features2)
+    # Removed feature_gallery building - only using semantic discrimination
 
     optimizer = torch.optim.SGD(model.prompt_learner.parameters(), lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.Epoch, eta_min=1e-5)

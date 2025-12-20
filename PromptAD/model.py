@@ -215,20 +215,11 @@ class PromptAD(torch.nn.Module):
         self.normal_text_features = None
         self.abnormal_text_features = None
         self.grid_size = model.visual.grid_size
-        self.visual_gallery = None
-
-        visual_gallery1 = torch.zeros((self.shot*self.grid_size[0]*self.grid_size[1], self.model.visual.embed_dim))
-        self.register_buffer("feature_gallery1", visual_gallery1)
-
-        visual_gallery2 = torch.zeros((self.shot*self.grid_size[0]*self.grid_size[1], self.model.visual.embed_dim))
-        self.register_buffer("feature_gallery2", visual_gallery2)
 
         text_features = torch.zeros((2, self.model.visual.output_dim))
         self.register_buffer("text_features", text_features)
 
         if self.precision == 'fp16':
-            self.feature_gallery1  = self.feature_gallery1.half()
-            self.feature_gallery2  = self.feature_gallery2.half()
             self.text_features  = text_features.half()
 
         # # for testing
@@ -291,28 +282,7 @@ class PromptAD(torch.nn.Module):
         text_features = torch.cat([avr_normal_text_features, avr_abnormal_text_features], dim=0)
         self.text_features.copy_(text_features / text_features.norm(dim=-1, keepdim=True))
 
-    def build_image_feature_gallery(self, features1, features2):
-        b1, n1, d1 = features1.shape
-        features1_flat = F.normalize(features1.reshape(-1, d1), dim=-1)
-        
-        # Dynamically resize gallery if needed
-        if self.feature_gallery1.shape[0] != features1_flat.shape[0]:
-            self.feature_gallery1 = torch.zeros_like(features1_flat)
-            if self.precision == 'fp16':
-                self.feature_gallery1 = self.feature_gallery1.half()
-        
-        self.feature_gallery1.copy_(features1_flat)
-
-        b2, n2, d2 = features2.shape
-        features2_flat = F.normalize(features2.reshape(-1, d2), dim=-1)
-        
-        # Dynamically resize gallery if needed
-        if self.feature_gallery2.shape[0] != features2_flat.shape[0]:
-            self.feature_gallery2 = torch.zeros_like(features2_flat)
-            if self.precision == 'fp16':
-                self.feature_gallery2 = self.feature_gallery2.half()
-        
-        self.feature_gallery2.copy_(features2_flat)
+    # build_image_feature_gallery method removed - only using semantic discrimination
 
     def calculate_textual_anomaly_score(self, visual_features, task):
         # t = 100
@@ -352,35 +322,15 @@ class PromptAD(torch.nn.Module):
         else:
             assert 'task error'
 
-    def calculate_visual_anomaly_score(self, visual_features):
-        N = visual_features[1].shape[0]
-
-        score1, _ = (1.0 - visual_features[2] @ self.feature_gallery1.t()).min(dim=-1)
-        score1 /= 2.0
-
-        score2, _ = (1.0 - visual_features[3] @ self.feature_gallery2.t()).min(dim=-1)
-        score2 /= 2.0
-
-        # Dynamically get grid size from actual feature shape
-        num_patches = visual_features[2].shape[1]
-        grid_h = grid_w = int(num_patches ** 0.5)
-
-        score = torch.zeros((N, num_patches)) + 0.5 * (score1 + score2).cpu()
-
-        return score.reshape((N, grid_h, grid_w)).unsqueeze(1)
+    # calculate_visual_anomaly_score method removed - only using semantic discrimination
 
     def forward(self, images, task):
 
         visual_features = self.encode_image(images)
         if task == 'seg':
+            # Only use textual/semantic anomaly score
             textual_anomaly_map = self.calculate_textual_anomaly_score(visual_features, 'seg')
-
-            visual_anomaly_map = self.calculate_visual_anomaly_score(visual_features)
-            #
-            anomaly_map = 1. / (1. / textual_anomaly_map + 1. / visual_anomaly_map)
-            # anomaly_map = 0.5 * (textual_anomaly_map + visual_anomaly_map)
-            # anomaly_map = visual_anomaly_map
-            # anomaly_map = textual_anomaly_map
+            anomaly_map = textual_anomaly_map
 
             anomaly_map = F.interpolate(anomaly_map, size=(self.out_size_h, self.out_size_w), mode='bilinear', align_corners=False)
 
@@ -395,11 +345,12 @@ class PromptAD(torch.nn.Module):
             return am_pix_list
 
         elif task == 'cls':
+            # Only use textual/semantic anomaly score
             textual_anomaly = self.calculate_textual_anomaly_score(visual_features, 'cls')
 
-            visual_anomaly_map = self.calculate_visual_anomaly_score(visual_features)
-
-            anomaly_map = F.interpolate(visual_anomaly_map, size=(self.out_size_h, self.out_size_w), mode='bilinear',
+            # For cls task, also compute pixel-level semantic anomaly map
+            textual_anomaly_map = self.calculate_textual_anomaly_score(visual_features, 'seg')
+            anomaly_map = F.interpolate(textual_anomaly_map, size=(self.out_size_h, self.out_size_w), mode='bilinear',
                                         align_corners=False)
 
             am_pix = anomaly_map.squeeze(1).numpy()
