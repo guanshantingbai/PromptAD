@@ -215,12 +215,15 @@ class PromptAD(torch.nn.Module):
         self.normal_text_features = None
         self.abnormal_text_features = None
         self.grid_size = model.visual.grid_size
-
-        text_features = torch.zeros((2, self.model.visual.output_dim))
-        self.register_buffer("text_features", text_features)
+        
+        # Store multiple prototypes for normal (K prototypes) and abnormal (M prototypes)
+        # Will be dynamically sized in build_text_feature_gallery
+        self.register_buffer("normal_prototypes", torch.zeros((1, self.model.visual.output_dim)))
+        self.register_buffer("abnormal_prototypes", torch.zeros((1, self.model.visual.output_dim)))
 
         if self.precision == 'fp16':
-            self.text_features  = text_features.half()
+            self.normal_prototypes = self.normal_prototypes.half()
+            self.abnormal_prototypes = self.abnormal_prototypes.half()
 
         # # for testing
         # p1, p2 = self.prompt_learner()
@@ -271,16 +274,24 @@ class PromptAD(torch.nn.Module):
         else:
             raise NotImplementedError
 
-        avr_normal_text_features = torch.mean(normal_text_features, dim=0, keepdim=True)
-        avr_abnormal_text_features = torch.mean(abnormal_text_features, dim=0, keepdim=True)
-
-        text_features_all = torch.cat([normal_text_features, abnormal_text_features], dim=0)
-        text_features_all /= text_features_all.norm(dim=-1, keepdim=True)
-
-        avr_normal_text_features = avr_normal_text_features
-        avr_abnormal_text_features = avr_abnormal_text_features
-        text_features = torch.cat([avr_normal_text_features, avr_abnormal_text_features], dim=0)
-        self.text_features.copy_(text_features / text_features.norm(dim=-1, keepdim=True))
+        # Store all prototypes instead of averaging (multi-prototype approach)
+        # Normalize each prototype individually
+        normal_text_features = normal_text_features / normal_text_features.norm(dim=-1, keepdim=True)
+        abnormal_text_features = abnormal_text_features / abnormal_text_features.norm(dim=-1, keepdim=True)
+        
+        # Dynamically resize buffers if needed
+        if self.normal_prototypes.shape[0] != normal_text_features.shape[0]:
+            self.normal_prototypes = torch.zeros_like(normal_text_features)
+            if self.precision == 'fp16':
+                self.normal_prototypes = self.normal_prototypes.half()
+        
+        if self.abnormal_prototypes.shape[0] != abnormal_text_features.shape[0]:
+            self.abnormal_prototypes = torch.zeros_like(abnormal_text_features)
+            if self.precision == 'fp16':
+                self.abnormal_prototypes = self.abnormal_prototypes.half()
+        
+        self.normal_prototypes.copy_(normal_text_features)
+        self.abnormal_prototypes.copy_(abnormal_text_features)
 
     # build_image_feature_gallery method removed - only using semantic discrimination
 
@@ -291,13 +302,22 @@ class PromptAD(torch.nn.Module):
         N = visual_features[1].shape[0]
 
         if task == 'seg':
-            # ############################################## local tokens scores ############################
-            # token_features = self.cross_attention(visual_features[1])
-            token_features = visual_features[1]
-            local_normality_and_abnormality_score = (t * token_features @ self.text_features.T).softmax(dim=-1)
-
-            local_abnormality_score = local_normality_and_abnormality_score[:, :, 1]
-
+            # Multi-prototype approach for local patches
+            token_features = visual_features[1]  # [N, num_patches, dim]
+            
+            # Compute similarity to all normal prototypes and take max (multi-modal normal manifold)
+            normal_sim = t * token_features @ self.normal_prototypes.T  # [N, num_patches, K_normal]
+            max_normal_sim = normal_sim.max(dim=-1)[0]  # [N, num_patches]
+            
+            # Compute similarity to all abnormal prototypes and take max (structured abnormal directions)
+            abnormal_sim = t * token_features @ self.abnormal_prototypes.T  # [N, num_patches, M_abnormal]
+            max_abnormal_sim = abnormal_sim.max(dim=-1)[0]  # [N, num_patches]
+            
+            # Softmax between best normal and best abnormal
+            logits = torch.stack([max_normal_sim, max_abnormal_sim], dim=-1)  # [N, num_patches, 2]
+            prob = logits.softmax(dim=-1)
+            local_abnormality_score = prob[:, :, 1]  # [N, num_patches]
+            
             # Dynamically get grid size from actual feature shape  
             num_patches = visual_features[1].shape[1]
             grid_h = grid_w = int(num_patches ** 0.5)
@@ -308,12 +328,21 @@ class PromptAD(torch.nn.Module):
             return local_abnormality_score.detach()
 
         elif task == 'cls':
-            # ################################################ global cls token scores ##########################
-            # global_feature = self.cross_attention(visual_features[0].unsqueeze(dim=1)).squeeze(dim=1)
-            global_feature = visual_features[0]
-            global_normality_and_abnormality_score = (t * global_feature @ self.text_features.T).softmax(dim=-1)
-
-            global_abnormality_score = global_normality_and_abnormality_score[:, 1]
+            # Multi-prototype approach for global cls token
+            global_feature = visual_features[0]  # [N, dim]
+            
+            # Compute similarity to all normal prototypes and take max
+            normal_sim = t * global_feature @ self.normal_prototypes.T  # [N, K_normal]
+            max_normal_sim = normal_sim.max(dim=-1)[0]  # [N]
+            
+            # Compute similarity to all abnormal prototypes and take max
+            abnormal_sim = t * global_feature @ self.abnormal_prototypes.T  # [N, M_abnormal]
+            max_abnormal_sim = abnormal_sim.max(dim=-1)[0]  # [N]
+            
+            # Softmax between best normal and best abnormal
+            logits = torch.stack([max_normal_sim, max_abnormal_sim], dim=-1)  # [N, 2]
+            prob = logits.softmax(dim=-1)
+            global_abnormality_score = prob[:, 1]  # [N]
 
             global_abnormality_score = global_abnormality_score.cpu()
 

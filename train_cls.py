@@ -19,7 +19,8 @@ TASK = 'CLS'
 
 def save_check_point(model, path):
     selected_keys = [
-        'text_features',
+        'normal_prototypes',
+        'abnormal_prototypes',
     ]
     state_dict = model.state_dict()
     selected_state_dict = {k: v for k, v in state_dict.items() if k in selected_keys}
@@ -70,30 +71,40 @@ def fit(model,
             loss_match_abnormal = (mean_ad_handle - mean_ad_learned).norm(dim=0) ** 2.0
 
             cls_feature, _, _, _ = model.encode_image(data)
+            cls_feature = cls_feature / cls_feature.norm(dim=-1, keepdim=True)
 
-            # compute v2t loss and triplet loss
-            normal_text_features_ahchor = normal_text_features.mean(dim=0).unsqueeze(0)
-            normal_text_features_ahchor = normal_text_features_ahchor / normal_text_features_ahchor.norm(dim=-1, keepdim=True)
-
-            abnormal_text_features_ahchor = abnormal_text_features.mean(dim=0).unsqueeze(0)
-            abnormal_text_features_ahchor = abnormal_text_features_ahchor / abnormal_text_features_ahchor.norm(dim=-1, keepdim=True)
+            # Multi-prototype contrastive loss
+            # Normalize all features
+            normal_text_features = normal_text_features / normal_text_features.norm(dim=-1, keepdim=True)
             abnormal_text_features = abnormal_text_features / abnormal_text_features.norm(dim=-1, keepdim=True)
-
-            l_pos = torch.einsum('nc,cm->nm', cls_feature, normal_text_features_ahchor.transpose(0, 1))
-            l_neg_v2t = torch.einsum('nc,cm->nm', cls_feature, abnormal_text_features.transpose(0, 1))
-
+            
+            # Compute similarity to all normal prototypes (pull to closest one)
+            normal_sim = torch.einsum('nc,mc->nm', cls_feature, normal_text_features)  # [batch, K_normal]
+            
+            # Compute similarity to all abnormal prototypes (push away from all)
+            abnormal_sim = torch.einsum('nc,mc->nm', cls_feature, abnormal_text_features)  # [batch, M_abnormal]
+            
             if model.precision == 'fp16':
                 logit_scale = model.model.logit_scale.half()
             else:
-                logit_scale = model.model.logit_scalef
+                logit_scale = model.model.logit_scale
+            
+            # Multi-prototype InfoNCE loss: pull to best normal, push all abnormals
+            # For each sample, use max normal similarity as positive, all abnormals as negatives
+            max_normal_sim = normal_sim.max(dim=-1, keepdim=True)[0]  # [batch, 1]
+            logits = torch.cat([max_normal_sim, abnormal_sim], dim=-1) * logit_scale  # [batch, 1 + M_abnormal]
+            
+            target_v2t = torch.zeros([logits.shape[0]], dtype=torch.long).to(device)
+            loss_v2t = criterion(logits, target_v2t)
 
-            logits_v2t = torch.cat([l_pos, l_neg_v2t], dim=-1) * logit_scale
-
-            target_v2t = torch.zeros([logits_v2t.shape[0]], dtype=torch.long).to(device)
-
-            loss_v2t = criterion(logits_v2t, target_v2t)
-
-            trip_loss = criterion_tip(cls_feature, normal_text_features_ahchor, abnormal_text_features_ahchor)
+            # Triplet loss with multi-prototypes: use best normal and worst abnormal
+            best_normal_idx = normal_sim.argmax(dim=-1)  # [batch]
+            normal_anchors = normal_text_features[best_normal_idx]  # [batch, dim]
+            
+            worst_abnormal_idx = abnormal_sim.argmax(dim=-1)  # [batch]
+            abnormal_anchors = abnormal_text_features[worst_abnormal_idx]  # [batch, dim]
+            
+            trip_loss = criterion_tip(cls_feature, normal_anchors, abnormal_anchors)
             loss = loss_v2t + trip_loss + loss_match_abnormal * args.lambda1
 
             loss.backward()
