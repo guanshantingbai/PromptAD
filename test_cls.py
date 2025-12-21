@@ -17,6 +17,7 @@ TASK = 'CLS'
 def test(model,
         args,
         dataloader: DataLoader,
+        train_dataloader: DataLoader,  # Add train dataloader to build memory bank
         device: str,
         img_dir: str,
         check_path: str,
@@ -25,7 +26,42 @@ def test(model,
     # change the model into eval mode
     model.eval_mode()
 
-    model.load_state_dict(torch.load(check_path), strict=False)
+    # Load checkpoint
+    checkpoint = torch.load(check_path)
+    
+    # Handle prototype size mismatch - resize buffers to match checkpoint
+    if 'normal_prototypes' in checkpoint:
+        model.normal_prototypes = torch.zeros_like(checkpoint['normal_prototypes'])
+        if model.precision == 'fp16':
+            model.normal_prototypes = model.normal_prototypes.half()
+    
+    if 'abnormal_prototypes' in checkpoint:
+        model.abnormal_prototypes = torch.zeros_like(checkpoint['abnormal_prototypes'])
+        if model.precision == 'fp16':
+            model.abnormal_prototypes = model.abnormal_prototypes.half()
+    
+    # Handle memory bank size mismatch - will be rebuilt from training data
+    if 'feature_gallery1' in checkpoint:
+        model.feature_gallery1 = torch.zeros_like(checkpoint['feature_gallery1'])
+        if model.precision == 'fp16':
+            model.feature_gallery1 = model.feature_gallery1.half()
+    
+    if 'feature_gallery2' in checkpoint:
+        model.feature_gallery2 = torch.zeros_like(checkpoint['feature_gallery2'])
+        if model.precision == 'fp16':
+            model.feature_gallery2 = model.feature_gallery2.half()
+    
+    model.load_state_dict(checkpoint, strict=False)
+    
+    # Build memory bank from training data if not in checkpoint
+    if 'feature_gallery1' not in checkpoint or checkpoint['feature_gallery1'].sum() == 0:
+        print("Building memory bank from training data...")
+        with torch.no_grad():
+            for (data, _, _, _, _) in tqdm(train_dataloader, desc="Building memory bank"):
+                data = [model.transform(Image.fromarray(f.numpy())) for f in data]
+                data = torch.stack(data, dim=0).to(device)
+                model.build_image_feature_gallery(data)
+        print(f"Memory bank built: {model.feature_gallery1.shape[0]} samples")
 
     scores_img = []
     score_maps = []
@@ -80,6 +116,9 @@ def main(args):
 
     # get the test dataloader
     test_dataloader, test_dataset_inst = get_dataloader_from_args(phase='test', perturbed=False, **kwargs)
+    
+    # get the train dataloader for building memory bank
+    train_dataloader, train_dataset_inst = get_dataloader_from_args(phase='train', perturbed=False, **kwargs)
 
     kwargs['out_size_h'] = kwargs['resolution']
     kwargs['out_size_w'] = kwargs['resolution']
@@ -89,7 +128,7 @@ def main(args):
     model = model.to(device)
 
     # as the pro metric calculation is costly, we only calculate it in the last evaluation
-    metrics = test(model, args, test_dataloader, device, img_dir=img_dir, check_path=check_path)
+    metrics = test(model, args, test_dataloader, train_dataloader, device, img_dir=img_dir, check_path=check_path)
 
     p_roc = round(metrics['i_roc'], 2)
     object = kwargs['class_name']

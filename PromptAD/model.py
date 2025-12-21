@@ -352,10 +352,10 @@ class PromptAD(torch.nn.Module):
             num_patches = visual_features[1].shape[1]
             grid_h = grid_w = int(num_patches ** 0.5)
             
-            local_abnormality_score = torch.zeros((N, num_patches)) + local_abnormality_score.cpu()
+            # Keep on same device as input
             local_abnormality_score = local_abnormality_score.reshape((N, grid_h, grid_w)).unsqueeze(1)
 
-            return local_abnormality_score.detach()
+            return local_abnormality_score
 
         elif task == 'cls':
             # Multi-prototype approach for global cls token
@@ -424,7 +424,8 @@ class PromptAD(torch.nn.Module):
             grid_h = grid_w = int(num_patches ** 0.5)
             visual_anomaly_score = visual_anomaly_score.reshape(N, grid_h, grid_w).unsqueeze(1)  # [N, 1, H, W]
             
-            return visual_anomaly_score.detach()
+            # Keep on same device as input
+            return visual_anomaly_score
 
         elif task == 'cls':
             # Global image-level anomaly detection
@@ -439,7 +440,8 @@ class PromptAD(torch.nn.Module):
             # Convert similarity to anomaly score
             visual_anomaly_score = 1 - max_similarity / t
             
-            return visual_anomaly_score.detach().cpu().numpy()
+            # Return as numpy for consistency with textual score
+            return visual_anomaly_score.cpu().detach().numpy()
 
         else:
             raise ValueError(f"Unknown task: {task}")
@@ -469,7 +471,7 @@ class PromptAD(torch.nn.Module):
 
             anomaly_map = F.interpolate(anomaly_map, size=(self.out_size_h, self.out_size_w), mode='bilinear', align_corners=False)
 
-            am_pix = anomaly_map.squeeze(1).numpy()
+            am_pix = anomaly_map.squeeze(1).detach().cpu().numpy()
 
             am_pix_list = []
 
@@ -503,7 +505,7 @@ class PromptAD(torch.nn.Module):
             anomaly_map = F.interpolate(anomaly_map, size=(self.out_size_h, self.out_size_w), mode='bilinear',
                                         align_corners=False)
 
-            am_pix = anomaly_map.squeeze(1).numpy()
+            am_pix = anomaly_map.squeeze(1).detach().cpu().numpy()
 
             am_pix_list = []
 

@@ -16,14 +16,14 @@ if __name__ == '__main__':
     print(f"主程序起始时间: {main_start_time.strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"{'='*80}\n")
 
-    pool = Pool(processes=3)
+    pool = Pool(processes=2)
 
     datasets = ['mvtec', 'visa']
 #    datasets = ['mvtec']
-    shots = [2, 4]
+    shots = [1, 2, 4]
 #    shots = [1]
-    output_dir = './result/baseline'  # 指定输出目录
-    gpu_id = 1
+    output_dir = './result/prompt1'  # 指定输出目录
+    gpu_id = 0  # 指定使用的 GPU ID
 
     # 创建日志目录
     log_dir = os.path.join(output_dir, 'cls_logs')
