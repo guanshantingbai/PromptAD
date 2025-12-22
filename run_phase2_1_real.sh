@@ -50,7 +50,7 @@ for class_info in "${CLASSES[@]}"; do
     
     python run_gate_experiment.py \
         --dataset $dataset \
-        --class-name $class_name \
+        --class_name $class_name \
         --k-shot $K_SHOT \
         --task $TASK \
         --gpu-id 0 \
@@ -58,7 +58,7 @@ for class_info in "${CLASSES[@]}"; do
         --checkpoint-dir $CHECKPOINT_DIR \
         --seed 111 \
         --backbone ViT-B-16-plus-240 \
-        --pretrained-dataset laion400m_e32
+        --pretrained_dataset laion400m_e32
     
     if [ $? -eq 0 ]; then
         echo "✓ ${dataset}/${class_name} completed"
