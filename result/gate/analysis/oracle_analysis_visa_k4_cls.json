@@ -1,0 +1,98 @@
+{
+  "candle": {
+    "semantic_chosen_ratio": 0.09090909090909091,
+    "memory_chosen_ratio": 0.9090909090909091,
+    "semantic_auroc": 95.113,
+    "memory_auroc": 86.07849999999999,
+    "oracle_auroc": 100.0,
+    "oracle_gain": 4.8870000000000005
+  },
+  "capsules": {
+    "semantic_chosen_ratio": 0.8518518518518519,
+    "memory_chosen_ratio": 0.14814814814814814,
+    "semantic_auroc": 57.80813953488373,
+    "memory_auroc": 70.27906976744187,
+    "oracle_auroc": 100.0,
+    "oracle_gain": 29.720930232558132
+  },
+  "cashew": {
+    "semantic_chosen_ratio": 0.16666666666666663,
+    "memory_chosen_ratio": 0.8333333333333335,
+    "semantic_auroc": 92.31800000000001,
+    "memory_auroc": 83.43599999999999,
+    "oracle_auroc": 100.0,
+    "oracle_gain": 7.681999999999988
+  },
+  "chewinggum": {
+    "semantic_chosen_ratio": 0.1658374792703151,
+    "memory_chosen_ratio": 0.8341625207296849,
+    "semantic_auroc": 95.84393638170974,
+    "memory_auroc": 94.66600397614313,
+    "oracle_auroc": 100.0,
+    "oracle_gain": 4.156063618290261
+  },
+  "fryum": {
+    "semantic_chosen_ratio": 0.26,
+    "memory_chosen_ratio": 0.74,
+    "semantic_auroc": 76.88600000000001,
+    "memory_auroc": 88.99600000000001,
+    "oracle_auroc": 98.099,
+    "oracle_gain": 9.102999999999994
+  },
+  "macaroni1": {
+    "semantic_chosen_ratio": 0.9054545454545455,
+    "memory_chosen_ratio": 0.09454545454545454,
+    "semantic_auroc": 83.7295,
+    "memory_auroc": 83.534,
+    "oracle_auroc": 100.0,
+    "oracle_gain": 16.2705
+  },
+  "macaroni2": {
+    "semantic_chosen_ratio": 0.9054545454545455,
+    "memory_chosen_ratio": 0.09454545454545454,
+    "semantic_auroc": 63.1125,
+    "memory_auroc": 73.26400000000001,
+    "oracle_auroc": 99.9885,
+    "oracle_gain": 26.724499999999992
+  },
+  "pcb1": {
+    "semantic_chosen_ratio": 0.7454710144927535,
+    "memory_chosen_ratio": 0.2545289855072464,
+    "semantic_auroc": 91.1269920318725,
+    "memory_auroc": 93.67529880478087,
+    "oracle_auroc": 99.93276892430279,
+    "oracle_gain": 6.257470119521926
+  },
+  "pcb2": {
+    "semantic_chosen_ratio": 0.9055404178019982,
+    "memory_chosen_ratio": 0.09445958219800181,
+    "semantic_auroc": 64.83616383616383,
+    "memory_auroc": 75.68031968031967,
+    "oracle_auroc": 100.0,
+    "oracle_gain": 24.31968031968033
+  },
+  "pcb3": {
+    "semantic_chosen_ratio": 0.17269439421338156,
+    "memory_chosen_ratio": 0.8273056057866185,
+    "semantic_auroc": 72.05318091451292,
+    "memory_auroc": 80.17296222664017,
+    "oracle_auroc": 97.37972166998013,
+    "oracle_gain": 17.206759443339962
+  },
+  "pcb4": {
+    "semantic_chosen_ratio": 0.8714932126696833,
+    "memory_chosen_ratio": 0.12850678733031673,
+    "semantic_auroc": 80.1582089552239,
+    "memory_auroc": 86.37114427860698,
+    "oracle_auroc": 99.95124378109452,
+    "oracle_gain": 13.580099502487542
+  },
+  "pipe_fryum": {
+    "semantic_chosen_ratio": 0.8266666666666667,
+    "memory_chosen_ratio": 0.17333333333333337,
+    "semantic_auroc": 73.178,
+    "memory_auroc": 98.6,
+    "oracle_auroc": 100.0,
+    "oracle_gain": 1.4000000000000057
+  }
+}

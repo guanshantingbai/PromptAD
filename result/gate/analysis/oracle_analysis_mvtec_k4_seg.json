@@ -1,0 +1,122 @@
+{
+  "bottle": {
+    "semantic_chosen_ratio": 0.5,
+    "memory_chosen_ratio": 0.5,
+    "semantic_auroc": 0.0,
+    "memory_auroc": 0.0,
+    "oracle_auroc": 0.0,
+    "oracle_gain": 0.0
+  },
+  "cable": {
+    "semantic_chosen_ratio": 0.5,
+    "memory_chosen_ratio": 0.5,
+    "semantic_auroc": 0.0,
+    "memory_auroc": 0.0,
+    "oracle_auroc": 0.0,
+    "oracle_gain": 0.0
+  },
+  "capsule": {
+    "semantic_chosen_ratio": 0.5,
+    "memory_chosen_ratio": 0.5,
+    "semantic_auroc": 0.0,
+    "memory_auroc": 0.0,
+    "oracle_auroc": 0.0,
+    "oracle_gain": 0.0
+  },
+  "carpet": {
+    "semantic_chosen_ratio": 0.5,
+    "memory_chosen_ratio": 0.5,
+    "semantic_auroc": 0.0,
+    "memory_auroc": 0.0,
+    "oracle_auroc": 0.0,
+    "oracle_gain": 0.0
+  },
+  "grid": {
+    "semantic_chosen_ratio": 0.5,
+    "memory_chosen_ratio": 0.5,
+    "semantic_auroc": 0.0,
+    "memory_auroc": 0.0,
+    "oracle_auroc": 0.0,
+    "oracle_gain": 0.0
+  },
+  "hazelnut": {
+    "semantic_chosen_ratio": 0.5,
+    "memory_chosen_ratio": 0.5,
+    "semantic_auroc": 0.0,
+    "memory_auroc": 0.0,
+    "oracle_auroc": 0.0,
+    "oracle_gain": 0.0
+  },
+  "leather": {
+    "semantic_chosen_ratio": 0.5,
+    "memory_chosen_ratio": 0.5,
+    "semantic_auroc": 0.0,
+    "memory_auroc": 0.0,
+    "oracle_auroc": 0.0,
+    "oracle_gain": 0.0
+  },
+  "metal_nut": {
+    "semantic_chosen_ratio": 0.5,
+    "memory_chosen_ratio": 0.5,
+    "semantic_auroc": 0.0,
+    "memory_auroc": 0.0,
+    "oracle_auroc": 0.0,
+    "oracle_gain": 0.0
+  },
+  "pill": {
+    "semantic_chosen_ratio": 0.5,
+    "memory_chosen_ratio": 0.5,
+    "semantic_auroc": 0.0,
+    "memory_auroc": 0.0,
+    "oracle_auroc": 0.0,
+    "oracle_gain": 0.0
+  },
+  "screw": {
+    "semantic_chosen_ratio": 0.5,
+    "memory_chosen_ratio": 0.5,
+    "semantic_auroc": 0.0,
+    "memory_auroc": 0.0,
+    "oracle_auroc": 0.0,
+    "oracle_gain": 0.0
+  },
+  "tile": {
+    "semantic_chosen_ratio": 0.5,
+    "memory_chosen_ratio": 0.5,
+    "semantic_auroc": 0.0,
+    "memory_auroc": 0.0,
+    "oracle_auroc": 0.0,
+    "oracle_gain": 0.0
+  },
+  "toothbrush": {
+    "semantic_chosen_ratio": 0.5,
+    "memory_chosen_ratio": 0.5,
+    "semantic_auroc": 0.0,
+    "memory_auroc": 0.0,
+    "oracle_auroc": 0.0,
+    "oracle_gain": 0.0
+  },
+  "transistor": {
+    "semantic_chosen_ratio": 0.5,
+    "memory_chosen_ratio": 0.5,
+    "semantic_auroc": 0.0,
+    "memory_auroc": 0.0,
+    "oracle_auroc": 0.0,
+    "oracle_gain": 0.0
+  },
+  "wood": {
+    "semantic_chosen_ratio": 0.5,
+    "memory_chosen_ratio": 0.5,
+    "semantic_auroc": 0.0,
+    "memory_auroc": 0.0,
+    "oracle_auroc": 0.0,
+    "oracle_gain": 0.0
+  },
+  "zipper": {
+    "semantic_chosen_ratio": 0.5,
+    "memory_chosen_ratio": 0.5,
+    "semantic_auroc": 0.0,
+    "memory_auroc": 0.0,
+    "oracle_auroc": 0.0,
+    "oracle_gain": 0.0
+  }
+}

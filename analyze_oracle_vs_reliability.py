@@ -38,66 +38,38 @@ def load_gate_results(result_dir, dataset, k_shot, task, class_name):
 
 def analyze_oracle_pattern(results_dict):
     """
-    Analyze oracle selection pattern.
+    Analyze oracle selection pattern from aggregated statistics.
+    
+    Note: Gate results only contain aggregated stats, not per-sample data.
+    We can only analyze oracle_semantic_ratio here.
     
     Returns:
-        analysis_dict with statistics about oracle choices
+        analysis_dict with oracle selection statistics
     """
     if results_dict is None:
         return None
     
-    # Extract scores
-    semantic_scores = np.array(results_dict['semantic_scores'])
-    memory_scores = np.array(results_dict['memory_scores'])
-    oracle_scores = np.array(results_dict['oracle_scores'])
-    gt_labels = np.array(results_dict['gt_labels'])
+    # Extract oracle statistics
+    oracle_data = results_dict.get('oracle', {})
     
-    N = len(gt_labels)
+    if not oracle_data:
+        return None
     
-    # Infer oracle selection (which branch was chosen)
-    oracle_selections = np.zeros(N, dtype=int)  # 0=semantic, 1=memory
+    semantic_ratio = oracle_data.get('oracle_semantic_ratio', 50.0)
+    memory_ratio = oracle_data.get('oracle_memory_ratio', 50.0)
     
-    for i in range(N):
-        if gt_labels[i] == 1:  # anomaly
-            # Oracle picks higher score
-            oracle_selections[i] = 0 if semantic_scores[i] > memory_scores[i] else 1
-        else:  # normal
-            # Oracle picks lower score
-            oracle_selections[i] = 0 if semantic_scores[i] < memory_scores[i] else 1
-    
-    # Compute statistics
-    semantic_chosen_ratio = (oracle_selections == 0).mean()
-    
-    # Analyze score differences
-    score_diff = semantic_scores - memory_scores  # positive = semantic higher
-    
-    # Separate by GT label
-    normal_mask = gt_labels == 0
-    anomaly_mask = gt_labels == 1
+    # Also get individual branch AUROCs for context
+    semantic_auroc = oracle_data.get('i_roc_semantic', 0.0)
+    memory_auroc = oracle_data.get('i_roc_memory', 0.0)
+    oracle_auroc = oracle_data.get('i_roc', 0.0)
     
     analysis = {
-        'n_samples': N,
-        'n_normal': normal_mask.sum(),
-        'n_anomaly': anomaly_mask.sum(),
-        'semantic_chosen_ratio': semantic_chosen_ratio,
-        'memory_chosen_ratio': 1 - semantic_chosen_ratio,
-        'oracle_selections': oracle_selections,
-        'score_diff': score_diff,
-        'semantic_scores': semantic_scores,
-        'memory_scores': memory_scores,
-        'gt_labels': gt_labels,
-        
-        # Statistics by GT label
-        'normal': {
-            'semantic_chosen_ratio': (oracle_selections[normal_mask] == 0).mean() if normal_mask.sum() > 0 else 0,
-            'score_diff_mean': score_diff[normal_mask].mean() if normal_mask.sum() > 0 else 0,
-            'score_diff_std': score_diff[normal_mask].std() if normal_mask.sum() > 0 else 0,
-        },
-        'anomaly': {
-            'semantic_chosen_ratio': (oracle_selections[anomaly_mask] == 0).mean() if anomaly_mask.sum() > 0 else 0,
-            'score_diff_mean': score_diff[anomaly_mask].mean() if anomaly_mask.sum() > 0 else 0,
-            'score_diff_std': score_diff[anomaly_mask].std() if anomaly_mask.sum() > 0 else 0,
-        }
+        'semantic_chosen_ratio': semantic_ratio / 100.0,
+        'memory_chosen_ratio': memory_ratio / 100.0,
+        'semantic_auroc': semantic_auroc,
+        'memory_auroc': memory_auroc,
+        'oracle_auroc': oracle_auroc,
+        'oracle_gain': oracle_auroc - max(semantic_auroc, memory_auroc),
     }
     
     return analysis
@@ -153,16 +125,18 @@ def main():
         
         # Print summary
         print(f"📊 {cls_name:15s} | "
-              f"N={analysis['n_samples']:3d} | "
-              f"Semantic chosen: {analysis['semantic_chosen_ratio']:.1%} | "
-              f"Score diff: {analysis['score_diff'].mean():+.3f}±{analysis['score_diff'].std():.3f}")
+              f"Semantic: {analysis['semantic_chosen_ratio']:.1%} | "
+              f"Memory: {analysis['memory_chosen_ratio']:.1%} | "
+              f"AUROC - Sem: {analysis['semantic_auroc']:.1f} | Mem: {analysis['memory_auroc']:.1f} | Oracle: {analysis['oracle_auroc']:.1f} (+{analysis['oracle_gain']:.2f})")
         
         summary_stats.append({
             'class': cls_name,
             'semantic_ratio': analysis['semantic_chosen_ratio'],
-            'score_diff_mean': analysis['score_diff'].mean(),
-            'score_diff_std': analysis['score_diff'].std(),
-            'n_samples': analysis['n_samples']
+            'memory_ratio': analysis['memory_chosen_ratio'],
+            'semantic_auroc': analysis['semantic_auroc'],
+            'memory_auroc': analysis['memory_auroc'],
+            'oracle_auroc': analysis['oracle_auroc'],
+            'oracle_gain': analysis['oracle_gain']
         })
     
     # Overall statistics
@@ -171,8 +145,12 @@ def main():
     print(f"{'='*80}")
     
     semantic_ratios = [s['semantic_ratio'] for s in summary_stats]
+    oracle_gains = [s['oracle_gain'] for s in summary_stats]
     print(f"Semantic chosen (avg across classes): {np.mean(semantic_ratios):.1%} ± {np.std(semantic_ratios):.1%}")
     print(f"Range: [{np.min(semantic_ratios):.1%}, {np.max(semantic_ratios):.1%}]")
+    print(f"\nOracle gain over best single branch:")
+    print(f"  Average: {np.mean(oracle_gains):.2f}%")
+    print(f"  Range: [{np.min(oracle_gains):.2f}, {np.max(oracle_gains):.2f}]%")
     
     # Create output directory
     os.makedirs(args.output_dir, exist_ok=True)
@@ -211,39 +189,47 @@ def plot_oracle_analysis(all_analyses, summary_stats, args):
     """Generate visualization plots."""
     output_dir = Path(args.output_dir)
     
-    # Plot 1: Oracle selection ratio per class
-    fig, axes = plt.subplots(2, 1, figsize=(12, 8))
+    # Plot 1: Oracle selection ratio + AUROC comparison
+    fig, axes = plt.subplots(2, 1, figsize=(14, 10))
     
     # Subplot 1: Bar plot of semantic vs memory selection
     classes = [s['class'] for s in summary_stats]
     semantic_ratios = [s['semantic_ratio'] for s in summary_stats]
-    memory_ratios = [1 - s['semantic_ratio'] for s in summary_stats]
+    memory_ratios = [s['memory_ratio'] for s in summary_stats]
     
     x = np.arange(len(classes))
     width = 0.35
     
-    axes[0].bar(x - width/2, semantic_ratios, width, label='Semantic', color='steelblue')
-    axes[0].bar(x + width/2, memory_ratios, width, label='Memory', color='coral')
-    axes[0].axhline(y=0.5, color='gray', linestyle='--', alpha=0.5)
-    axes[0].set_ylabel('Selection Ratio')
-    axes[0].set_title(f'Oracle Branch Selection - {args.dataset.upper()} K={args.k_shot} {args.task.upper()}')
+    axes[0].bar(x - width/2, semantic_ratios, width, label='Semantic', color='steelblue', alpha=0.8)
+    axes[0].bar(x + width/2, memory_ratios, width, label='Memory', color='coral', alpha=0.8)
+    axes[0].axhline(y=0.5, color='gray', linestyle='--', alpha=0.5, linewidth=1)
+    axes[0].set_ylabel('Selection Ratio', fontsize=11)
+    axes[0].set_title(f'Oracle Branch Selection - {args.dataset.upper()} K={args.k_shot} {args.task.upper()}', 
+                     fontsize=13, fontweight='bold')
     axes[0].set_xticks(x)
-    axes[0].set_xticklabels(classes, rotation=45, ha='right')
-    axes[0].legend()
+    axes[0].set_xticklabels(classes, rotation=45, ha='right', fontsize=9)
+    axes[0].legend(fontsize=10)
     axes[0].grid(axis='y', alpha=0.3)
+    axes[0].set_ylim([0, 1])
     
-    # Subplot 2: Score difference distribution
-    score_diffs = [s['score_diff_mean'] for s in summary_stats]
-    colors = ['steelblue' if d > 0 else 'coral' for d in score_diffs]
+    # Subplot 2: AUROC comparison (Semantic vs Memory vs Oracle)
+    semantic_aurocs = [s['semantic_auroc'] for s in summary_stats]
+    memory_aurocs = [s['memory_auroc'] for s in summary_stats]
+    oracle_aurocs = [s['oracle_auroc'] for s in summary_stats]
     
-    axes[1].bar(x, score_diffs, color=colors, alpha=0.7)
-    axes[1].axhline(y=0, color='black', linestyle='-', linewidth=0.8)
-    axes[1].set_ylabel('Score Diff (Semantic - Memory)')
-    axes[1].set_xlabel('Class')
-    axes[1].set_title('Average Score Difference (positive = Semantic higher)')
+    width = 0.25
+    axes[1].bar(x - width, semantic_aurocs, width, label='Semantic', color='steelblue', alpha=0.8)
+    axes[1].bar(x, memory_aurocs, width, label='Memory', color='coral', alpha=0.8)
+    axes[1].bar(x + width, oracle_aurocs, width, label='Oracle', color='gold', alpha=0.8)
+    
+    axes[1].set_ylabel('AUROC (%)', fontsize=11)
+    axes[1].set_xlabel('Class', fontsize=11)
+    axes[1].set_title('Branch Performance Comparison', fontsize=13, fontweight='bold')
     axes[1].set_xticks(x)
-    axes[1].set_xticklabels(classes, rotation=45, ha='right')
+    axes[1].set_xticklabels(classes, rotation=45, ha='right', fontsize=9)
+    axes[1].legend(fontsize=10)
     axes[1].grid(axis='y', alpha=0.3)
+    axes[1].set_ylim([50, 105])
     
     plt.tight_layout()
     plot_file = output_dir / f"oracle_selection_{args.dataset}_k{args.k_shot}_{args.task}.png"

@@ -1,0 +1,122 @@
+{
+  "bottle": {
+    "semantic_chosen_ratio": 0.18072289156626506,
+    "memory_chosen_ratio": 0.8192771084337349,
+    "semantic_auroc": 97.5,
+    "memory_auroc": 99.68253968253968,
+    "oracle_auroc": 100.0,
+    "oracle_gain": 0.31746031746031633
+  },
+  "cable": {
+    "semantic_chosen_ratio": 0.38666666666666666,
+    "memory_chosen_ratio": 0.6133333333333333,
+    "semantic_auroc": 87.56559220389803,
+    "memory_auroc": 95.4272863568216,
+    "oracle_auroc": 100.0,
+    "oracle_gain": 4.572713643178403
+  },
+  "capsule": {
+    "semantic_chosen_ratio": 0.3939393939393939,
+    "memory_chosen_ratio": 0.6060606060606061,
+    "semantic_auroc": 90.30714000797767,
+    "memory_auroc": 84.24411647387315,
+    "oracle_auroc": 98.24491424012764,
+    "oracle_gain": 7.937774232149977
+  },
+  "carpet": {
+    "semantic_chosen_ratio": 0.5811965811965812,
+    "memory_chosen_ratio": 0.4188034188034188,
+    "semantic_auroc": 100.0,
+    "memory_auroc": 99.87961476725522,
+    "oracle_auroc": 100.0,
+    "oracle_gain": 0.0
+  },
+  "grid": {
+    "semantic_chosen_ratio": 0.7307692307692306,
+    "memory_chosen_ratio": 0.2692307692307692,
+    "semantic_auroc": 99.83291562238931,
+    "memory_auroc": 95.32163742690058,
+    "oracle_auroc": 100.0,
+    "oracle_gain": 0.16708437761069206
+  },
+  "hazelnut": {
+    "semantic_chosen_ratio": 0.21818181818181817,
+    "memory_chosen_ratio": 0.7818181818181819,
+    "semantic_auroc": 80.14285714285715,
+    "memory_auroc": 100.0,
+    "oracle_auroc": 100.0,
+    "oracle_gain": 0.0
+  },
+  "leather": {
+    "semantic_chosen_ratio": 0.7419354838709676,
+    "memory_chosen_ratio": 0.25806451612903225,
+    "semantic_auroc": 100.0,
+    "memory_auroc": 99.08288043478261,
+    "oracle_auroc": 100.0,
+    "oracle_gain": 0.0
+  },
+  "metal_nut": {
+    "semantic_chosen_ratio": 0.19130434782608696,
+    "memory_chosen_ratio": 0.8086956521739129,
+    "semantic_auroc": 87.2434017595308,
+    "memory_auroc": 100.0,
+    "oracle_auroc": 100.0,
+    "oracle_gain": 0.0
+  },
+  "pill": {
+    "semantic_chosen_ratio": 0.15568862275449102,
+    "memory_chosen_ratio": 0.844311377245509,
+    "semantic_auroc": 85.66557555919258,
+    "memory_auroc": 94.81723949809057,
+    "oracle_auroc": 100.0,
+    "oracle_gain": 5.182760501909428
+  },
+  "screw": {
+    "semantic_chosen_ratio": 0.25625,
+    "memory_chosen_ratio": 0.74375,
+    "semantic_auroc": 58.00368928059029,
+    "memory_auroc": 66.18159458905514,
+    "oracle_auroc": 100.0,
+    "oracle_gain": 33.81840541094486
+  },
+  "tile": {
+    "semantic_chosen_ratio": 0.717948717948718,
+    "memory_chosen_ratio": 0.28205128205128205,
+    "semantic_auroc": 100.0,
+    "memory_auroc": 100.0,
+    "oracle_auroc": 100.0,
+    "oracle_gain": 0.0
+  },
+  "toothbrush": {
+    "semantic_chosen_ratio": 0.2857142857142857,
+    "memory_chosen_ratio": 0.7142857142857143,
+    "semantic_auroc": 84.44444444444444,
+    "memory_auroc": 97.22222222222223,
+    "oracle_auroc": 100.0,
+    "oracle_gain": 2.7777777777777715
+  },
+  "transistor": {
+    "semantic_chosen_ratio": 0.4,
+    "memory_chosen_ratio": 0.6,
+    "semantic_auroc": 91.20833333333334,
+    "memory_auroc": 87.54166666666666,
+    "oracle_auroc": 100.0,
+    "oracle_gain": 8.791666666666657
+  },
+  "wood": {
+    "semantic_chosen_ratio": 0.26582278481012656,
+    "memory_chosen_ratio": 0.7341772151898734,
+    "semantic_auroc": 97.80701754385966,
+    "memory_auroc": 98.42105263157895,
+    "oracle_auroc": 99.56140350877193,
+    "oracle_gain": 1.1403508771929864
+  },
+  "zipper": {
+    "semantic_chosen_ratio": 0.7880794701986755,
+    "memory_chosen_ratio": 0.21192052980132453,
+    "semantic_auroc": 94.47216386554622,
+    "memory_auroc": 91.91176470588236,
+    "oracle_auroc": 100.0,
+    "oracle_gain": 5.5278361344537785
+  }
+}
