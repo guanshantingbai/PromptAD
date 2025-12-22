@@ -201,12 +201,14 @@ def evaluate_all_modes(base_model, test_dataloader, device, args, output_dir):
                             topk=5
                         )
                         
-                        # Compute semantic reliability (simplified - using score extremity)
-                        # TODO: Full implementation needs per-prompt scores
-                        semantic_rel = reliability_estimator.compute_semantic_reliability(
-                            semantic_score=torch.tensor([semantic_score]),
-                            prompt_scores=None  # Placeholder
-                        )
+                        # Compute semantic reliability
+                        # NOTE: We don't have per-prompt scores, so use placeholder values
+                        # TODO: Modify model_modular.py to expose per-prompt semantic scores
+                        semantic_rel = {
+                            'prompt_variance_z': np.array([0.0]),
+                            'prompt_margin_z': np.array([0.0]),
+                            'score_extremity_z': np.array([0.0])
+                        }
                         
                         # Store per-sample data
                         sample_data = {
