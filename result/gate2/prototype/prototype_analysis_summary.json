@@ -1,0 +1,297 @@
+[
+  {
+    "dataset": "mvtec",
+    "class_name": "screw",
+    "k_shot": 4,
+    "oracle_stats": {
+      "semantic_ratio": 0.25625,
+      "semantic_auroc": 58.00368928059029,
+      "memory_auroc": 66.18159458905514,
+      "oracle_auroc": 100.0
+    },
+    "distribution": {
+      "Memory Margin": {
+        "sem_mean": 0.014281799879066784,
+        "mem_mean": 0.6351287659392548,
+        "cohens_d": 0.5529091456599798,
+        "p_value": 0.0221967544249753
+      },
+      "Memory Entropy": {
+        "sem_mean": 0.042561503552853916,
+        "mem_mean": 0.3952802687306698,
+        "cohens_d": 0.38535178379759194,
+        "p_value": 0.12461511155344508
+      },
+      "Memory Centroid": {
+        "sem_mean": 0.1628989167457205,
+        "mem_mean": 0.3116099245608724,
+        "cohens_d": 0.16900263944010724,
+        "p_value": 0.51697574662737
+      },
+      "Semantic Prompt Var": {
+        "sem_mean": 0.712878467030714,
+        "mem_mean": -0.03105157750925238,
+        "cohens_d": -0.7758920685815213,
+        "p_value": 0.0027945976746471084
+      },
+      "Semantic Prompt Margin": {
+        "sem_mean": 0.6465312875206601,
+        "mem_mean": 0.057564613085023524,
+        "cohens_d": -0.6622188360430972,
+        "p_value": 0.011077826963851746
+      },
+      "Semantic Extremity": {
+        "sem_mean": 0.5022692639520591,
+        "mem_mean": -0.052510350915341335,
+        "cohens_d": -0.5379586287169201,
+        "p_value": 0.018057217186066198
+      }
+    },
+    "auc": {
+      "auc_r_mem_margin": 0.621458710066305,
+      "auc_r_mem_entropy": 0.6106088004822182,
+      "auc_r_mem_centroid": 0.5424954792043399,
+      "auc_r_sem_prompt_var": 0.704038577456299,
+      "auc_r_sem_prompt_margin": 0.6546112115732369,
+      "auc_r_sem_extremity": 0.622664255575648,
+      "auc_memory_avg": 0.5915209965842877,
+      "auc_semantic_avg": 0.6604380148683946
+    }
+  },
+  {
+    "dataset": "mvtec",
+    "class_name": "capsule",
+    "k_shot": 4,
+    "oracle_stats": {
+      "semantic_ratio": 0.3939393939393939,
+      "semantic_auroc": 90.30714000797767,
+      "memory_auroc": 84.24411647387315,
+      "oracle_auroc": 98.24491424012764
+    },
+    "distribution": {
+      "Memory Margin": {
+        "sem_mean": 0.28089179710365697,
+        "mem_mean": 0.6421298199151011,
+        "cohens_d": 0.3208593116564943,
+        "p_value": 0.1434015514355395
+      },
+      "Memory Entropy": {
+        "sem_mean": -0.3191175841844821,
+        "mem_mean": 0.35086619587393053,
+        "cohens_d": 0.6565301750554107,
+        "p_value": 0.00237497245121974
+      },
+      "Memory Centroid": {
+        "sem_mean": -0.028096152659713644,
+        "mem_mean": 0.4919866393251186,
+        "cohens_d": 0.4574425791009255,
+        "p_value": 0.034219885009210395
+      },
+      "Semantic Prompt Var": {
+        "sem_mean": 0.6162862989067452,
+        "mem_mean": -0.056117600917225424,
+        "cohens_d": -0.6628804450824773,
+        "p_value": 0.0027721140415365633
+      },
+      "Semantic Prompt Margin": {
+        "sem_mean": 0.5267735954474767,
+        "mem_mean": 0.11971273765314192,
+        "cohens_d": -0.4099077239958084,
+        "p_value": 0.057027596703072406
+      },
+      "Semantic Extremity": {
+        "sem_mean": 0.30294743756489817,
+        "mem_mean": -0.133269191664829,
+        "cohens_d": -0.4436868430277555,
+        "p_value": 0.033039851199686325
+      }
+    },
+    "auc": {
+      "auc_r_mem_margin": 0.592944369063772,
+      "auc_r_mem_entropy": 0.6879240162822252,
+      "auc_r_mem_centroid": 0.6512890094979648,
+      "auc_r_sem_prompt_var": 0.6897331524197196,
+      "auc_r_sem_prompt_margin": 0.6205336951605608,
+      "auc_r_sem_extremity": 0.629127091813659,
+      "auc_memory_avg": 0.6440524649479874,
+      "auc_semantic_avg": 0.6464646464646465
+    }
+  },
+  {
+    "dataset": "visa",
+    "class_name": "capsules",
+    "k_shot": 4,
+    "oracle_stats": {
+      "semantic_ratio": 0.8518518518518519,
+      "semantic_auroc": 57.80813953488373,
+      "memory_auroc": 70.27906976744187,
+      "oracle_auroc": 100.0
+    },
+    "distribution": {
+      "Memory Margin": {
+        "sem_mean": -0.025608953683042692,
+        "mem_mean": 1.2509277827870282,
+        "cohens_d": 1.2978752304802057,
+        "p_value": 4.332086058744474e-05
+      },
+      "Memory Entropy": {
+        "sem_mean": 0.1557710023203826,
+        "mem_mean": -0.0019466569908322534,
+        "cohens_d": -0.16984589293605354,
+        "p_value": 0.5819497739321922
+      },
+      "Memory Centroid": {
+        "sem_mean": -0.1890306020127034,
+        "mem_mean": -0.08955872017547323,
+        "cohens_d": 0.10259034756038798,
+        "p_value": 0.7202330408502887
+      },
+      "Semantic Prompt Var": {
+        "sem_mean": 0.5185986276801368,
+        "mem_mean": 0.21910096676481788,
+        "cohens_d": -0.27225492164295934,
+        "p_value": 0.3453434363305228
+      },
+      "Semantic Prompt Margin": {
+        "sem_mean": 0.44445906102282323,
+        "mem_mean": 0.35927392119220625,
+        "cohens_d": -0.09647901575484137,
+        "p_value": 0.7923260845440057
+      },
+      "Semantic Extremity": {
+        "sem_mean": 0.17567258903719837,
+        "mem_mean": -0.1251734468191948,
+        "cohens_d": -0.3627860630071672,
+        "p_value": 0.2878568222916899
+      }
+    },
+    "auc": {
+      "auc_r_mem_margin": 0.8143236074270557,
+      "auc_r_mem_entropy": 0.4482758620689656,
+      "auc_r_mem_centroid": 0.5349248452696729,
+      "auc_r_sem_prompt_var": 0.5473032714412025,
+      "auc_r_sem_prompt_margin": 0.515473032714412,
+      "auc_r_sem_extremity": 0.6021220159151193,
+      "auc_memory_avg": 0.5991747715885647,
+      "auc_semantic_avg": 0.5549661066902446
+    }
+  },
+  {
+    "dataset": "visa",
+    "class_name": "macaroni2",
+    "k_shot": 4,
+    "oracle_stats": {
+      "semantic_ratio": 0.9054545454545455,
+      "semantic_auroc": 63.1125,
+      "memory_auroc": 73.26400000000001,
+      "oracle_auroc": 99.9885
+    },
+    "distribution": {
+      "Memory Margin": {
+        "sem_mean": 0.2530054508128754,
+        "mem_mean": 0.52199763800145,
+        "cohens_d": 0.2754938590308668,
+        "p_value": 0.400723952528927
+      },
+      "Memory Entropy": {
+        "sem_mean": -0.05848882404196945,
+        "mem_mean": 0.266651083910492,
+        "cohens_d": 0.33397365447388744,
+        "p_value": 0.29233082644837194
+      },
+      "Memory Centroid": {
+        "sem_mean": 0.167677797304078,
+        "mem_mean": 0.5493615734250776,
+        "cohens_d": 0.4792896096231303,
+        "p_value": 0.21916939435106056
+      },
+      "Semantic Prompt Var": {
+        "sem_mean": 0.598613158763728,
+        "mem_mean": 0.5273086116329642,
+        "cohens_d": -0.08509285021569851,
+        "p_value": 0.8106729502439357
+      },
+      "Semantic Prompt Margin": {
+        "sem_mean": 0.576333653239591,
+        "mem_mean": 0.26820444466692595,
+        "cohens_d": -0.34281844512595916,
+        "p_value": 0.3319994740259028
+      },
+      "Semantic Extremity": {
+        "sem_mean": 0.42395028942246893,
+        "mem_mean": -0.17610317702385925,
+        "cohens_d": -0.6060474702712995,
+        "p_value": 0.09151826233670242
+      }
+    },
+    "auc": {
+      "auc_r_mem_margin": 0.5700000000000001,
+      "auc_r_mem_entropy": 0.5811111111111111,
+      "auc_r_mem_centroid": 0.64,
+      "auc_r_sem_prompt_var": 0.4911111111111111,
+      "auc_r_sem_prompt_margin": 0.5888888888888889,
+      "auc_r_sem_extremity": 0.6966666666666667,
+      "auc_memory_avg": 0.5970370370370371,
+      "auc_semantic_avg": 0.5922222222222223
+    }
+  },
+  {
+    "dataset": "visa",
+    "class_name": "candle",
+    "k_shot": 4,
+    "oracle_stats": {
+      "semantic_ratio": 0.09090909090909091,
+      "semantic_auroc": 95.113,
+      "memory_auroc": 86.07849999999999,
+      "oracle_auroc": 100.0
+    },
+    "distribution": {
+      "Memory Margin": {
+        "sem_mean": -0.03542521349709429,
+        "mem_mean": 0.3931738062083882,
+        "cohens_d": 0.5481679785982156,
+        "p_value": 0.18004553163255907
+      },
+      "Memory Entropy": {
+        "sem_mean": 0.18098710449862887,
+        "mem_mean": 0.5946150215132974,
+        "cohens_d": 0.4533261148565897,
+        "p_value": 0.26207859147405377
+      },
+      "Memory Centroid": {
+        "sem_mean": 0.01850610146836827,
+        "mem_mean": 0.1759393160056525,
+        "cohens_d": 0.1523162227193791,
+        "p_value": 0.6686142878835754
+      },
+      "Semantic Prompt Var": {
+        "sem_mean": 0.9242935284885251,
+        "mem_mean": 0.10408404829020816,
+        "cohens_d": -1.1156009407110214,
+        "p_value": 0.007098170911199329
+      },
+      "Semantic Prompt Margin": {
+        "sem_mean": 0.478832255199256,
+        "mem_mean": 0.17278618415922836,
+        "cohens_d": -0.35369229439952865,
+        "p_value": 0.34281602526859045
+      },
+      "Semantic Extremity": {
+        "sem_mean": -0.2483421100381933,
+        "mem_mean": 0.007969142264403161,
+        "cohens_d": 0.28447927432247166,
+        "p_value": 0.4524952194710563
+      }
+    },
+    "auc": {
+      "auc_r_mem_margin": 0.6324786324786325,
+      "auc_r_mem_entropy": 0.6227106227106227,
+      "auc_r_mem_centroid": 0.5372405372405373,
+      "auc_r_sem_prompt_var": 0.7863247863247863,
+      "auc_r_sem_prompt_margin": 0.5787545787545788,
+      "auc_r_sem_extremity": 0.4261294261294261,
+      "auc_memory_avg": 0.5974765974765975,
+      "auc_semantic_avg": 0.5970695970695971
+    }
+  }
+]
