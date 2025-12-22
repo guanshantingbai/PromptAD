@@ -1,0 +1,917 @@
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:grid =========================== Image-AUROC:99.46
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+[ WARN:0@5.190] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/capsules/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+[ WARN:0@5.244] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/candle/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+[ WARN:0@4.974] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/cashew/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+[ WARN:0@4.917] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/chewinggum/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+[ WARN:0@5.016] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/fryum/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+[ WARN:0@4.954] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/macaroni1/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+[ WARN:0@4.952] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/macaroni2/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+[ WARN:0@4.898] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/pcb1/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+[ WARN:0@4.965] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/pcb2/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+[ WARN:0@4.884] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/pcb3/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+[ WARN:0@5.138] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/pipe_fryum/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+[ WARN:0@5.215] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/pcb4/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+[ WARN:0@5.130] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/candle/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+[ WARN:0@5.044] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/capsules/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+[ WARN:0@5.038] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/chewinggum/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+[ WARN:0@5.154] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/cashew/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+[ WARN:0@5.137] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/macaroni1/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+[ WARN:0@5.229] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/fryum/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+[ WARN:0@5.087] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/macaroni2/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+[ WARN:0@5.051] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/pcb1/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+[ WARN:0@5.106] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/pcb3/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+[ WARN:0@5.159] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/pcb2/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+[ WARN:0@4.991] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/pipe_fryum/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+[ WARN:0@5.094] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/pcb4/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+[ WARN:0@5.216] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/capsules/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+[ WARN:0@5.327] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/candle/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+[ WARN:0@5.081] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/chewinggum/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+[ WARN:0@5.201] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/cashew/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+[ WARN:0@5.168] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/fryum/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+[ WARN:0@5.110] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/macaroni1/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+[ WARN:0@4.957] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/macaroni2/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+[ WARN:0@4.917] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/pcb1/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+[ WARN:0@5.152] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/pcb2/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+[ WARN:0@5.083] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/pcb3/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+[ WARN:0@5.221] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/pipe_fryum/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+[ WARN:0@5.322] global loadsave.cpp:268 findDecoder imread_('/home/zju/datasets/pro_visa/1cls/pcb4/ground_truth/bad/000.png'): can't open/read file: check file path/integrity
+Traceback (most recent call last):
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 289, in <module>
+    main(args)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 217, in main
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
+  File "/home/zju/codes/AD/PromptAD/train_cls.py", line 127, in fit
+    for (data, mask, label, name, img_type) in dataloader:
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/zju/codes/AD/PromptAD/datasets/dataset.py", line 45, in __getitem__
+    gt[gt > 0] = 255
+TypeError: '>' not supported between instances of 'NoneType' and 'int'
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 1 --class_name candle --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 1 --class_name capsules --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 1 --class_name cashew --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 1 --class_name chewinggum --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 1 --class_name fryum --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 1 --class_name macaroni1 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 1 --class_name macaroni2 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 1 --class_name pcb1 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 1 --class_name pcb2 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 1 --class_name pcb3 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 1 --class_name pcb4 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 1 --class_name pipe_fryum --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 2 --class_name candle --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 2 --class_name capsules --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 2 --class_name cashew --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 2 --class_name chewinggum --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 2 --class_name fryum --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 2 --class_name macaroni1 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 2 --class_name macaroni2 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 2 --class_name pcb1 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 2 --class_name pcb2 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 2 --class_name pcb3 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 2 --class_name pcb4 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 2 --class_name pipe_fryum --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 4 --class_name candle --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 4 --class_name capsules --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 4 --class_name cashew --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 4 --class_name chewinggum --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 4 --class_name fryum --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 4 --class_name macaroni1 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 4 --class_name macaroni2 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 4 --class_name pcb1 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 4 --class_name pcb2 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 4 --class_name pcb3 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 4 --class_name pcb4 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 4 --class_name pipe_fryum --root-dir ./output_max_fusion
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 1 --class_name carpet --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k1_mvtec_carpet.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 1 --class_name grid --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k1_mvtec_grid.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 1 --class_name leather --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k1_mvtec_leather.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 1 --class_name tile --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k1_mvtec_tile.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 1 --class_name wood --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k1_mvtec_wood.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 1 --class_name bottle --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k1_mvtec_bottle.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 1 --class_name cable --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k1_mvtec_cable.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 1 --class_name capsule --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k1_mvtec_capsule.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 1 --class_name hazelnut --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k1_mvtec_hazelnut.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 1 --class_name metal_nut --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k1_mvtec_metal_nut.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 1 --class_name pill --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k1_mvtec_pill.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 1 --class_name screw --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k1_mvtec_screw.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 1 --class_name toothbrush --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k1_mvtec_toothbrush.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 1 --class_name transistor --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k1_mvtec_transistor.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 1 --class_name zipper --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k1_mvtec_zipper.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 1 --class_name candle --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k1_visa_candle.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 1 --class_name capsules --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k1_visa_capsules.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 1 --class_name cashew --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k1_visa_cashew.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 1 --class_name chewinggum --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k1_visa_chewinggum.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 1 --class_name fryum --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k1_visa_fryum.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 1 --class_name macaroni1 --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k1_visa_macaroni1.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 1 --class_name macaroni2 --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k1_visa_macaroni2.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 1 --class_name pcb1 --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k1_visa_pcb1.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 1 --class_name pcb2 --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k1_visa_pcb2.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 1 --class_name pcb3 --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k1_visa_pcb3.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 1 --class_name pcb4 --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k1_visa_pcb4.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 1 --class_name pipe_fryum --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k1_visa_pipe_fryum.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 2 --class_name carpet --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k2_mvtec_carpet.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 2 --class_name grid --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k2_mvtec_grid.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 2 --class_name leather --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k2_mvtec_leather.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 2 --class_name tile --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k2_mvtec_tile.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 2 --class_name wood --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k2_mvtec_wood.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 2 --class_name bottle --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k2_mvtec_bottle.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 2 --class_name cable --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k2_mvtec_cable.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 2 --class_name capsule --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k2_mvtec_capsule.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 2 --class_name hazelnut --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k2_mvtec_hazelnut.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 2 --class_name metal_nut --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k2_mvtec_metal_nut.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 2 --class_name pill --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k2_mvtec_pill.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 2 --class_name screw --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k2_mvtec_screw.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 2 --class_name toothbrush --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k2_mvtec_toothbrush.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 2 --class_name transistor --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k2_mvtec_transistor.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 2 --class_name zipper --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k2_mvtec_zipper.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 2 --class_name candle --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k2_visa_candle.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 2 --class_name capsules --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k2_visa_capsules.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 2 --class_name cashew --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k2_visa_cashew.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 2 --class_name chewinggum --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k2_visa_chewinggum.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 2 --class_name fryum --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k2_visa_fryum.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 2 --class_name macaroni1 --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k2_visa_macaroni1.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 2 --class_name macaroni2 --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k2_visa_macaroni2.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 2 --class_name pcb1 --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k2_visa_pcb1.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 2 --class_name pcb2 --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k2_visa_pcb2.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 2 --class_name pcb3 --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k2_visa_pcb3.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 2 --class_name pcb4 --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k2_visa_pcb4.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 2 --class_name pipe_fryum --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k2_visa_pipe_fryum.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 4 --class_name carpet --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k4_mvtec_carpet.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 4 --class_name grid --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k4_mvtec_grid.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 4 --class_name leather --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k4_mvtec_leather.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 4 --class_name tile --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k4_mvtec_tile.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 4 --class_name wood --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k4_mvtec_wood.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 4 --class_name bottle --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k4_mvtec_bottle.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 4 --class_name cable --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k4_mvtec_cable.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 4 --class_name capsule --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k4_mvtec_capsule.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 4 --class_name hazelnut --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k4_mvtec_hazelnut.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 4 --class_name metal_nut --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k4_mvtec_metal_nut.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 4 --class_name pill --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k4_mvtec_pill.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 4 --class_name screw --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k4_mvtec_screw.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 4 --class_name toothbrush --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k4_mvtec_toothbrush.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 4 --class_name transistor --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k4_mvtec_transistor.log 2>&1
+python train_seg.py --dataset mvtec --gpu-id 0 --k-shot 4 --class_name zipper --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k4_mvtec_zipper.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 4 --class_name candle --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k4_visa_candle.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 4 --class_name capsules --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k4_visa_capsules.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 4 --class_name cashew --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k4_visa_cashew.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 4 --class_name chewinggum --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k4_visa_chewinggum.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 4 --class_name fryum --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k4_visa_fryum.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 4 --class_name macaroni1 --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k4_visa_macaroni1.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 4 --class_name macaroni2 --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k4_visa_macaroni2.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 4 --class_name pcb1 --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k4_visa_pcb1.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 4 --class_name pcb2 --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k4_visa_pcb2.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 4 --class_name pcb3 --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k4_visa_pcb3.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 4 --class_name pcb4 --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k4_visa_pcb4.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 4 --class_name pipe_fryum --root-dir ./output_max_fusion > ./output_max_fusion/seg_logs/k4_visa_pipe_fryum.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 1 --class_name candle --root-dir ./result/baseline > ./result/baseline/seg_logs/k1_visa_candle.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 1 --class_name capsules --root-dir ./result/baseline > ./result/baseline/seg_logs/k1_visa_capsules.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 1 --class_name cashew --root-dir ./result/baseline > ./result/baseline/seg_logs/k1_visa_cashew.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 1 --class_name chewinggum --root-dir ./result/baseline > ./result/baseline/seg_logs/k1_visa_chewinggum.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 1 --class_name fryum --root-dir ./result/baseline > ./result/baseline/seg_logs/k1_visa_fryum.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 1 --class_name macaroni1 --root-dir ./result/baseline > ./result/baseline/seg_logs/k1_visa_macaroni1.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 1 --class_name macaroni2 --root-dir ./result/baseline > ./result/baseline/seg_logs/k1_visa_macaroni2.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 1 --class_name pcb1 --root-dir ./result/baseline > ./result/baseline/seg_logs/k1_visa_pcb1.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 1 --class_name pcb2 --root-dir ./result/baseline > ./result/baseline/seg_logs/k1_visa_pcb2.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 1 --class_name pcb3 --root-dir ./result/baseline > ./result/baseline/seg_logs/k1_visa_pcb3.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 1 --class_name pcb4 --root-dir ./result/baseline > ./result/baseline/seg_logs/k1_visa_pcb4.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 1 --class_name pipe_fryum --root-dir ./result/baseline > ./result/baseline/seg_logs/k1_visa_pipe_fryum.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 2 --class_name candle --root-dir ./result/baseline > ./result/baseline/seg_logs/k2_visa_candle.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 2 --class_name capsules --root-dir ./result/baseline > ./result/baseline/seg_logs/k2_visa_capsules.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 2 --class_name cashew --root-dir ./result/baseline > ./result/baseline/seg_logs/k2_visa_cashew.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 2 --class_name chewinggum --root-dir ./result/baseline > ./result/baseline/seg_logs/k2_visa_chewinggum.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 2 --class_name fryum --root-dir ./result/baseline > ./result/baseline/seg_logs/k2_visa_fryum.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 2 --class_name macaroni1 --root-dir ./result/baseline > ./result/baseline/seg_logs/k2_visa_macaroni1.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 2 --class_name macaroni2 --root-dir ./result/baseline > ./result/baseline/seg_logs/k2_visa_macaroni2.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 2 --class_name pcb1 --root-dir ./result/baseline > ./result/baseline/seg_logs/k2_visa_pcb1.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 2 --class_name pcb2 --root-dir ./result/baseline > ./result/baseline/seg_logs/k2_visa_pcb2.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 2 --class_name pcb3 --root-dir ./result/baseline > ./result/baseline/seg_logs/k2_visa_pcb3.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 2 --class_name pcb4 --root-dir ./result/baseline > ./result/baseline/seg_logs/k2_visa_pcb4.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 2 --class_name pipe_fryum --root-dir ./result/baseline > ./result/baseline/seg_logs/k2_visa_pipe_fryum.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 4 --class_name candle --root-dir ./result/baseline > ./result/baseline/seg_logs/k4_visa_candle.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 4 --class_name capsules --root-dir ./result/baseline > ./result/baseline/seg_logs/k4_visa_capsules.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 4 --class_name cashew --root-dir ./result/baseline > ./result/baseline/seg_logs/k4_visa_cashew.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 4 --class_name chewinggum --root-dir ./result/baseline > ./result/baseline/seg_logs/k4_visa_chewinggum.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 4 --class_name fryum --root-dir ./result/baseline > ./result/baseline/seg_logs/k4_visa_fryum.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 4 --class_name macaroni1 --root-dir ./result/baseline > ./result/baseline/seg_logs/k4_visa_macaroni1.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 4 --class_name macaroni2 --root-dir ./result/baseline > ./result/baseline/seg_logs/k4_visa_macaroni2.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 4 --class_name pcb1 --root-dir ./result/baseline > ./result/baseline/seg_logs/k4_visa_pcb1.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 4 --class_name pcb2 --root-dir ./result/baseline > ./result/baseline/seg_logs/k4_visa_pcb2.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 4 --class_name pcb3 --root-dir ./result/baseline > ./result/baseline/seg_logs/k4_visa_pcb3.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 4 --class_name pcb4 --root-dir ./result/baseline > ./result/baseline/seg_logs/k4_visa_pcb4.log 2>&1
+python train_seg.py --dataset visa --gpu-id 0 --k-shot 4 --class_name pipe_fryum --root-dir ./result/baseline > ./result/baseline/seg_logs/k4_visa_pipe_fryum.log 2>&1

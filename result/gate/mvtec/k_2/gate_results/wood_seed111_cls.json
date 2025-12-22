@@ -1,0 +1,39 @@
+{
+  "semantic": {
+    "i_roc": 98.81578947368422,
+    "score_mode": "semantic"
+  },
+  "memory": {
+    "i_roc": 98.85964912280701,
+    "score_mode": "memory"
+  },
+  "max": {
+    "i_roc": 99.3859649122807,
+    "score_mode": "max",
+    "i_roc_semantic": 98.81578947368422,
+    "i_roc_memory": 98.85964912280701,
+    "gap": 0.5263157894736858,
+    "memory_nn_margin_mean": 0.01953125,
+    "memory_nn_margin_std": 0.0011959075927734375
+  },
+  "harmonic": {
+    "i_roc": 99.21052631578947,
+    "score_mode": "harmonic",
+    "i_roc_semantic": 98.81578947368422,
+    "i_roc_memory": 98.85964912280701,
+    "gap": 0.35087719298245723,
+    "memory_nn_margin_mean": 0.01953125,
+    "memory_nn_margin_std": 0.0011959075927734375
+  },
+  "oracle": {
+    "i_roc": 99.64912280701755,
+    "score_mode": "oracle",
+    "i_roc_semantic": 98.81578947368422,
+    "i_roc_memory": 98.85964912280701,
+    "gap": 0.7894736842105288,
+    "oracle_semantic_ratio": 17.72151898734177,
+    "oracle_memory_ratio": 82.27848101265823,
+    "memory_nn_margin_mean": 0.01953125,
+    "memory_nn_margin_std": 0.0011959075927734375
+  }
+}
