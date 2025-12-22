@@ -1,0 +1,180 @@
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:capsules =========================== Image-AUROC:74.16
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:candle =========================== Image-AUROC:95.59
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:cashew =========================== Image-AUROC:93.12
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:chewinggum =========================== Image-AUROC:95.59
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:fryum =========================== Image-AUROC:84.05
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:macaroni1 =========================== Image-AUROC:76.7
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:macaroni2 =========================== Image-AUROC:68.06
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:pcb1 =========================== Image-AUROC:92.25
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:pcb2 =========================== Image-AUROC:78.15
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:pcb3 =========================== Image-AUROC:76.02
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:pcb4 =========================== Image-AUROC:86.74
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:pipe_fryum =========================== Image-AUROC:99.22
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:capsules =========================== Image-AUROC:76.41
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:candle =========================== Image-AUROC:95.4
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:cashew =========================== Image-AUROC:92.28
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:chewinggum =========================== Image-AUROC:95.95
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:fryum =========================== Image-AUROC:86.12
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:macaroni1 =========================== Image-AUROC:85.76
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:macaroni2 =========================== Image-AUROC:77.49
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:pcb1 =========================== Image-AUROC:93.13
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:pcb2 =========================== Image-AUROC:74.89
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:pcb3 =========================== Image-AUROC:73.38
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:pcb4 =========================== Image-AUROC:85.79
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:pipe_fryum =========================== Image-AUROC:98.81
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:capsules =========================== Image-AUROC:70.26
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:candle =========================== Image-AUROC:95.2
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:cashew =========================== Image-AUROC:92.42
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:chewinggum =========================== Image-AUROC:95.84
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:fryum =========================== Image-AUROC:90.15
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:macaroni1 =========================== Image-AUROC:83.5
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:macaroni2 =========================== Image-AUROC:73.26
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:pcb1 =========================== Image-AUROC:93.68
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:pcb2 =========================== Image-AUROC:75.67
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:pcb3 =========================== Image-AUROC:81.9
+
+/home/zju/miniconda3/envs/prompt_ad/lib/python3.10/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Object:pcb4 =========================== Image-AUROC:86.36
+
+Object:pipe_fryum =========================== Image-AUROC:98.6
+
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 1 --class_name candle --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 1 --class_name capsules --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 1 --class_name cashew --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 1 --class_name chewinggum --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 1 --class_name fryum --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 1 --class_name macaroni1 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 1 --class_name macaroni2 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 1 --class_name pcb1 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 1 --class_name pcb2 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 1 --class_name pcb3 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 1 --class_name pcb4 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 1 --class_name pipe_fryum --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 2 --class_name candle --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 2 --class_name capsules --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 2 --class_name cashew --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 2 --class_name chewinggum --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 2 --class_name fryum --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 2 --class_name macaroni1 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 2 --class_name macaroni2 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 2 --class_name pcb1 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 2 --class_name pcb2 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 2 --class_name pcb3 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 2 --class_name pcb4 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 2 --class_name pipe_fryum --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 4 --class_name candle --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 4 --class_name capsules --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 4 --class_name cashew --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 4 --class_name chewinggum --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 4 --class_name fryum --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 4 --class_name macaroni1 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 4 --class_name macaroni2 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 4 --class_name pcb1 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 4 --class_name pcb2 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 4 --class_name pcb3 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 4 --class_name pcb4 --root-dir ./output_max_fusion
+python train_cls.py --dataset visa --gpu-id 0 --k-shot 4 --class_name pipe_fryum --root-dir ./output_max_fusion

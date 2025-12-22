@@ -23,3 +23,7 @@ venv/
 *.lock
 *.md 
 
+# 中间文件
+*.csv
+*.jpg
+*.out

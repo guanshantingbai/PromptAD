@@ -3,17 +3,17 @@ from datasets import dataset_classes
 from multiprocessing import Pool
 
 # 限制 CPU 线程数，避免多进程并行时 CPU 超载
-os.environ['OMP_NUM_THREADS'] = '2'
-os.environ['MKL_NUM_THREADS'] = '2'
-os.environ['OPENBLAS_NUM_THREADS'] = '2'
+os.environ['OMP_NUM_THREADS'] = '3'
+os.environ['MKL_NUM_THREADS'] = '3'
+os.environ['OPENBLAS_NUM_THREADS'] = '3'
 
 if __name__ == '__main__':
 
     pool = Pool(processes=2)
 
-    datasets = ['mvtec', 'visa']
+    datasets = ['visa']  # 只训练visa数据集
     shots = [1, 2, 4]
-    output_dir = './output_max_fusion'  # 指定输出目录
+    output_dir = './result/baseline'  # 修改为baseline目录
     gpu_id = 0
     
     # 创建日志目录
@@ -25,7 +25,7 @@ if __name__ == '__main__':
             classes = dataset_classes[dataset]
             for cls in classes[:]:
                 log_file = os.path.join(log_dir, f'k{shot}_{dataset}_{cls}.log')
-                sh_method = f'python train_cls.py ' \
+                sh_method = f'python train_seg.py ' \
                             f'--dataset {dataset} ' \
                             f'--gpu-id {gpu_id} ' \
                             f'--k-shot {shot} ' \
