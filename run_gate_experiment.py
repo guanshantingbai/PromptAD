@@ -177,7 +177,15 @@ def evaluate_all_modes(base_model, test_dataloader, device, args, output_dir):
                     # Extract features for current sample
                     with torch.no_grad():
                         visual_features = base_model.encode_image(data)
-                        query_feat = visual_features[0]  # (1, D) - global feature
+                        
+                        # visual_features[0]: (B, D) - global CLS token
+                        # visual_features[1]: (B, num_patches, D) - patch tokens
+                        # visual_features[2]: (B, H*W, D) - reshaped patch features for memory
+                        query_feat = visual_features[0]  # (B, D) - Use global CLS token
+                        
+                        # Ensure single sample
+                        if query_feat.shape[0] != 1:
+                            query_feat = query_feat[:1]  # Take first sample if batch
                         
                         # Get semantic and memory scores
                         semantic_score = metadata.get('semantic_scores', [0])[0] if metadata else 0
