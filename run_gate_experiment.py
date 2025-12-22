@@ -95,7 +95,7 @@ def save_per_sample_data(per_sample_data, output_dir, dataset, k_shot, class_nam
     return per_sample_file
 
 
-def evaluate_all_modes(base_model, test_dataloader, device, args, output_dir):
+def evaluate_all_modes(base_model, test_dataloader, train_dataloader, device, args, output_dir):
     """评估所有评分模式并保存结果"""
     
     modes_to_test = ['semantic', 'memory', 'max', 'harmonic', 'oracle']
@@ -108,10 +108,35 @@ def evaluate_all_modes(base_model, test_dataloader, device, args, output_dir):
     reliability_estimator = ReliabilityEstimator(temperature=temperature)
     
     # Calibrate on support set (k-shot normal samples)
-    support_features = base_model.feature_gallery1[:args.k_shot]  # (k_shot, D)
+    # First ensure text features are built (needed for per-prompt scores)
+    base_model.build_text_feature_gallery()
+    
+    # Extract support features and compute per-prompt scores
+    support_cls_features = []
+    support_gallery_features = []
+    
+    for data, mask, label, name, img_type in train_dataloader:
+        data = data.to(device)
+        with torch.no_grad():
+            visual_features = base_model.encode_image(data)
+            support_cls_features.append(visual_features[0])  # CLS token for per-prompt
+            support_gallery_features.append(visual_features[2].mean(dim=1))  # Gallery features
+    
+    support_cls_features = torch.cat(support_cls_features, dim=0)  # (k_shot, D)
+    support_gallery_features = torch.cat(support_gallery_features, dim=0)  # (k_shot, D)
+    
+    # Get per-prompt scores for support set
+    with torch.no_grad():
+        support_prompt_dict = base_model.get_per_prompt_scores(
+            [support_cls_features, None, None, None],  # Minimal structure for CLS
+            task='cls'
+        )
+        support_prompt_scores = support_prompt_dict['normal_prompt_scores']  # (k_shot, n_pro)
+    
     reliability_estimator.calibrate_on_support(
-        support_features=support_features,
-        gallery=base_model.feature_gallery1
+        support_features=support_gallery_features,
+        gallery=base_model.feature_gallery1,
+        prompt_scores_support=support_prompt_scores
     )
     
     print(f"\n{'='*60}")
@@ -134,6 +159,7 @@ def evaluate_all_modes(base_model, test_dataloader, device, args, output_dir):
         gt_masks = []  # For seg task
         all_metadata = []
         per_sample_data = []  # Store per-sample indicators
+        sample_counter = 0  # Global sample counter across batches
         
         # Evaluate
         for batch_idx, (data, mask, label, name, img_type) in enumerate(tqdm(test_dataloader, desc=f'{mode}')):
@@ -174,57 +200,60 @@ def evaluate_all_modes(base_model, test_dataloader, device, args, output_dir):
                 
                 # Compute per-sample reliability indicators (only for oracle mode)
                 if mode == 'oracle' and args.task == 'cls':
-                    # Extract features for current sample
-                    with torch.no_grad():
-                        visual_features = base_model.encode_image(data)
-                        
-                        # visual_features structure (from model.py):
-                        # [0]: (B, D) - global CLS token
-                        # [1]: (B, num_patches, D) - patch tokens
-                        # [2]: (B, H*W, D) - features for gallery1 comparison
-                        # [3]: (B, H*W, D) - features for gallery2 comparison
-                        
-                        # For memory reliability, use visual_features[2] which matches gallery1
-                        query_feat_memory = visual_features[2]  # (B, H*W, D)
-                        # Take mean over patches for a single query vector
-                        query_feat_memory = query_feat_memory.mean(dim=1)  # (B, D)
-                        
-                        # Get semantic and memory scores
-                        semantic_score = metadata.get('semantic_scores', [0])[0] if metadata else 0
-                        memory_score = metadata.get('memory_scores', [0])[0] if metadata else 0
-                        oracle_choice = metadata.get('oracle_choices', [0])[0] if metadata else 0
-                        
-                        # Compute memory reliability
-                        memory_rel = reliability_estimator.compute_memory_reliability(
-                            query_features=query_feat_memory,
-                            gallery=base_model.feature_gallery1,
-                            topk=5
-                        )
-                        
-                        # Compute semantic reliability
-                        # NOTE: We don't have per-prompt scores, so use placeholder values
-                        # TODO: Modify model_modular.py to expose per-prompt semantic scores
-                        semantic_rel = {
-                            'prompt_variance_z': np.array([0.0]),
-                            'prompt_margin_z': np.array([0.0]),
-                            'score_extremity_z': np.array([0.0])
-                        }
-                        
-                        # Store per-sample data
-                        sample_data = {
-                            'sample_id': batch_idx,
-                            'gt_label': int(label[0].item()),
-                            'semantic_score': float(semantic_score),
-                            'memory_score': float(memory_score),
-                            'oracle_choice': int(oracle_choice),
-                            'r_mem_margin': float(memory_rel['nn_margin_z'][0]),
-                            'r_mem_entropy': float(memory_rel['neighbor_entropy_z'][0]),
-                            'r_mem_centroid': float(memory_rel['centroid_similarity_z'][0]),
-                            'r_sem_prompt_var': float(semantic_rel['prompt_variance_z'][0]),
-                            'r_sem_prompt_margin': float(semantic_rel['prompt_margin_z'][0]),
-                            'r_sem_extremity': float(semantic_rel['score_extremity_z'][0])
-                        }
-                        per_sample_data.append(sample_data)
+                    # Process each sample in the batch
+                    batch_size = data.shape[0]
+                    
+                    for i in range(batch_size):
+                        # Extract features for current sample
+                        with torch.no_grad():
+                            single_data = data[i:i+1]  # Keep batch dimension
+                            visual_features = base_model.encode_image(single_data)
+                            
+                            # visual_features structure (from model.py):
+                            # [0]: (B, D) - global CLS token
+                            # [1]: (B, num_patches, D) - patch tokens
+                            # [2]: (B, H*W, D) - features for gallery1 comparison
+                            # [3]: (B, H*W, D) - features for gallery2 comparison
+                            
+                            # For memory reliability, use visual_features[2] which matches gallery1
+                            query_feat_memory = visual_features[2]  # (1, H*W, D)
+                            # Take mean over patches for a single query vector
+                            query_feat_memory = query_feat_memory.mean(dim=1)  # (1, D)
+                            
+                            # Get semantic and memory scores for this sample
+                            semantic_score = metadata.get('semantic_scores', [0]*batch_size)[i] if metadata else 0
+                            memory_score = metadata.get('memory_scores', [0]*batch_size)[i] if metadata else 0
+                            oracle_choice = metadata.get('selections', [0]*batch_size)[i] if metadata else 0
+                            
+                            # Compute memory reliability
+                            memory_rel = reliability_estimator.compute_memory_reliability(
+                                query_features=query_feat_memory,
+                                gallery=base_model.feature_gallery1,
+                                topk=5
+                            )
+                            
+                            # Compute semantic reliability using REAL per-prompt scores
+                            prompt_score_dict = base_model.get_per_prompt_scores(visual_features, task='cls')
+                            prompt_scores = prompt_score_dict['normal_prompt_scores'][0:1]  # (1, n_pro)
+                            
+                            semantic_rel = reliability_estimator.compute_semantic_reliability(prompt_scores)
+                            
+                            # Store per-sample data
+                            sample_data = {
+                                'sample_id': sample_counter,
+                                'gt_label': int(label[i].item()),
+                                'semantic_score': float(semantic_score),
+                                'memory_score': float(memory_score),
+                                'oracle_choice': int(oracle_choice),
+                                'r_mem_margin': float(memory_rel['nn_margin_z'][0]),
+                                'r_mem_entropy': float(memory_rel['neighbor_entropy_z'][0]),
+                                'r_mem_centroid': float(memory_rel['centroid_similarity_z'][0]),
+                                'r_sem_prompt_var': float(semantic_rel['prompt_variance_z'][0]),
+                                'r_sem_prompt_margin': float(semantic_rel['prompt_margin_z'][0]),
+                                'r_sem_extremity': float(semantic_rel['score_extremity_z'][0])
+                            }
+                            per_sample_data.append(sample_data)
+                            sample_counter += 1
         
         # Merge metadata from all batches
         merged_metadata = None
@@ -431,9 +460,15 @@ def main(args):
         print(f"加载检查点: {checkpoint_path}")
         base_model.load_state_dict(torch.load(checkpoint_path), strict=False)
         print(f"✓ 记忆库已从检查点恢复")
+        
+        # CRITICAL: Rebuild text features from learned prompts
+        # The checkpoint only saves feature galleries and text_features buffer,
+        # but text_features needs to be recomputed from the learned prompt parameters
+        base_model.build_text_feature_gallery()
+        print(f"✓ 语义文本特征已从学习的prompts重建")
     
     # Evaluate all modes
-    all_results = evaluate_all_modes(base_model, test_dataloader, device, args, args.root_dir)
+    all_results = evaluate_all_modes(base_model, test_dataloader, train_dataloader, device, args, args.root_dir)
     
     # Save results summary
     result_dir = Path(args.root_dir) / args.dataset / f'k_{args.k_shot}' / 'gate_results'

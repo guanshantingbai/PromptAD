@@ -1,11 +1,15 @@
 #!/bin/bash
 
-# Phase 2.1: Run 5 representative classes with REAL indicator computation
+# Activate conda environment
+source ~/miniconda3/bin/activate prompt_ad
+
+# Phase 2.1 FIXED: Run 5 representative classes with REAL indicator computation
 # This script will compute per-sample reliability indicators for selected classes
+# FIXED: Per-prompt scores, centroid normalization, entropy handling
 
 DEVICE="cuda:0"
-OUTPUT_DIR="result/gate2"
-CHECKPOINT_DIR="result/gate"  # Use existing checkpoints
+OUTPUT_DIR="result_gate"  # Use result_gate (same as training)
+CHECKPOINT_DIR="result_gate"  # Use existing checkpoints from result_gate
 
 echo "=============================================="
 echo "Phase 2.1: REAL Indicator Computation"
@@ -74,7 +78,7 @@ echo "Phase 2.1 Real Computation Complete!"
 echo "=============================================="
 echo ""
 echo "Next steps:"
-echo "1. Run analysis: python phase2_1_oracle_correlation.py --use-real-data --dataset mvtec visa --k-shot 4 --task cls"
-echo "2. Check results in result/gate2/*/per_sample/"
+echo "1. Run analysis: python phase2_1_oracle_correlation.py --use-real-data --datasets mvtec visa --k-shots 4 --task cls --result_dir result_gate"
+echo "2. Check results in result_gate/*/per_sample/"
 echo "3. Review AUC scores to decide next phase"
 echo ""

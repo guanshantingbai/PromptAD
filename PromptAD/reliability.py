@@ -91,6 +91,12 @@ class ReliabilityEstimator:
         self.support_stats['entropy_median'] = np.median(entropies)
         self.support_stats['entropy_mad'] = np.median(np.abs(entropies - np.median(entropies)))
         
+        # Compute centroid statistics on support set
+        gallery_centroid = gallery.mean(dim=0, keepdim=True)  # (1, D)
+        centroid_sims = (support_features @ gallery_centroid.t()).squeeze(-1).cpu().numpy()  # (k_shot,)
+        self.support_stats['centroid_sim_median'] = np.median(centroid_sims)
+        self.support_stats['centroid_sim_mad'] = np.median(np.abs(centroid_sims - np.median(centroid_sims)))
+        
         # === Semantic branch statistics ===
         if prompt_scores_support is not None:
             # Prompt variance across support samples
@@ -140,16 +146,29 @@ class ReliabilityEstimator:
         
         # Normalize (note: lower entropy = more reliable, so negate)
         entropy_median = self.support_stats.get('entropy_median', 1.0)
-        entropy_mad = self.support_stats.get('entropy_mad', 0.1) + 1e-6
-        entropy_z = -(entropies - entropy_median) / entropy_mad  # Negate so higher = better
+        entropy_mad = self.support_stats.get('entropy_mad', 0.1)
+        
+        # Handle degenerate case: if MAD=0, entropy is constant across support set
+        if entropy_mad < 1e-6:
+            # Mark as invalid - cannot distinguish samples
+            entropy_z = np.full_like(entropies, np.nan)
+        else:
+            entropy_z = -(entropies - entropy_median) / entropy_mad  # Negate so higher = better
         
         # === 3. Distance to Support Center (additional indicator) ===
         # Centroid of gallery
         gallery_centroid = gallery.mean(dim=0, keepdim=True)  # (1, D)
         centroid_sim = (query_features @ gallery_centroid.t()).squeeze(-1).cpu().numpy()  # (N,)
         
-        # Normalize (higher similarity = closer to support = more reliable for normal)
-        centroid_sim_z = (centroid_sim - centroid_sim.mean()) / (centroid_sim.std() + 1e-6)
+        # Normalize using support set statistics (NOT batch statistics)
+        centroid_median = self.support_stats.get('centroid_sim_median', 0.5)
+        centroid_mad = self.support_stats.get('centroid_sim_mad', 0.1)
+        
+        if centroid_mad < 1e-6:
+            # Degenerate case: all support samples have same centroid similarity
+            centroid_sim_z = np.full_like(centroid_sim, np.nan)
+        else:
+            centroid_sim_z = (centroid_sim - centroid_median) / centroid_mad
         
         return {
             'nn_margin_z': nn_margin_z,

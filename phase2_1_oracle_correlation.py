@@ -50,6 +50,22 @@ def load_oracle_and_indicators(result_dir, dataset, k_shot, task, class_name, us
             # Extract arrays
             oracle_choices = np.array([s['oracle_choice'] for s in per_sample_data])
             
+            # Also load gate_results for AUROC scores
+            gate_result_path = Path(result_dir) / dataset / f"k_{k_shot}" / "gate_results" / f"{class_name}_seed111_{task}.json"
+            gate_aurocs = {}
+            if gate_result_path.exists():
+                with open(gate_result_path, 'r') as f:
+                    gate_results = json.load(f)
+                gate_aurocs = {
+                    'semantic_auroc': gate_results.get('semantic', {}).get('i_roc', 0.0),
+                    'memory_auroc': gate_results.get('memory', {}).get('i_roc', 0.0),
+                    'oracle_auroc': gate_results.get('oracle', {}).get('i_roc', 0.0),
+                    'oracle_gain': gate_results.get('oracle', {}).get('i_roc', 0.0) - max(
+                        gate_results.get('semantic', {}).get('i_roc', 0.0),
+                        gate_results.get('memory', {}).get('i_roc', 0.0)
+                    )
+                }
+            
             return {
                 'oracle_choices': oracle_choices,
                 'indicators': {
@@ -61,7 +77,8 @@ def load_oracle_and_indicators(result_dir, dataset, k_shot, task, class_name, us
                     'r_sem_extremity': np.array([s['r_sem_extremity'] for s in per_sample_data])
                 },
                 'semantic_ratio': 1 - oracle_choices.mean(),
-                'has_per_sample_data': True
+                'has_per_sample_data': True,
+                **gate_aurocs
             }
     
     # Fallback to aggregated statistics
@@ -116,18 +133,39 @@ def analyze_oracle_selection_summary(results_dict, output_dir):
         if data is None:
             continue
         
-        summary_data.append({
-            'dataset': dataset,
-            'k_shot': k_shot,
-            'task': task,
-            'class': class_name,
-            'semantic_ratio': data['semantic_ratio'],
-            'memory_ratio': data['memory_ratio'],
-            'semantic_auroc': data['semantic_auroc'],
-            'memory_auroc': data['memory_auroc'],
-            'oracle_auroc': data['oracle_auroc'],
-            'oracle_gain': data['oracle_gain']
-        })
+        # Handle both aggregated and per-sample data
+        if data.get('has_per_sample_data', False):
+            # Compute ratios from per-sample oracle_choices
+            oracle_choices = data.get('oracle_choices', np.array([]))
+            semantic_ratio = (oracle_choices == 0).mean() if len(oracle_choices) > 0 else 0.5
+            memory_ratio = (oracle_choices == 1).mean() if len(oracle_choices) > 0 else 0.5
+            
+            summary_data.append({
+                'dataset': dataset,
+                'k_shot': k_shot,
+                'task': task,
+                'class': class_name,
+                'semantic_ratio': semantic_ratio,
+                'memory_ratio': memory_ratio,
+                'semantic_auroc': data.get('semantic_auroc', 0.0),
+                'memory_auroc': data.get('memory_auroc', 0.0),
+                'oracle_auroc': data.get('oracle_auroc', 0.0),
+                'oracle_gain': data.get('oracle_gain', 0.0)
+            })
+        else:
+            # Use aggregated statistics
+            summary_data.append({
+                'dataset': dataset,
+                'k_shot': k_shot,
+                'task': task,
+                'class': class_name,
+                'semantic_ratio': data['semantic_ratio'],
+                'memory_ratio': data['memory_ratio'],
+                'semantic_auroc': data['semantic_auroc'],
+                'memory_auroc': data['memory_auroc'],
+                'oracle_auroc': data['oracle_auroc'],
+                'oracle_gain': data['oracle_gain']
+            })
     
     df = pd.DataFrame(summary_data)
     

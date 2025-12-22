@@ -290,6 +290,59 @@ class PromptAD(torch.nn.Module):
         avr_abnormal_text_features = avr_abnormal_text_features
         text_features = torch.cat([avr_normal_text_features, avr_abnormal_text_features], dim=0)
         self.text_features.copy_(text_features / text_features.norm(dim=-1, keepdim=True))
+        
+        # Store all prompt features for per-prompt score computation
+        self.all_normal_text_features = normal_text_features  # (n_pro, D)
+        self.all_abnormal_text_features = abnormal_text_features  # (n_pro*n_ab, D)
+
+    @torch.no_grad()
+    def get_per_prompt_scores(self, visual_features, task='cls'):
+        """
+        Get per-prompt anomaly scores for reliability estimation.
+        
+        Args:
+            visual_features: output from encode_image()
+            task: 'cls' or 'seg'
+            
+        Returns:
+            dict with:
+                - 'normal_prompt_scores': (N, n_pro) scores for each normal prompt
+                - 'abnormal_prompt_scores': (N, n_ab) scores for each abnormal prompt
+        """
+        t = self.model.logit_scale
+        
+        if task == 'cls':
+            global_feature = visual_features[0]  # (N, D)
+            N = global_feature.shape[0]
+            
+            # Compute logits for each normal prompt
+            normal_logits = t * global_feature @ self.all_normal_text_features.T  # (N, n_pro)
+            
+            # Compute logits for each abnormal prompt  
+            abnormal_logits = t * global_feature @ self.all_abnormal_text_features.T  # (N, n_ab)
+            
+            # For each prompt pair, compute P(abnormal | prompt)
+            # Stack normal and abnormal for each prompt, then softmax
+            n_pro = self.all_normal_text_features.shape[0]
+            
+            normal_prompt_scores = torch.zeros((N, n_pro), device=global_feature.device)
+            for i in range(n_pro):
+                # For i-th normal prompt, compare with all abnormal prompts
+                # Simplified: use average abnormal logit
+                pair_logits = torch.stack([
+                    normal_logits[:, i],  # normal
+                    abnormal_logits.mean(dim=1)  # average abnormal
+                ], dim=1)  # (N, 2)
+                probs = torch.softmax(pair_logits, dim=1)
+                normal_prompt_scores[:, i] = probs[:, 1]  # P(abnormal)
+            
+            return {
+                'normal_prompt_scores': normal_prompt_scores.cpu(),  # (N, n_pro)
+                'normal_logits': normal_logits.cpu(),
+                'abnormal_logits': abnormal_logits.cpu()
+            }
+        else:
+            raise NotImplementedError("Per-prompt scores only implemented for cls task")
 
     def build_image_feature_gallery(self, features1, features2):
         b1, n1, d1 = features1.shape
