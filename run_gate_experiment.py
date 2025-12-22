@@ -17,6 +17,7 @@ from pathlib import Path
 from datasets import get_dataloader_from_args, dataset_classes
 from PromptAD import PromptAD
 from PromptAD.model_modular import PromptADModular
+from PromptAD.reliability import ReliabilityEstimator
 from utils.metrics_modular import metric_cal_img_modular, analyze_reliability_signals
 from utils.training_utils import setup_seed
 from utils.csv_utils import save_metric
@@ -70,14 +71,49 @@ def save_metadata(metadata, output_dir, dataset, k_shot, class_name, task, score
     return meta_file
 
 
+def save_per_sample_data(per_sample_data, output_dir, dataset, k_shot, class_name, task, seed=111):
+    """保存per-sample reliability indicators和oracle choices"""
+    per_sample_dir = Path(output_dir) / dataset / f'k_{k_shot}' / 'per_sample' / task
+    per_sample_dir.mkdir(parents=True, exist_ok=True)
+    
+    per_sample_file = per_sample_dir / f'{class_name}_seed{seed}_per_sample.json'
+    
+    with open(per_sample_file, 'w') as f:
+        json.dump({
+            'metadata': {
+                'dataset': dataset,
+                'class_name': class_name,
+                'k_shot': k_shot,
+                'task': task,
+                'seed': seed,
+                'n_samples': len(per_sample_data)
+            },
+            'per_sample_data': per_sample_data
+        }, f, indent=2, cls=NumpyEncoder)
+    
+    print(f"   → Per-sample data saved: {per_sample_file}")
+    return per_sample_file
+
+
 def evaluate_all_modes(base_model, test_dataloader, device, args, output_dir):
     """评估所有评分模式并保存结果"""
     
     modes_to_test = ['semantic', 'memory', 'max', 'harmonic', 'oracle']
     all_results = {}
     
+    # Initialize ReliabilityEstimator for per-sample analysis
+    reliability_estimator = ReliabilityEstimator(temperature=base_model.temperature)
+    
+    # Calibrate on support set (k-shot normal samples)
+    support_features = base_model.feature_gallery1[:args.k_shot]  # (k_shot, D)
+    reliability_estimator.calibrate_on_support(
+        support_features=support_features,
+        gallery=base_model.feature_gallery1
+    )
+    
     print(f"\n{'='*60}")
     print(f"评估所有评分模式 - {args.class_name}")
+    print(f"  ✓ ReliabilityEstimator calibrated on {args.k_shot}-shot support")
     print(f"{'='*60}\n")
     
     for mode in modes_to_test:
@@ -93,9 +129,10 @@ def evaluate_all_modes(base_model, test_dataloader, device, args, output_dir):
         gt_list = []
         gt_masks = []  # For seg task
         all_metadata = []
+        per_sample_data = []  # Store per-sample indicators
         
         # Evaluate
-        for data, mask, label, name, img_type in tqdm(test_dataloader, desc=f'{mode}'):
+        for batch_idx, (data, mask, label, name, img_type) in enumerate(tqdm(test_dataloader, desc=f'{mode}')):
             data = data.to(device)
             
             with torch.no_grad():
@@ -130,6 +167,48 @@ def evaluate_all_modes(base_model, test_dataloader, device, args, output_dir):
                 # Collect metadata from each batch
                 if metadata:
                     all_metadata.append(metadata)
+                
+                # Compute per-sample reliability indicators (only for oracle mode)
+                if mode == 'oracle' and args.task == 'cls':
+                    # Extract features for current sample
+                    with torch.no_grad():
+                        visual_features = base_model.encode_image(data)
+                        query_feat = visual_features[0]  # (1, D) - global feature
+                        
+                        # Get semantic and memory scores
+                        semantic_score = metadata.get('semantic_scores', [0])[0] if metadata else 0
+                        memory_score = metadata.get('memory_scores', [0])[0] if metadata else 0
+                        oracle_choice = metadata.get('oracle_choices', [0])[0] if metadata else 0
+                        
+                        # Compute memory reliability
+                        memory_rel = reliability_estimator.compute_memory_reliability(
+                            query_features=query_feat,
+                            gallery=base_model.feature_gallery1,
+                            topk=5
+                        )
+                        
+                        # Compute semantic reliability (simplified - using score extremity)
+                        # TODO: Full implementation needs per-prompt scores
+                        semantic_rel = reliability_estimator.compute_semantic_reliability(
+                            semantic_score=torch.tensor([semantic_score]),
+                            prompt_scores=None  # Placeholder
+                        )
+                        
+                        # Store per-sample data
+                        sample_data = {
+                            'sample_id': batch_idx,
+                            'gt_label': int(label[0].item()),
+                            'semantic_score': float(semantic_score),
+                            'memory_score': float(memory_score),
+                            'oracle_choice': int(oracle_choice),
+                            'r_mem_margin': float(memory_rel['nn_margin_z'][0]),
+                            'r_mem_entropy': float(memory_rel['neighbor_entropy_z'][0]),
+                            'r_mem_centroid': float(memory_rel['centroid_similarity_z'][0]),
+                            'r_sem_prompt_var': float(semantic_rel['prompt_variance_z'][0]),
+                            'r_sem_prompt_margin': float(semantic_rel['prompt_margin_z'][0]),
+                            'r_sem_extremity': float(semantic_rel['score_extremity_z'][0])
+                        }
+                        per_sample_data.append(sample_data)
         
         # Merge metadata from all batches
         merged_metadata = None
@@ -178,6 +257,18 @@ def evaluate_all_modes(base_model, test_dataloader, device, args, output_dir):
                 args.seed
             )
             print(f"   → Metadata saved: {meta_file}")
+        
+        # Save per-sample data (only for oracle mode)
+        if mode == 'oracle' and per_sample_data:
+            save_per_sample_data(
+                per_sample_data,
+                output_dir,
+                args.dataset,
+                args.k_shot,
+                args.class_name,
+                args.task,
+                args.seed
+            )
         
         all_results[mode] = metrics
         

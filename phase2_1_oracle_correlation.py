@@ -23,9 +23,13 @@ import warnings
 warnings.filterwarnings('ignore')
 
 
-def load_oracle_and_indicators(result_dir, dataset, k_shot, task, class_name):
+def load_oracle_and_indicators(result_dir, dataset, k_shot, task, class_name, use_real_data=False):
     """
     Load oracle selection and reliability indicators for a class.
+    
+    Args:
+        use_real_data: If True, load per-sample data from per_sample/ directory
+                       If False, use aggregated statistics from gate_results/
     
     Returns:
         dict with:
@@ -33,8 +37,34 @@ def load_oracle_and_indicators(result_dir, dataset, k_shot, task, class_name):
             - indicators: dict of (N,) arrays
             - metadata: dict with statistics
     """
-    # For now, use oracle selection ratios from gate results
-    # In future, will load per-sample indicators from metadata
+    # Try loading per-sample data first (if use_real_data=True)
+    if use_real_data:
+        per_sample_path = Path(result_dir) / dataset / f"k_{k_shot}" / "per_sample" / task / f"{class_name}_seed111_per_sample.json"
+        
+        if per_sample_path.exists():
+            with open(per_sample_path, 'r') as f:
+                per_sample_json = json.load(f)
+            
+            per_sample_data = per_sample_json['per_sample_data']
+            
+            # Extract arrays
+            oracle_choices = np.array([s['oracle_choice'] for s in per_sample_data])
+            
+            return {
+                'oracle_choices': oracle_choices,
+                'indicators': {
+                    'r_mem_margin': np.array([s['r_mem_margin'] for s in per_sample_data]),
+                    'r_mem_entropy': np.array([s['r_mem_entropy'] for s in per_sample_data]),
+                    'r_mem_centroid': np.array([s['r_mem_centroid'] for s in per_sample_data]),
+                    'r_sem_prompt_var': np.array([s['r_sem_prompt_var'] for s in per_sample_data]),
+                    'r_sem_prompt_margin': np.array([s['r_sem_prompt_margin'] for s in per_sample_data]),
+                    'r_sem_extremity': np.array([s['r_sem_extremity'] for s in per_sample_data])
+                },
+                'semantic_ratio': 1 - oracle_choices.mean(),
+                'has_per_sample_data': True
+            }
+    
+    # Fallback to aggregated statistics
     result_path = Path(result_dir) / dataset / f"k_{k_shot}" / "gate_results" / f"{class_name}_seed111_{task}.json"
     
     if not result_path.exists():
@@ -62,7 +92,8 @@ def load_oracle_and_indicators(result_dir, dataset, k_shot, task, class_name):
         'oracle_gain': oracle_data.get('i_roc', 0.0) - max(
             oracle_data.get('i_roc_semantic', 0.0),
             oracle_data.get('i_roc_memory', 0.0)
-        )
+        ),
+        'has_per_sample_data': False
     }
 
 
@@ -286,6 +317,8 @@ def main():
     parser.add_argument('--task', type=str, default='cls',
                        choices=['cls', 'seg'],
                        help='Task type')
+    parser.add_argument('--use_real_data', action='store_true',
+                       help='Use real per-sample data from per_sample/ directory')
     args = parser.parse_args()
     
     # Create output directory
@@ -315,21 +348,27 @@ def main():
     print(f"Datasets: {args.datasets}")
     print(f"K-shots: {args.k_shots}")
     print(f"Task: {args.task}")
+    print(f"Use real data: {args.use_real_data}")
     
     # Load all results
     results_dict = {}
+    has_per_sample_count = 0
     
     for dataset in args.datasets:
         for k_shot in args.k_shots:
             for class_name in class_lists.get(dataset, []):
                 data = load_oracle_and_indicators(
-                    args.result_dir, dataset, k_shot, args.task, class_name
+                    args.result_dir, dataset, k_shot, args.task, class_name,
+                    use_real_data=args.use_real_data
                 )
                 if data is not None:
                     key = (dataset, k_shot, args.task, class_name)
                     results_dict[key] = data
+                    if data.get('has_per_sample_data', False):
+                        has_per_sample_count += 1
     
     print(f"\n✅ Loaded data for {len(results_dict)} class configurations")
+    print(f"   Classes with per-sample data: {has_per_sample_count}")
     
     # Task 1: Oracle Selection Summary
     df_summary = analyze_oracle_selection_summary(results_dict, args.output_dir)
@@ -337,21 +376,130 @@ def main():
     # Task 4: Hard-case analysis
     analyze_hard_cases(results_dict, hard_classes, args.output_dir)
     
-    # NOTE: Tasks 2 & 3 require per-sample indicator data
-    # Currently we only have aggregated statistics
-    print("\n" + "="*80)
-    print("⚠️  IMPORTANT NOTE")
-    print("="*80)
-    print("Tasks 2 & 3 (indicator distribution and AUC analysis) require per-sample data.")
-    print("Current implementation only loads aggregated statistics from gate results.")
-    print("\nNext steps:")
-    print("1. Modify run_gate_experiment.py to save per-sample indicators in metadata")
-    print("2. Re-run gate experiments with indicator computation")
-    print("3. Update this script to load per-sample data")
-    print("4. Then Tasks 2 & 3 can be completed")
+    # Tasks 2 & 3: Indicator analysis (only if we have per-sample data)
+    if has_per_sample_count > 0:
+        print("\n" + "="*80)
+        print("Tasks 2 & 3: Per-Sample Indicator Analysis")
+        print("="*80)
+        print(f"Analyzing {has_per_sample_count} classes with per-sample data...\n")
+        
+        all_auc_results = []
+        
+        for key, data in results_dict.items():
+            if not data.get('has_per_sample_data', False):
+                continue
+            
+            dataset, k_shot, task, class_name = key
+            print(f"\n{'='*60}")
+            print(f"{dataset}/{class_name} (k={k_shot})")
+            print(f"{'='*60}")
+            
+            oracle_choices = data['oracle_choices']
+            indicators = data['indicators']
+            
+            print(f"  Samples: {len(oracle_choices)}")
+            print(f"  Semantic ratio: {(oracle_choices == 0).mean()*100:.1f}%")
+            
+            # Task 2: Distribution analysis
+            print("\n  📊 Task 2: Indicator Distribution")
+            for name, values in indicators.items():
+                sem_mask = oracle_choices == 0
+                mem_mask = oracle_choices == 1
+                sem_vals = values[sem_mask]
+                mem_vals = values[mem_mask]
+                
+                if len(sem_vals) > 0 and len(mem_vals) > 0:
+                    pooled_std = np.sqrt((sem_vals.std()**2 + mem_vals.std()**2) / 2)
+                    cohens_d = (mem_vals.mean() - sem_vals.mean()) / (pooled_std + 1e-8)
+                    t_stat, p_value = stats.ttest_ind(sem_vals, mem_vals)
+                    
+                    sig = '***' if p_value < 0.001 else '**' if p_value < 0.01 else '*' if p_value < 0.05 else 'ns'
+                    print(f"    {name:20s}: d={cohens_d:+.3f}, p={p_value:.4f} {sig}")
+            
+            # Task 3: AUC analysis
+            print("\n  📊 Task 3: Oracle Predictability (AUC)")
+            auc_scores = {}
+            
+            for name, values in indicators.items():
+                # Memory indicators: high -> memory (1)
+                # Semantic indicators: high -> semantic (0), invert
+                if name.startswith('r_sem'):
+                    y_score = -values
+                else:
+                    y_score = values
+                
+                try:
+                    if len(np.unique(oracle_choices)) > 1 and len(np.unique(y_score)) > 1:
+                        auc = roc_auc_score(oracle_choices, y_score)
+                        auc_scores[name] = auc
+                        print(f"    {name:20s}: AUC = {auc:.3f}")
+                    else:
+                        auc_scores[name] = 0.5
+                        print(f"    {name:20s}: AUC = 0.500 (uniform)")
+                except Exception as e:
+                    auc_scores[name] = 0.5
+                    print(f"    {name:20s}: AUC = 0.500 (error)")
+            
+            # Average AUCs
+            mem_auc = np.mean([auc_scores.get(f'r_mem_{x}', 0.5) for x in ['margin', 'entropy', 'centroid']])
+            sem_auc = np.mean([auc_scores.get(f'r_sem_{x}', 0.5) for x in ['prompt_var', 'prompt_margin', 'extremity']])
+            
+            print(f"\n    Memory avg AUC:   {mem_auc:.3f}")
+            print(f"    Semantic avg AUC: {sem_auc:.3f}")
+            print(f"    Overall avg AUC:  {(mem_auc + sem_auc)/2:.3f}")
+            
+            auc_results = {
+                'dataset': dataset,
+                'class_name': class_name,
+                'k_shot': k_shot,
+                **auc_scores,
+                'memory_avg_auc': mem_auc,
+                'semantic_avg_auc': sem_auc,
+                'overall_avg_auc': (mem_auc + sem_auc) / 2
+            }
+            all_auc_results.append(auc_results)
+        
+        # Save AUC results
+        if all_auc_results:
+            auc_df = pd.DataFrame(all_auc_results)
+            auc_file = Path(args.output_dir) / 'indicator_auc_results.csv'
+            auc_df.to_csv(auc_file, index=False)
+            print(f"\n✅ Saved AUC results: {auc_file}")
+            
+            # Summary
+            print("\n" + "="*80)
+            print("SUMMARY: Indicator AUC Performance")
+            print("="*80)
+            print(f"Average Memory indicator AUC:   {auc_df['memory_avg_auc'].mean():.3f}")
+            print(f"Average Semantic indicator AUC: {auc_df['semantic_avg_auc'].mean():.3f}")
+            print(f"Overall average AUC:            {auc_df['overall_avg_auc'].mean():.3f}")
+            
+            avg_auc = auc_df['overall_avg_auc'].mean()
+            print("\n💡 Interpretation:")
+            if avg_auc > 0.60:
+                print("✅ Hypothesis validated! Indicators correlate with oracle choices.")
+                print("   Proceed to Phase 2.2: Design adaptive gating mechanism.")
+            elif avg_auc > 0.55:
+                print("⚠️  Weak correlation detected. Consider:")
+                print("   - Adding more indicators")
+                print("   - Improving normalization")
+                print("   - Class-specific calibration")
+            else:
+                print("❌ No significant correlation. Consider:")
+                print("   - Re-examining indicator design")
+                print("   - Meta-learning approach")
+                print("   - Alternative gating strategies")
+    else:
+        print("\n" + "="*80)
+        print("⚠️  TASKS 2 & 3 SKIPPED")
+        print("="*80)
+        print("No per-sample data available.")
+        print("\nTo generate per-sample data:")
+        print("1. Run: ./run_phase2_1_real.sh")
+        print("2. Then re-run this analysis with --use_real_data flag")
     
     print("\n" + "="*80)
-    print("Phase 2.1 Analysis Complete (Partial)")
+    print("Phase 2.1 Analysis Complete")
     print("="*80)
     print(f"Results saved to: {args.output_dir}")
 
