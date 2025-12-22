@@ -102,7 +102,10 @@ def evaluate_all_modes(base_model, test_dataloader, device, args, output_dir):
     all_results = {}
     
     # Initialize ReliabilityEstimator for per-sample analysis
-    reliability_estimator = ReliabilityEstimator(temperature=base_model.temperature)
+    # Note: PromptAD uses logit_scale, convert to temperature (t = exp(logit_scale))
+    logit_scale = base_model.model.logit_scale.exp().item()
+    temperature = 1.0 / logit_scale if logit_scale > 0 else 0.07
+    reliability_estimator = ReliabilityEstimator(temperature=temperature)
     
     # Calibrate on support set (k-shot normal samples)
     support_features = base_model.feature_gallery1[:args.k_shot]  # (k_shot, D)
@@ -114,6 +117,7 @@ def evaluate_all_modes(base_model, test_dataloader, device, args, output_dir):
     print(f"\n{'='*60}")
     print(f"评估所有评分模式 - {args.class_name}")
     print(f"  ✓ ReliabilityEstimator calibrated on {args.k_shot}-shot support")
+    print(f"  ✓ Temperature: {temperature:.4f}")
     print(f"{'='*60}\n")
     
     for mode in modes_to_test:
