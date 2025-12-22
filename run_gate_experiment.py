@@ -178,14 +178,16 @@ def evaluate_all_modes(base_model, test_dataloader, device, args, output_dir):
                     with torch.no_grad():
                         visual_features = base_model.encode_image(data)
                         
-                        # visual_features[0]: (B, D) - global CLS token
-                        # visual_features[1]: (B, num_patches, D) - patch tokens
-                        # visual_features[2]: (B, H*W, D) - reshaped patch features for memory
-                        query_feat = visual_features[0]  # (B, D) - Use global CLS token
+                        # visual_features structure (from model.py):
+                        # [0]: (B, D) - global CLS token
+                        # [1]: (B, num_patches, D) - patch tokens
+                        # [2]: (B, H*W, D) - features for gallery1 comparison
+                        # [3]: (B, H*W, D) - features for gallery2 comparison
                         
-                        # Ensure single sample
-                        if query_feat.shape[0] != 1:
-                            query_feat = query_feat[:1]  # Take first sample if batch
+                        # For memory reliability, use visual_features[2] which matches gallery1
+                        query_feat_memory = visual_features[2]  # (B, H*W, D)
+                        # Take mean over patches for a single query vector
+                        query_feat_memory = query_feat_memory.mean(dim=1)  # (B, D)
                         
                         # Get semantic and memory scores
                         semantic_score = metadata.get('semantic_scores', [0])[0] if metadata else 0
@@ -194,7 +196,7 @@ def evaluate_all_modes(base_model, test_dataloader, device, args, output_dir):
                         
                         # Compute memory reliability
                         memory_rel = reliability_estimator.compute_memory_reliability(
-                            query_features=query_feat,
+                            query_features=query_feat_memory,
                             gallery=base_model.feature_gallery1,
                             topk=5
                         )
