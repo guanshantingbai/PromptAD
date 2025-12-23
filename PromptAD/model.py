@@ -422,18 +422,28 @@ class PromptAD(torch.nn.Module):
 
         return score.reshape((N, grid_h, grid_w)).unsqueeze(1)
 
-    def forward(self, images, task):
-
+    def forward(self, images, task, training_mode=False):
+        """
+        Forward pass for the model.
+        
+        Args:
+            images: Input images
+            task: 'cls' or 'seg'
+            training_mode: If True, only compute semantic branch (for training)
+                          If False, compute both branches (for evaluation)
+        """
         visual_features = self.encode_image(images)
         if task == 'seg':
             textual_anomaly_map = self.calculate_textual_anomaly_score(visual_features, 'seg')
 
-            visual_anomaly_map = self.calculate_visual_anomaly_score(visual_features)
-            #
-            anomaly_map = torch.maximum(textual_anomaly_map, visual_anomaly_map)
-            # anomaly_map = 0.5 * (textual_anomaly_map + visual_anomaly_map)
-            # anomaly_map = visual_anomaly_map
-            # anomaly_map = textual_anomaly_map
+            if training_mode:
+                # During training, only return semantic branch scores
+                # Memory branch should not participate in gradient computation
+                anomaly_map = textual_anomaly_map
+            else:
+                # During evaluation, compute both branches and fuse
+                visual_anomaly_map = self.calculate_visual_anomaly_score(visual_features)
+                anomaly_map = torch.maximum(textual_anomaly_map, visual_anomaly_map)
 
             anomaly_map = F.interpolate(anomaly_map, size=(self.out_size_h, self.out_size_w), mode='bilinear', align_corners=False)
 
@@ -450,23 +460,29 @@ class PromptAD(torch.nn.Module):
         elif task == 'cls':
             textual_anomaly = self.calculate_textual_anomaly_score(visual_features, 'cls')
 
-            visual_anomaly_map = self.calculate_visual_anomaly_score(visual_features)
+            if training_mode:
+                # During training, only return semantic branch scores
+                # Memory branch does not participate in gradient computation
+                return textual_anomaly, None
+            else:
+                # During evaluation, compute both branches
+                visual_anomaly_map = self.calculate_visual_anomaly_score(visual_features)
 
-            anomaly_map = F.interpolate(visual_anomaly_map, size=(self.out_size_h, self.out_size_w), mode='bilinear',
-                                        align_corners=False)
+                anomaly_map = F.interpolate(visual_anomaly_map, size=(self.out_size_h, self.out_size_w), mode='bilinear',
+                                            align_corners=False)
 
-            am_pix = anomaly_map.squeeze(1).numpy()
+                am_pix = anomaly_map.squeeze(1).numpy()
 
-            am_pix_list = []
+                am_pix_list = []
 
-            for i in range(am_pix.shape[0]):
-                am_pix_list.append(am_pix[i])
+                for i in range(am_pix.shape[0]):
+                    am_pix_list.append(am_pix[i])
 
-            am_img_list = []
-            for i in range(textual_anomaly.shape[0]):
-                am_img_list.append(textual_anomaly[i])
+                am_img_list = []
+                for i in range(textual_anomaly.shape[0]):
+                    am_img_list.append(textual_anomaly[i])
 
-            return am_img_list, am_pix_list
+                return am_img_list, am_pix_list
         else:
             assert 'task error'
 
