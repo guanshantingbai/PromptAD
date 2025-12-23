@@ -92,7 +92,7 @@ run_task() {
         --dataset $dataset \
         --class_name $class \
         --k-shot $K_SHOT \
-        --Seed $SEED \
+        --seed $SEED \
         --Epoch $EPOCH \
         --gpu-id $GPU \
         --root-dir $OUTPUT_DIR \
