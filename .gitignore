@@ -32,3 +32,4 @@ result/**/*.png
 !*.csv
 !*.json
 !*.sh
+result_gate/**/*.pt
