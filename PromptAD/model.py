@@ -412,10 +412,12 @@ class PromptAD(torch.nn.Module):
 
     def forward(self, images, task):
         """
-        Forward pass with harmonic mean fusion (numerator = 1).
+        Forward pass.
         
-        Fusion formula: score = 1 / (1/semantic + 1/visual)
-        This is the harmonic mean with numerator = 1 instead of 2.
+        For SEG task: Returns fused pixel-level anomaly maps (harmonic mean fusion done in model).
+        For CLS task: Returns independent semantic and visual branches (fusion done in metric_cal_img).
+        
+        This matches baseline's implementation where CLS fusion happens in utils/metrics.py.
         """
         visual_features = self.encode_image(images)
         
@@ -448,45 +450,33 @@ class PromptAD(torch.nn.Module):
             return am_pix_list
 
         elif task == 'cls':
-            # Compute both semantic and visual anomaly scores
+            # CLS task: Return independent semantic and visual branches
+            # Fusion will be done in metric_cal_img (utils/metrics.py)
+            # This matches baseline's implementation
+            
+            # 1. Compute semantic branch score (multi-prototype)
             textual_anomaly = self.calculate_textual_anomaly_score(visual_features, 'cls')
             
-            # Visual anomaly: calculate_visual_anomaly_score returns patch-level map
-            # For cls, we need to extract image-level score from the map
-            visual_anomaly_map_for_cls = self.calculate_visual_anomaly_score(visual_features)
-            # Take max over patches for image-level score
-            visual_anomaly = visual_anomaly_map_for_cls.reshape(visual_anomaly_map_for_cls.shape[0], -1).max(axis=1)[0].detach().cpu().numpy()
-            
-            # Harmonic mean fusion with numerator = 1 for image-level score
-            eps = 1e-10
-            textual_anomaly = np.clip(textual_anomaly, eps, None)
-            visual_anomaly = np.clip(visual_anomaly, eps, None)
-            
-            fused_anomaly = 1.0 / (1.0/textual_anomaly + 1.0/visual_anomaly)
-
-            # For cls task, also compute pixel-level anomaly map
-            textual_anomaly_map = self.calculate_textual_anomaly_score(visual_features, 'seg')
+            # 2. Compute visual branch pixel-level map (for fusion in metric_cal_img)
             visual_anomaly_map = self.calculate_visual_anomaly_score(visual_features)
             
-            # Harmonic fusion for pixel-level
-            textual_anomaly_map = textual_anomaly_map.clamp(min=eps)
-            visual_anomaly_map = visual_anomaly_map.clamp(min=eps)
+            # Interpolate to output resolution
+            anomaly_map = F.interpolate(visual_anomaly_map, 
+                                       size=(self.out_size_h, self.out_size_w), 
+                                       mode='bilinear', 
+                                       align_corners=False)
             
-            anomaly_map = 1.0 / (1.0/textual_anomaly_map + 1.0/visual_anomaly_map)
-            anomaly_map = F.interpolate(anomaly_map, size=(self.out_size_h, self.out_size_w), mode='bilinear',
-                                        align_corners=False)
-
             am_pix = anomaly_map.squeeze(1).detach().cpu().numpy()
-
             am_pix_list = []
-
             for i in range(am_pix.shape[0]):
                 am_pix_list.append(am_pix[i])
-
+            
+            # 3. Return semantic score as image-level score (NOT fused!)
+            # metric_cal_img will do: fusion = 1/(1/semantic + 1/visual_map.max())
             am_img_list = []
-            for i in range(fused_anomaly.shape[0]):
-                am_img_list.append(fused_anomaly[i])
-
+            for i in range(textual_anomaly.shape[0]):
+                am_img_list.append(textual_anomaly[i])
+            
             return am_img_list, am_pix_list
         else:
             raise ValueError(f"Unknown task: {task}")
