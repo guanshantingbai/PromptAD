@@ -223,8 +223,12 @@ class PromptAD(torch.nn.Module):
         self.register_buffer("abnormal_prototypes", torch.zeros((1, self.model.visual.output_dim)))
         
         # Memory bank for visual features (1-NN approach)
-        self.register_buffer("feature_gallery1", torch.zeros((1, self.model.visual.output_dim)))
-        self.register_buffer("feature_gallery2", torch.zeros((1, self.grid_size[0] * self.grid_size[1], self.model.visual.output_dim)))
+        # Use embed_dim (896) not output_dim (640) - matches baseline implementation
+        visual_gallery1 = torch.zeros((self.shot*self.grid_size[0]*self.grid_size[1], self.model.visual.embed_dim))
+        self.register_buffer("feature_gallery1", visual_gallery1)
+        
+        visual_gallery2 = torch.zeros((self.shot*self.grid_size[0]*self.grid_size[1], self.model.visual.embed_dim))
+        self.register_buffer("feature_gallery2", visual_gallery2)
 
         if self.precision == 'fp16':
             self.normal_prototypes = self.normal_prototypes.half()
@@ -301,29 +305,27 @@ class PromptAD(torch.nn.Module):
         self.abnormal_prototypes.copy_(abnormal_text_features)
 
     @torch.no_grad()
-    def build_image_feature_gallery(self, images):
+    def build_image_feature_gallery(self, features1, features2):
         """
-        Build memory bank from training normal samples.
+        Build image feature gallery from training data features.
+        This matches the baseline implementation.
+        
         Args:
-            images: Training normal images [N, C, H, W]
+            features1: [B, N, D] or [B*N, D] tensor from visual layer 1
+            features2: [B, N, D] or [B*N, D] tensor from visual layer 2
         """
-        visual_features = self.encode_image(images)
+        # Handle both 3D [B, N, D] and 2D [B*N, D] inputs
+        if features1.dim() == 3:
+            b1, n1, d1 = features1.shape
+            features1 = features1.reshape(-1, d1)
         
-        # visual_features[0]: global cls token [N, dim]
-        # visual_features[1]: local patch tokens [N, num_patches, dim]
+        if features2.dim() == 3:
+            b2, n2, d2 = features2.shape
+            features2 = features2.reshape(-1, d2)
         
-        global_features = visual_features[0]  # [N, dim]
-        local_features = visual_features[1]   # [N, num_patches, dim]
-        
-        # Accumulate features from all training batches
-        if self.feature_gallery1.shape[0] == 1 and self.feature_gallery1.sum() == 0:
-            # First batch - initialize
-            self.feature_gallery1 = global_features.clone()
-            self.feature_gallery2 = local_features.clone()
-        else:
-            # Subsequent batches - concatenate
-            self.feature_gallery1 = torch.cat([self.feature_gallery1, global_features], dim=0)
-            self.feature_gallery2 = torch.cat([self.feature_gallery2, local_features], dim=0)
+        # Copy normalized features to buffers (baseline implementation)
+        self.feature_gallery1.copy_(F.normalize(features1, dim=-1))
+        self.feature_gallery2.copy_(F.normalize(features2, dim=-1))
 
     def calculate_textual_anomaly_score(self, visual_features, task):
         # t = 100
@@ -381,70 +383,32 @@ class PromptAD(torch.nn.Module):
         else:
             assert 'task error'
 
-    def calculate_visual_anomaly_score(self, visual_features, task):
+    def calculate_visual_anomaly_score(self, visual_features):
         """
-        Calculate anomaly score based on 1-NN distance to memory bank.
-        Lower similarity to normal training samples → higher anomaly score.
+        Calculate patch-level anomaly score based on 1-NN distance to memory bank.
+        Author's implementation - no task parameter, always returns patch-level map.
         
         Args:
-            visual_features: [global_features, local_features]
-            task: 'seg' or 'cls'
+            visual_features: List of [cls, patches, mid_feat1, mid_feat2]
         
         Returns:
-            Anomaly score (higher = more anomalous)
+            Anomaly score map [N, 1, grid_h, grid_w]
         """
-        t = self.model.logit_scale
         N = visual_features[1].shape[0]
-
-        if task == 'seg':
-            # Local patch-level anomaly detection
-            token_features = visual_features[1]  # [N, num_patches, dim]
-            num_patches = token_features.shape[1]
-            
-            # Compute similarity to all memory bank patches
-            # token_features: [N, num_patches, dim]
-            # feature_gallery2: [M, num_patches, dim] where M is number of training samples
-            
-            # Reshape for batch computation
-            token_features_flat = token_features.reshape(N * num_patches, -1)  # [N*num_patches, dim]
-            gallery_features_flat = self.feature_gallery2.reshape(-1, self.feature_gallery2.shape[-1])  # [M*num_patches, dim]
-            
-            # Compute cosine similarity (already normalized)
-            similarity = t * token_features_flat @ gallery_features_flat.T  # [N*num_patches, M*num_patches]
-            
-            # 1-NN: max similarity for each query patch
-            max_similarity, _ = similarity.max(dim=1)  # [N*num_patches]
-            max_similarity = max_similarity.reshape(N, num_patches)  # [N, num_patches]
-            
-            # Convert similarity to anomaly score (1 - similarity)
-            # High similarity to normal samples → low anomaly score
-            visual_anomaly_score = 1 - max_similarity / t  # Normalize by temperature
-            
-            # Reshape to spatial grid
-            grid_h = grid_w = int(num_patches ** 0.5)
-            visual_anomaly_score = visual_anomaly_score.reshape(N, grid_h, grid_w).unsqueeze(1)  # [N, 1, H, W]
-            
-            # Keep on same device as input
-            return visual_anomaly_score
-
-        elif task == 'cls':
-            # Global image-level anomaly detection
-            global_feature = visual_features[0]  # [N, dim]
-            
-            # Compute similarity to all memory bank global features
-            similarity = t * global_feature @ self.feature_gallery1.T  # [N, M]
-            
-            # 1-NN: max similarity
-            max_similarity, _ = similarity.max(dim=1)  # [N]
-            
-            # Convert similarity to anomaly score
-            visual_anomaly_score = 1 - max_similarity / t
-            
-            # Return as numpy for consistency with textual score
-            return visual_anomaly_score.cpu().detach().numpy()
-
-        else:
-            raise ValueError(f"Unknown task: {task}")
+        
+        # Compute 1-NN distance for features1 (gallery1)
+        score1, _ = (1.0 - visual_features[2] @ self.feature_gallery1.t()).min(dim=-1)
+        score1 /= 2.0
+        
+        # Compute 1-NN distance for features2 (gallery2)
+        score2, _ = (1.0 - visual_features[3] @ self.feature_gallery2.t()).min(dim=-1)
+        score2 /= 2.0
+        
+        # Average the two scores (keep on same device as input for fusion)
+        score = 0.5 * (score1 + score2)
+        
+        # Reshape to spatial grid and add channel dimension
+        return score.reshape((N, self.grid_size[0], self.grid_size[1])).unsqueeze(1)
 
     def forward(self, images, task):
         """
@@ -458,7 +422,7 @@ class PromptAD(torch.nn.Module):
         if task == 'seg':
             # Compute both semantic and visual anomaly scores
             textual_anomaly_map = self.calculate_textual_anomaly_score(visual_features, 'seg')
-            visual_anomaly_map = self.calculate_visual_anomaly_score(visual_features, 'seg')
+            visual_anomaly_map = self.calculate_visual_anomaly_score(visual_features)
             
             # Harmonic mean fusion with numerator = 1
             # score = 1 / (1/semantic + 1/visual)
@@ -476,7 +440,9 @@ class PromptAD(torch.nn.Module):
             am_pix_list = []
 
             for i in range(am_pix.shape[0]):
-                am_pix[i] = gaussian_filter(am_pix[i], sigma=4)
+                # Convert to float32 for gaussian_filter (doesn't support float16)
+                am_pix_f32 = am_pix[i].astype(np.float32) if am_pix[i].dtype == np.float16 else am_pix[i]
+                am_pix[i] = gaussian_filter(am_pix_f32, sigma=4)
                 am_pix_list.append(am_pix[i])
 
             return am_pix_list
@@ -484,7 +450,12 @@ class PromptAD(torch.nn.Module):
         elif task == 'cls':
             # Compute both semantic and visual anomaly scores
             textual_anomaly = self.calculate_textual_anomaly_score(visual_features, 'cls')
-            visual_anomaly = self.calculate_visual_anomaly_score(visual_features, 'cls')
+            
+            # Visual anomaly: calculate_visual_anomaly_score returns patch-level map
+            # For cls, we need to extract image-level score from the map
+            visual_anomaly_map_for_cls = self.calculate_visual_anomaly_score(visual_features)
+            # Take max over patches for image-level score
+            visual_anomaly = visual_anomaly_map_for_cls.reshape(visual_anomaly_map_for_cls.shape[0], -1).max(axis=1)[0].detach().cpu().numpy()
             
             # Harmonic mean fusion with numerator = 1 for image-level score
             eps = 1e-10
@@ -495,7 +466,7 @@ class PromptAD(torch.nn.Module):
 
             # For cls task, also compute pixel-level anomaly map
             textual_anomaly_map = self.calculate_textual_anomaly_score(visual_features, 'seg')
-            visual_anomaly_map = self.calculate_visual_anomaly_score(visual_features, 'seg')
+            visual_anomaly_map = self.calculate_visual_anomaly_score(visual_features)
             
             # Harmonic fusion for pixel-level
             textual_anomaly_map = textual_anomaly_map.clamp(min=eps)

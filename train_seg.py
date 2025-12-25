@@ -1,4 +1,5 @@
 import argparse
+import cv2
 
 import torch.optim.lr_scheduler
 
@@ -38,7 +39,18 @@ def fit(model,
     # change the model into eval mode
     model.eval_mode()
 
-    # Removed feature_gallery building - only using semantic discrimination
+    # Build Memory Bank from training data (baseline方式)
+    features1 = []
+    features2 = []
+    for (data, mask, label, name, img_type) in train_data:
+        data = data.to(device)
+        _, _, feature_map1, feature_map2 = model.encode_image(data)
+        features1.append(feature_map1)
+        features2.append(feature_map2)
+
+    features1 = torch.cat(features1, dim=0)
+    features2 = torch.cat(features2, dim=0)
+    model.build_image_feature_gallery(features1, features2)
 
     optimizer = torch.optim.SGD(model.prompt_learner.parameters(), lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.Epoch, eta_min=1e-5)
@@ -138,11 +150,16 @@ def fit(model,
                         gt_mask_list.append(m)
 
                     data = data.to(device)
-                    score_map = model(data, 'seg')
-                    score_maps += score_map
+                    # 使用语义分支评估（不含Memory Bank融合）
+                    visual_features = model.encode_image(data)
+                    score_map = model.calculate_textual_anomaly_score(visual_features, task='seg')
+                    # score_map: [N, grid_h, grid_w], resize to resolution
+                    score_map_np = score_map.cpu().numpy()
+                    for i in range(score_map_np.shape[0]):
+                        resized = cv2.resize(score_map_np[i], (args.resolution, args.resolution), interpolation=cv2.INTER_LINEAR)
+                        score_maps.append(resized)
 
                 # 方向 3.1 + 3.2: 只 resize gt_mask，降低到 256
-                import cv2
                 gt_mask_list = [cv2.resize(mask, (args.resolution, args.resolution), 
                                           interpolation=cv2.INTER_NEAREST) for mask in gt_mask_list]
                 if args.vis:
@@ -159,8 +176,14 @@ def fit(model,
                 # 使用缓存数据，只重新计算 scores
                 for (data, mask, label, name, img_type) in dataloader:
                     data = data.to(device)
-                    score_map = model(data, 'seg')
-                    score_maps += score_map
+                    # 使用语义分支评估（不含Memory Bank融合）
+                    visual_features = model.encode_image(data)
+                    score_map = model.calculate_textual_anomaly_score(visual_features, task='seg')
+                    # score_map: [N, grid_h, grid_w], resize to resolution
+                    score_map_np = score_map.cpu().numpy()
+                    for i in range(score_map_np.shape[0]):
+                        resized = cv2.resize(score_map_np[i], (args.resolution, args.resolution), interpolation=cv2.INTER_LINEAR)
+                        score_maps.append(resized)
                 
                 test_imgs = cached_test_data['test_imgs']
                 gt_mask_list = cached_test_data['gt_mask_list']

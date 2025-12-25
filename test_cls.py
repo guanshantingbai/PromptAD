@@ -29,38 +29,40 @@ def test(model,
     # Load checkpoint
     checkpoint = torch.load(check_path)
     
-    # Handle prototype size mismatch - resize buffers to match checkpoint
+    # Resize buffers to match checkpoint and copy values directly
     if 'normal_prototypes' in checkpoint:
-        model.normal_prototypes = torch.zeros_like(checkpoint['normal_prototypes'])
+        model.normal_prototypes = checkpoint['normal_prototypes'].clone()
         if model.precision == 'fp16':
             model.normal_prototypes = model.normal_prototypes.half()
+        model.normal_prototypes = model.normal_prototypes.to(device)
+        print(f"[DEBUG] Loaded normal_prototypes: shape={model.normal_prototypes.shape}, first 5 values={model.normal_prototypes[0, :5]}")
     
     if 'abnormal_prototypes' in checkpoint:
-        model.abnormal_prototypes = torch.zeros_like(checkpoint['abnormal_prototypes'])
+        model.abnormal_prototypes = checkpoint['abnormal_prototypes'].clone()
         if model.precision == 'fp16':
             model.abnormal_prototypes = model.abnormal_prototypes.half()
+        model.abnormal_prototypes = model.abnormal_prototypes.to(device)
+        print(f"[DEBUG] Loaded abnormal_prototypes: shape={model.abnormal_prototypes.shape}, first 5 values={model.abnormal_prototypes[0, :5]}")
     
-    # Handle memory bank size mismatch - will be rebuilt from training data
-    if 'feature_gallery1' in checkpoint:
-        model.feature_gallery1 = torch.zeros_like(checkpoint['feature_gallery1'])
-        if model.precision == 'fp16':
-            model.feature_gallery1 = model.feature_gallery1.half()
-    
-    if 'feature_gallery2' in checkpoint:
-        model.feature_gallery2 = torch.zeros_like(checkpoint['feature_gallery2'])
-        if model.precision == 'fp16':
-            model.feature_gallery2 = model.feature_gallery2.half()
-    
-    model.load_state_dict(checkpoint, strict=False)
-    
-    # Build memory bank from training data if not in checkpoint
+    # Build memory bank from training data if not in checkpoint or if it's empty
     if 'feature_gallery1' not in checkpoint or checkpoint['feature_gallery1'].sum() == 0:
         print("Building memory bank from training data...")
+        features1 = []
+        features2 = []
         with torch.no_grad():
             for (data, _, _, _, _) in tqdm(train_dataloader, desc="Building memory bank"):
                 data = [model.transform(Image.fromarray(f.numpy())) for f in data]
                 data = torch.stack(data, dim=0).to(device)
-                model.build_image_feature_gallery(data)
+                _, _, feature_map1, feature_map2 = model.encode_image(data)
+                print(f"[DEBUG] Batch: feature_map1.shape={feature_map1.shape}, feature_map2.shape={feature_map2.shape}")
+                features1.append(feature_map1)
+                features2.append(feature_map2)
+        
+        features1 = torch.cat(features1, dim=0)
+        features2 = torch.cat(features2, dim=0)
+        print(f"[DEBUG] Concatenated: features1.shape={features1.shape}, features2.shape={features2.shape}")
+        print(f"[DEBUG] Buffer: feature_gallery1.shape={model.feature_gallery1.shape}, feature_gallery2.shape={model.feature_gallery2.shape}")
+        model.build_image_feature_gallery(features1, features2)
         print(f"Memory bank built: {model.feature_gallery1.shape[0]} samples")
 
     scores_img = []
@@ -86,9 +88,31 @@ def test(model,
             gt_mask_list += [m]
 
         data = data.to(device)
-        score_img, score_map = model(data, 'cls')
-        score_maps += score_map
-        scores_img += score_img
+        
+        if args.semantic_only:
+            # Semantic-only evaluation: only use textual branch
+            with torch.no_grad():
+                visual_features = model.encode_image(data)
+                textual_anomaly = model.calculate_textual_anomaly_score(visual_features, 'cls')
+                # Always compute anomaly map for metric calculation (needed even without vis)
+                textual_anomaly_map = model.calculate_textual_anomaly_score(visual_features, 'seg')
+                textual_anomaly_map = textual_anomaly_map.detach().cpu().numpy()
+            scores_img += textual_anomaly.tolist()
+            # Extract score maps
+            for i in range(textual_anomaly_map.shape[0]):
+                score_map_i = textual_anomaly_map[i, 0]  # Remove channel dimension
+                # Convert to float32 for OpenCV
+                score_map_i = score_map_i.astype(np.float32) if isinstance(score_map_i, np.ndarray) else score_map_i
+                score_maps.append(score_map_i)
+            
+            # Debug: print first 5 scores
+            if len(scores_img) <= 5:
+                print(f"[DEBUG] Batch {len(scores_img)}: anomaly_score={textual_anomaly[0].item():.4f}, gt_label={label[0].item() if torch.is_tensor(label[0]) else label[0]}, score_map shape={score_maps[-1].shape}, dtype={score_maps[-1].dtype}")
+        else:
+            # Original fusion evaluation
+            score_img, score_map = model(data, 'cls')
+            score_maps += score_map
+            scores_img += score_img
 
     test_imgs, score_maps, gt_mask_list = specify_resolution(test_imgs, score_maps, gt_mask_list,
                                                              resolution=(args.resolution, args.resolution))
@@ -114,6 +138,9 @@ def main(args):
     # prepare the experiment dir
     img_dir, csv_path, check_path = get_dir_from_args(TASK, **kwargs)
 
+    # Force num_workers=0 to avoid multiprocessing issues
+    kwargs['num_workers'] = 0
+    
     # get the test dataloader
     test_dataloader, test_dataset_inst = get_dataloader_from_args(phase='test', perturbed=False, **kwargs)
     
@@ -161,6 +188,10 @@ def get_args():
 
     # pure test
     parser.add_argument("--pure-test", type=str2bool, default=False)
+    
+    # evaluation mode
+    parser.add_argument("--semantic-only", type=str2bool, default=False,
+                       help='Evaluate semantic branch only without fusion')
 
     # method related parameters
     parser.add_argument('--k-shot', type=int, default=1)
@@ -180,7 +211,6 @@ def get_args():
     args = parser.parse_args()
 
     return args
-
 
 if __name__ == '__main__':
     import os

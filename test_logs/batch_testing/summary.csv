@@ -1,0 +1,14 @@
+class,result_line
+toothbrush,Object:toothbrush =========================== Pixel-AUROC:95.56
+hazelnut,Object:hazelnut =========================== Pixel-AUROC:99.88
+capsule,Object:capsule =========================== Pixel-AUROC:86.78
+metal_nut,Object:metal_nut =========================== Pixel-AUROC:99.22
+cable,Object:cable =========================== Pixel-AUROC:93.83
+zipper,Object:zipper =========================== Pixel-AUROC:92.28
+wood,Object:wood =========================== Pixel-AUROC:98.77
+pill,Object:pill =========================== Pixel-AUROC:92.05
+grid,Object:grid =========================== Pixel-AUROC:98.33
+carpet,Object:carpet =========================== Pixel-AUROC:100.0
+leather,Object:leather =========================== Pixel-AUROC:99.97
+tile,Object:tile =========================== Pixel-AUROC:99.82
+transistor,Object:transistor =========================== Pixel-AUROC:90.58

@@ -38,7 +38,22 @@ def fit(model,
     # change the model into eval mode
     model.eval_mode()
 
-    # Removed feature_gallery building - only using semantic discrimination
+    # Build image feature gallery (memory bank) from training data
+    # Baseline方式：先收集所有features，再一次性build
+    print("Building memory bank from training data...")
+    features1 = []
+    features2 = []
+    with torch.no_grad():
+        for data, mask, label, name, img_type in tqdm(train_data, desc="Building memory bank"):
+            data = data.to(device)
+            _, _, feature_map1, feature_map2 = model.encode_image(data)
+            features1.append(feature_map1)
+            features2.append(feature_map2)
+    
+    features1 = torch.cat(features1, dim=0)
+    features2 = torch.cat(features2, dim=0)
+    model.build_image_feature_gallery(features1, features2)
+    print(f"Memory bank built: {model.feature_gallery1.shape[0]} samples")
 
     optimizer = torch.optim.SGD(model.prompt_learner.parameters(), lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.Epoch, eta_min=1e-5)
@@ -139,9 +154,20 @@ def fit(model,
                         gt_mask_list.append(m)
 
                     data = data.to(device)
-                    score_img, score_map = model(data, 'cls')
-                    score_maps += score_map
-                    scores_img += score_img
+                    
+                    # 【修复BUG】只用语义分支评估，不用融合（Memory Bank应该是inference-only）
+                    with torch.no_grad():
+                        visual_features = model.encode_image(data)
+                        # 图像级得分（用于模型选择）
+                        textual_anomaly = model.calculate_textual_anomaly_score(visual_features, 'cls')
+                        # 像素级得分（用于metric计算）
+                        textual_anomaly_map = model.calculate_textual_anomaly_score(visual_features, 'seg')
+                        textual_anomaly_map = textual_anomaly_map.detach().cpu().numpy()
+                    
+                    scores_img += textual_anomaly.tolist()
+                    # 添加真实的score_maps
+                    for i in range(textual_anomaly_map.shape[0]):
+                        score_maps.append(textual_anomaly_map[i, 0])  # 移除channel维度
 
                 # 方向 3.1 + 3.2: 只 resize gt_mask（score_maps 已是正确尺寸），降低到 256
                 import cv2
@@ -161,9 +187,17 @@ def fit(model,
                 # 使用缓存数据，只重新计算 scores
                 for (data, mask, label, name, img_type) in dataloader:
                     data = data.to(device)
-                    score_img, score_map = model(data, 'cls')
-                    score_maps += score_map
-                    scores_img += score_img
+                    
+                    # 【修复BUG】只用语义分支评估
+                    with torch.no_grad():
+                        visual_features = model.encode_image(data)
+                        textual_anomaly = model.calculate_textual_anomaly_score(visual_features, 'cls')
+                        textual_anomaly_map = model.calculate_textual_anomaly_score(visual_features, 'seg')
+                        textual_anomaly_map = textual_anomaly_map.detach().cpu().numpy()
+                    
+                    scores_img += textual_anomaly.tolist()
+                    for i in range(textual_anomaly_map.shape[0]):
+                        score_maps.append(textual_anomaly_map[i, 0])
                 
                 test_imgs = cached_test_data['test_imgs']
                 gt_list = cached_test_data['gt_list']
