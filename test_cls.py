@@ -27,7 +27,9 @@ def test(model,
 
     model.load_state_dict(torch.load(check_path), strict=False)
 
-    scores_img = []
+    scores_semantic = []
+    scores_memory = []
+    scores_fusion = []
     score_maps = []
     test_imgs = []
     gt_list = []
@@ -50,13 +52,28 @@ def test(model,
             gt_mask_list += [m]
 
         data = data.to(device)
-        score_img, score_map = model(data, 'cls')
+        semantic_scores, memory_scores, fusion_scores, score_map = model(data, 'cls')
         score_maps += score_map
-        scores_img += score_img
+        scores_semantic += semantic_scores
+        scores_memory += memory_scores
+        scores_fusion += fusion_scores
 
     test_imgs, score_maps, gt_mask_list = specify_resolution(test_imgs, score_maps, gt_mask_list,
                                                              resolution=(args.resolution, args.resolution))
-    result_dict = metric_cal_img(np.array(scores_img), gt_list, np.array(score_maps))
+    
+    # Calculate metrics for each branch
+    from utils.metrics import metric_cal_img_only
+    result_semantic = metric_cal_img_only(np.array(scores_semantic), gt_list)
+    result_memory = metric_cal_img_only(np.array(scores_memory), gt_list)
+    result_fusion = metric_cal_img_only(np.array(scores_fusion), gt_list)
+    
+    # Legacy fusion metric (for backward compatibility)
+    result_dict = metric_cal_img(np.array(scores_fusion), gt_list, np.array(score_maps))
+    
+    # Merge all metrics
+    result_dict['semantic_i_roc'] = result_semantic['i_roc']
+    result_dict['memory_i_roc'] = result_memory['i_roc']
+    result_dict['fusion_i_roc'] = result_fusion['i_roc']
 
     return result_dict
 
@@ -91,9 +108,11 @@ def main(args):
     # as the pro metric calculation is costly, we only calculate it in the last evaluation
     metrics = test(model, args, test_dataloader, device, img_dir=img_dir, check_path=check_path)
 
-    p_roc = round(metrics['i_roc'], 2)
+    fusion_roc = round(metrics['fusion_i_roc'], 2)
+    semantic_roc = round(metrics['semantic_i_roc'], 2)
+    memory_roc = round(metrics['memory_i_roc'], 2)
     object = kwargs['class_name']
-    print(f'Object:{object} =========================== Pixel-AUROC:{p_roc}\n')
+    print(f'Object:{object} =========================== Fusion-AUROC:{fusion_roc}, Semantic:{semantic_roc}, Memory:{memory_roc}\n')
 
     save_metric(metrics, dataset_classes[kwargs['dataset']], kwargs['class_name'],
                 kwargs['dataset'], csv_path)

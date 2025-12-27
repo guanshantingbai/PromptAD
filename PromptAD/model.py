@@ -314,7 +314,7 @@ class PromptAD(torch.nn.Module):
         
         self.feature_gallery2.copy_(features2_flat)
 
-    def calculate_textual_anomaly_score(self, visual_features, task):
+    def calculate_textual_anomaly_score(self, visual_features, task, return_logits=False):
         # t = 100
         t = self.model.logit_scale
         # t = self.t
@@ -324,7 +324,8 @@ class PromptAD(torch.nn.Module):
             # ############################################## local tokens scores ############################
             # token_features = self.cross_attention(visual_features[1])
             token_features = visual_features[1]
-            local_normality_and_abnormality_score = (t * token_features @ self.text_features.T).softmax(dim=-1)
+            local_logits = t * token_features @ self.text_features.T
+            local_normality_and_abnormality_score = local_logits.softmax(dim=-1)
 
             local_abnormality_score = local_normality_and_abnormality_score[:, :, 1]
 
@@ -335,22 +336,41 @@ class PromptAD(torch.nn.Module):
             local_abnormality_score = torch.zeros((N, num_patches)) + local_abnormality_score.cpu()
             local_abnormality_score = local_abnormality_score.reshape((N, grid_h, grid_w)).unsqueeze(1)
 
+            if return_logits:
+                return local_abnormality_score.detach(), local_logits.detach()
             return local_abnormality_score.detach()
 
         elif task == 'cls':
             # ################################################ global cls token scores ##########################
             # global_feature = self.cross_attention(visual_features[0].unsqueeze(dim=1)).squeeze(dim=1)
             global_feature = visual_features[0]
-            global_normality_and_abnormality_score = (t * global_feature @ self.text_features.T).softmax(dim=-1)
+            global_logits = t * global_feature @ self.text_features.T  # [N, 2]: [s_normal, s_abnormal]
+            global_normality_and_abnormality_score = global_logits.softmax(dim=-1)
 
             global_abnormality_score = global_normality_and_abnormality_score[:, 1]
-
             global_abnormality_score = global_abnormality_score.cpu()
 
+            if return_logits:
+                return global_abnormality_score.detach().numpy(), global_logits.cpu().detach().numpy()
             return global_abnormality_score.detach().numpy()
 
         else:
             assert 'task error'
+    
+    @torch.no_grad()
+    def calculate_margin_and_logits(self, visual_features):
+        """
+        Calculate margin (geometric distance in logit space) for baseline analysis.
+        
+        Returns:
+            margins: np.array, shape [N], margin = s_normal - s_abnormal
+            logits: np.array, shape [N, 2], [s_normal, s_abnormal]
+        """
+        t = self.model.logit_scale
+        global_feature = visual_features[0]  # CLS token
+        logits = (t * global_feature @ self.text_features.T).cpu().numpy()  # [N, 2]
+        margins = logits[:, 0] - logits[:, 1]  # s_normal - s_abnormal
+        return margins, logits
 
     def calculate_visual_anomaly_score(self, visual_features):
         N = visual_features[1].shape[0]
@@ -368,6 +388,17 @@ class PromptAD(torch.nn.Module):
         score = torch.zeros((N, num_patches)) + 0.5 * (score1 + score2).cpu()
 
         return score.reshape((N, grid_h, grid_w)).unsqueeze(1)
+
+    def calculate_memory_image_score(self, visual_features):
+        """Calculate image-level anomaly score from memory branch (visual features)"""
+        import numpy as np
+        visual_anomaly_map = self.calculate_visual_anomaly_score(visual_features)
+        anomaly_map = F.interpolate(visual_anomaly_map, size=(self.out_size_h, self.out_size_w), mode='bilinear',
+                                    align_corners=False)
+        am_pix = anomaly_map.squeeze(1).numpy()
+        # Take max over spatial dimensions for image-level score
+        memory_img_scores = am_pix.reshape(am_pix.shape[0], -1).max(axis=1)
+        return memory_img_scores
 
     def forward(self, images, task):
 
@@ -395,25 +426,53 @@ class PromptAD(torch.nn.Module):
             return am_pix_list
 
         elif task == 'cls':
+            # Calculate semantic branch score (textual)
+            import numpy as np
             textual_anomaly = self.calculate_textual_anomaly_score(visual_features, 'cls')
+            semantic_img_scores = textual_anomaly  # Already image-level
 
+            # Calculate memory branch score (visual)
+            memory_img_scores = self.calculate_memory_image_score(visual_features)
+
+            # Calculate fusion score (max fusion)
+            fusion_img_scores = np.maximum(semantic_img_scores, memory_img_scores)
+
+            # Also return pixel-level maps for compatibility
             visual_anomaly_map = self.calculate_visual_anomaly_score(visual_features)
-
             anomaly_map = F.interpolate(visual_anomaly_map, size=(self.out_size_h, self.out_size_w), mode='bilinear',
                                         align_corners=False)
-
             am_pix = anomaly_map.squeeze(1).numpy()
+            am_pix_list = [am_pix[i] for i in range(am_pix.shape[0])]
 
-            am_pix_list = []
-
-            for i in range(am_pix.shape[0]):
-                am_pix_list.append(am_pix[i])
-
-            am_img_list = []
-            for i in range(textual_anomaly.shape[0]):
-                am_img_list.append(textual_anomaly[i])
-
-            return am_img_list, am_pix_list
+            # Return: semantic_scores, memory_scores, fusion_scores, pixel_maps
+            return (list(semantic_img_scores), list(memory_img_scores), 
+                    list(fusion_img_scores), am_pix_list)
+        
+        elif task == 'cls_detailed':
+            # For detailed baseline analysis: return margins, logits, and scores
+            import numpy as np
+            
+            # Calculate margins and logits
+            margins, logits = self.calculate_margin_and_logits(visual_features)
+            
+            # Calculate semantic score (from softmax)
+            textual_anomaly = self.calculate_textual_anomaly_score(visual_features, 'cls')
+            semantic_img_scores = textual_anomaly
+            
+            # Calculate memory branch score
+            memory_img_scores = self.calculate_memory_image_score(visual_features)
+            
+            # Calculate fusion score
+            fusion_img_scores = np.maximum(semantic_img_scores, memory_img_scores)
+            
+            # Return detailed info for analysis
+            return {
+                'margins': margins,
+                'logits': logits,  # [N, 2]: [s_normal, s_abnormal]
+                'semantic_scores': semantic_img_scores,
+                'memory_scores': memory_img_scores,
+                'fusion_scores': fusion_img_scores
+            }
         else:
             assert 'task error'
 

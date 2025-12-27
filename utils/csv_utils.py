@@ -4,7 +4,7 @@ import os
 
 def write_results(results:dict, cur_class, total_classes, csv_path):
     keys_ = list(results.keys())
-    keys = ['i_roc', 'p_roc']
+    keys = ['i_roc', 'p_roc', 'semantic_i_roc', 'memory_i_roc', 'fusion_i_roc']
 
     if not os.path.exists(csv_path):
         df_all = None

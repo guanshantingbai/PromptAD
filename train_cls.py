@@ -113,9 +113,11 @@ def fit(model,
         scheduler.step()
         model.build_text_feature_gallery()
 
-        # 方向 1: 降低评估频率（每 5 个 epoch 或最后一个 epoch）
-        if (epoch + 1) % 5 == 0 or epoch == args.Epoch - 1:
-            scores_img = []
+        # 方向 1: 降低评估频率（每 3 个 epoch 或最后一个 epoch）
+        if (epoch + 1) % 3 == 0 or epoch == args.Epoch - 1:
+            scores_semantic = []
+            scores_memory = []
+            scores_fusion = []
             score_maps = []
             test_imgs = [] if args.vis else None  # 方向 2 + 3.3: 仅在可视化时收集
             gt_list = []
@@ -140,9 +142,11 @@ def fit(model,
                         gt_mask_list.append(m)
 
                     data = data.to(device)
-                    score_img, score_map = model(data, 'cls')
+                    semantic_scores, memory_scores, fusion_scores, score_map = model(data, 'cls')
                     score_maps += score_map
-                    scores_img += score_img
+                    scores_semantic += semantic_scores
+                    scores_memory += memory_scores
+                    scores_fusion += fusion_scores
 
                 # 方向 3.1 + 3.2: 只 resize gt_mask（score_maps 已是正确尺寸），降低到 256
                 import cv2
@@ -162,23 +166,41 @@ def fit(model,
                 # 使用缓存数据，只重新计算 scores
                 for (data, mask, label, name, img_type) in dataloader:
                     data = data.to(device)
-                    score_img, score_map = model(data, 'cls')
+                    semantic_scores, memory_scores, fusion_scores, score_map = model(data, 'cls')
                     score_maps += score_map
-                    scores_img += score_img
+                    scores_semantic += semantic_scores
+                    scores_memory += memory_scores
+                    scores_fusion += fusion_scores
                 
                 test_imgs = cached_test_data['test_imgs']
                 gt_list = cached_test_data['gt_list']
                 gt_mask_list = cached_test_data['gt_mask_list']
 
-            result_dict = metric_cal_img(np.array(scores_img), gt_list, np.array(score_maps))
+            # Calculate metrics for each branch
+            from utils.metrics import metric_cal_img_only
+            result_semantic = metric_cal_img_only(np.array(scores_semantic), gt_list)
+            result_memory = metric_cal_img_only(np.array(scores_memory), gt_list)
+            result_fusion = metric_cal_img_only(np.array(scores_fusion), gt_list)
+            
+            # Legacy fusion metric (for backward compatibility)
+            result_dict = metric_cal_img(np.array(scores_fusion), gt_list, np.array(score_maps))
+            
+            # Merge all metrics
+            result_dict['semantic_i_roc'] = result_semantic['i_roc']
+            result_dict['memory_i_roc'] = result_memory['i_roc']
+            result_dict['fusion_i_roc'] = result_fusion['i_roc']
 
             if best_result_dict is None:
                 save_check_point(model, check_path)
                 best_result_dict = result_dict
+                print(f'  Epoch {epoch+1}: Semantic={result_semantic["i_roc"]:.2f}, Memory={result_memory["i_roc"]:.2f}, Fusion={result_fusion["i_roc"]:.2f}')
 
-            elif best_result_dict['i_roc'] < result_dict['i_roc']:
+            elif best_result_dict['fusion_i_roc'] < result_dict['fusion_i_roc']:
                 save_check_point(model, check_path)
                 best_result_dict = result_dict
+                print(f'  Epoch {epoch+1}: Semantic={result_semantic["i_roc"]:.2f}, Memory={result_memory["i_roc"]:.2f}, Fusion={result_fusion["i_roc"]:.2f} *** Best ***')
+            else:
+                print(f'  Epoch {epoch+1}: Semantic={result_semantic["i_roc"]:.2f}, Memory={result_memory["i_roc"]:.2f}, Fusion={result_fusion["i_roc"]:.2f}')
 
     return best_result_dict
 
@@ -216,9 +238,11 @@ def main(args):
     # as the pro metric calculation is costly, we only calculate it in the last evaluation
     metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
 
-    i_roc = round(metrics['i_roc'], 2)
+    i_roc = round(metrics['fusion_i_roc'], 2)
+    semantic_roc = round(metrics['semantic_i_roc'], 2)
+    memory_roc = round(metrics['memory_i_roc'], 2)
     object = kwargs['class_name']
-    print(f'Object:{object} =========================== Image-AUROC:{i_roc}\n')
+    print(f'Object:{object} =========================== Fusion-AUROC:{i_roc}, Semantic:{semantic_roc}, Memory:{memory_roc}\n')
 
     save_metric(metrics, dataset_classes[kwargs['dataset']], kwargs['class_name'],
                 kwargs['dataset'], csv_path)

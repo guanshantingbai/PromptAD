@@ -33,6 +33,13 @@ def metric_cal_img(img_scores, gt_list, map_scores=None):
     return result_dict
 
 
+def metric_cal_img_only(img_scores, gt_list):
+    """Calculate image-level ROC AUC score without pixel maps"""
+    gt_list = np.asarray(gt_list, dtype=int)
+    img_roc_auc = roc_auc_score(gt_list, img_scores)
+    return {'i_roc': img_roc_auc * 100}
+
+
 def metric_cal_pix(map_scores, gt_mask_list):
 
     gt_mask = np.asarray(gt_mask_list, dtype=int)

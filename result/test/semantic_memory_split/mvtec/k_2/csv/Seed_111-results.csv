@@ -1,0 +1,16 @@
+,i_roc,p_roc,semantic_i_roc,memory_i_roc,fusion_i_roc
+mvtec-carpet,99.92,0.00,99.92,99.80,99.92
+mvtec-grid,0.00,0.00,0.00,0.00,0.00
+mvtec-leather,0.00,0.00,0.00,0.00,0.00
+mvtec-tile,0.00,0.00,0.00,0.00,0.00
+mvtec-wood,0.00,0.00,0.00,0.00,0.00
+mvtec-bottle,0.00,0.00,0.00,0.00,0.00
+mvtec-cable,0.00,0.00,0.00,0.00,0.00
+mvtec-capsule,0.00,0.00,0.00,0.00,0.00
+mvtec-hazelnut,0.00,0.00,0.00,0.00,0.00
+mvtec-metal_nut,0.00,0.00,0.00,0.00,0.00
+mvtec-pill,0.00,0.00,0.00,0.00,0.00
+mvtec-screw,0.00,0.00,0.00,0.00,0.00
+mvtec-toothbrush,0.00,0.00,0.00,0.00,0.00
+mvtec-transistor,0.00,0.00,0.00,0.00,0.00
+mvtec-zipper,0.00,0.00,0.00,0.00,0.00
