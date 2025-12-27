@@ -1,0 +1,2 @@
+overall_pearson,overall_pearson_p,overall_spearman,overall_spearman_p,normal_pearson,normal_pearson_p,abnormal_pearson,abnormal_pearson_p,semantic_visual_diff_mean,semantic_visual_diff_normal,semantic_visual_diff_abnormal,class
+0.697,5.257363649272998e-18,0.6656966363306747,4.793581613007651e-16,-0.02094,0.9263229860448768,0.648,2.212772180893731e-12,0.1323,0.1296,0.133,mvtec_metal_nut_v1_k2

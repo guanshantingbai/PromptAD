@@ -1,0 +1,4 @@
+class,group,mean,std,p10,median,p90,n
+mvtec_cable_v1_k2,all,4.09,0.2532,3.776171875,4.176,4.30078125,150
+mvtec_cable_v1_k2,normal,4.22,0.0943,4.116015625,4.22,4.327734375,58
+mvtec_cable_v1_k2,abnormal,4.01,0.2866,3.6787109375,4.08,4.2578125,92

@@ -1,0 +1,10 @@
+{
+  "normal_mean": -0.045989990234375,
+  "normal_std": 0.006565093994140625,
+  "abnormal_mean": -0.049835205078125,
+  "abnormal_std": 0.00681304931640625,
+  "separation": 0.00384521484375,
+  "overlap_ratio": 0.865234375,
+  "ks_distance": 0.27,
+  "ks_pvalue": 8.143907120095266e-06
+}

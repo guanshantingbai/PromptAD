@@ -1,0 +1,6 @@
+{
+  "normal_semantic_mean": 0.51025390625,
+  "normal_semantic_std": 0.001171112060546875,
+  "abnormal_semantic_mean": 0.51318359375,
+  "abnormal_semantic_std": 0.0028781890869140625
+}

@@ -1,0 +1,2 @@
+overall_pearson,overall_pearson_p,overall_spearman,overall_spearman_p,normal_pearson,normal_pearson_p,abnormal_pearson,abnormal_pearson_p,semantic_visual_diff_mean,semantic_visual_diff_normal,semantic_visual_diff_abnormal,class
+0.811,7.414533964768525e-11,0.869773095623987,7.679140267845691e-14,0.791,0.0021839470771661154,0.8135,4.63923719097328e-08,0.0747,0.0748,0.07465,mvtec_toothbrush_v1_k2

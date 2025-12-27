@@ -1,0 +1,4 @@
+class,group,mean,std,p10,median,p90,n
+mvtec_leather_k2,all,3.059,0.2822,2.6736328125,3.041,3.41796875,124
+mvtec_leather_k2,normal,3.402,0.0595,3.334375,3.418,3.4607421875,32
+mvtec_leather_k2,abnormal,2.938,0.225,2.5904296875,2.969,3.226171875,92

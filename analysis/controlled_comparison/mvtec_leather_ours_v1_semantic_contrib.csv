@@ -1,0 +1,2 @@
+overall_pearson,overall_pearson_p,overall_spearman,overall_spearman_p,normal_pearson,normal_pearson_p,abnormal_pearson,abnormal_pearson_p,semantic_visual_diff_mean,semantic_visual_diff_normal,semantic_visual_diff_abnormal,class
+0.6865,1.3564837954101724e-18,0.7413662604439167,7.130273036296546e-23,0.525,0.0020394706289691826,0.4763,1.5922359413661633e-06,0.0603,0.06665,0.0581,mvtec_leather_k2

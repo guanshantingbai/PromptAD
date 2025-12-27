@@ -79,11 +79,33 @@ def fit(model,
             abnormal_text_features_learned = model.encode_text_embedding(abnormal_text_prompt_learned, model.tokenized_abnormal_prompts_learned)
             abnormal_text_features = torch.cat([abnormal_text_features_handle, abnormal_text_features_learned], dim=0)
 
-            # compute mean
-            mean_ad_handle = torch.mean(F.normalize(abnormal_text_features_handle, dim=-1), dim=0)
-            mean_ad_learned = torch.mean(F.normalize(abnormal_text_features_learned, dim=-1), dim=0)
-
-            loss_match_abnormal = (mean_ad_handle - mean_ad_learned).norm(dim=0) ** 2.0
+            # 【改动1】修正EMA: 逐原型对齐而非均值对齐
+            # 旧版：只对齐均值，导致learned内部可以坍缩
+            # 新版：每个learned原型都被拉向handle的均值，防止坍缩
+            handle_normalized = F.normalize(abnormal_text_features_handle, dim=-1)
+            learned_normalized = F.normalize(abnormal_text_features_learned, dim=-1)
+            
+            # 计算handle集合的中心作为anchor
+            handle_center = torch.mean(handle_normalized, dim=0, keepdim=True)  # [1, dim]
+            
+            # 每个learned原型到handle中心的距离
+            loss_match_abnormal = torch.mean((learned_normalized - handle_center).norm(dim=-1) ** 2.0)
+            
+            # 【改动2】Repulsion Loss: 防止learned原型坍缩
+            # 只对learned原型施加互斥约束，handle原型不动
+            if learned_normalized.shape[0] > 1:
+                # 计算learned原型之间的余弦相似度矩阵
+                learned_sim_matrix = torch.mm(learned_normalized, learned_normalized.t())  # [M, M]
+                # 去除对角线（自身与自身的相似度）
+                mask = torch.eye(learned_sim_matrix.shape[0], device=learned_sim_matrix.device).bool()
+                learned_sim_matrix = learned_sim_matrix.masked_fill(mask, 0.0)
+                # Repulsion: 最小化非对角元素（让原型相互远离）
+                loss_repulsion = learned_sim_matrix.abs().mean()
+            else:
+                loss_repulsion = torch.tensor(0.0, device=device)
+            
+            # 【改动3】Margin Loss: 显式优化判别边界
+            # Margin = s_normal - s_ab_max，希望正样本的margin尽可能大
 
             cls_feature, _, _, _ = model.encode_image(data)
             cls_feature = cls_feature / cls_feature.norm(dim=-1, keepdim=True)
@@ -120,7 +142,11 @@ def fit(model,
             abnormal_anchors = abnormal_text_features[worst_abnormal_idx]  # [batch, dim]
             
             trip_loss = criterion_tip(cls_feature, normal_anchors, abnormal_anchors)
-            loss = loss_v2t + trip_loss + loss_match_abnormal * args.lambda1
+            
+            # 总损失（移除Margin Loss以避免破坏Stable类的Separation）
+            loss = loss_v2t + trip_loss + \
+                   loss_match_abnormal * args.lambda1 + \
+                   loss_repulsion * args.lambda_rep
 
             loss.backward()
             optimizer.step()
@@ -317,7 +343,7 @@ def get_args():
     # prompt tuning hyper-parameter
     parser.add_argument("--n_ctx", type=int, default=4)
     parser.add_argument("--n_ctx_ab", type=int, default=1)
-    parser.add_argument("--n_pro", type=int, default=3)
+    parser.add_argument("--n_pro", type=int, default=1)
     parser.add_argument("--n_pro_ab", type=int, default=4)
     parser.add_argument("--Epoch", type=int, default=100)
 
@@ -328,6 +354,7 @@ def get_args():
 
     # loss hyper parameter
     parser.add_argument("--lambda1", type=float, default=0.001)
+    parser.add_argument("--lambda_rep", type=float, default=0.1, help='Repulsion loss weight (EMA+Rep config)')
 
     # dataloader configuration
     parser.add_argument("--num-workers", type=int, default=0,

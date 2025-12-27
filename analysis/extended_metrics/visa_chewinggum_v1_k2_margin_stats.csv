@@ -1,0 +1,4 @@
+class,group,mean,std,p10,median,p90,n
+visa_chewinggum_v1_k2,all,3.21,0.1044,3.0765625,3.234,3.31640625,603
+visa_chewinggum_v1_k2,normal,3.24,0.0682,3.15234375,3.25,3.319921875,503
+visa_chewinggum_v1_k2,abnormal,3.06,0.12445,2.936328125,3.072,3.2091796875,100

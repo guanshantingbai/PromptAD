@@ -1,0 +1,133 @@
+{
+  "metric_A": {
+    "mean": 0.267822265625,
+    "std": 0.00963592529296875,
+    "p50": 0.267578125,
+    "p90": 0.281201171875,
+    "p95": 0.284765625,
+    "p99": 0.290224609375,
+    "max": 0.292724609375,
+    "hit_rate_0.3": 0.0,
+    "hit_rate_0.4": 0.0,
+    "hit_rate_0.5": 0.0,
+    "hit_rate_0.6": 0.0,
+    "hit_rate_0.7": 0.0
+  },
+  "metric_B": {
+    "normal_mean": -0.108642578125,
+    "normal_std": 0.0037975311279296875,
+    "abnormal_mean": -0.1199951171875,
+    "abnormal_std": 0.01364898681640625,
+    "separation": 0.0113525390625,
+    "overlap_ratio": 0.3369140625,
+    "ks_distance": 0.538961038961039,
+    "ks_pvalue": 6.983834918716221e-07
+  },
+  "metric_C": {
+    "mean": 0.79443359375,
+    "std": 0.051513671875,
+    "max": 0.91796875,
+    "p90": 0.86103515625,
+    "p95": 0.8700927734374999,
+    "top10_mean": 0.89599609375,
+    "collapse_score": 0.89599609375
+  },
+  "metric_D": {
+    "proto_counts": [
+      0,
+      0,
+      33,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "proto_avg_scores": [
+      0.0,
+      0.0,
+      0.267822265625,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "high_score_proto_counts": [
+      0,
+      0,
+      7,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "high_score_threshold": 0.27509765625,
+    "top5_bad_prototypes": [
+      {
+        "index": 2,
+        "count": 33,
+        "high_score_count": 7,
+        "avg_score": 0.267822265625
+      },
+      {
+        "index": 16,
+        "count": 0,
+        "high_score_count": 0,
+        "avg_score": 0.0
+      },
+      {
+        "index": 7,
+        "count": 0,
+        "high_score_count": 0,
+        "avg_score": 0.0
+      },
+      {
+        "index": 1,
+        "count": 0,
+        "high_score_count": 0,
+        "avg_score": 0.0
+      },
+      {
+        "index": 3,
+        "count": 0,
+        "high_score_count": 0,
+        "avg_score": 0.0
+      }
+    ]
+  },
+  "metric_E": {
+    "normal_semantic_mean": 0.52734375,
+    "normal_semantic_std": 0.0009136199951171875,
+    "abnormal_semantic_mean": 0.52978515625,
+    "abnormal_semantic_std": 0.0034008026123046875
+  }
+}

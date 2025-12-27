@@ -1,0 +1,4 @@
+class,group,mean,std,p10,median,p90,n
+visa_pipe_fryum_v1_k2,all,2.8,0.12244,2.646484375,2.816,2.939453125,600
+visa_pipe_fryum_v1_k2,normal,2.832,0.0915,2.71484375,2.832,2.9453125,500
+visa_pipe_fryum_v1_k2,abnormal,2.652,0.1461,2.45625,2.656,2.81640625,100

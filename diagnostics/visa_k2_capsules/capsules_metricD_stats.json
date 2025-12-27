@@ -1,0 +1,92 @@
+{
+  "proto_counts": [
+    0,
+    0,
+    0,
+    598,
+    0,
+    0,
+    4,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "proto_avg_scores": [
+    0.0,
+    0.0,
+    0.0,
+    0.276611328125,
+    0.0,
+    0.0,
+    0.274658203125,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "high_score_proto_counts": [
+    0,
+    0,
+    0,
+    119,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "high_score_threshold": 0.283203125,
+  "top5_bad_prototypes": [
+    {
+      "index": 3,
+      "count": 598,
+      "high_score_count": 119,
+      "avg_score": 0.276611328125
+    },
+    {
+      "index": 16,
+      "count": 0,
+      "high_score_count": 0,
+      "avg_score": 0.0
+    },
+    {
+      "index": 7,
+      "count": 0,
+      "high_score_count": 0,
+      "avg_score": 0.0
+    },
+    {
+      "index": 1,
+      "count": 0,
+      "high_score_count": 0,
+      "avg_score": 0.0
+    },
+    {
+      "index": 2,
+      "count": 0,
+      "high_score_count": 0,
+      "avg_score": 0.0
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+class,group,mean,std,p10,median,p90,n
+visa_macaroni1_v2_k2,all,2.709,0.0876,2.5994140625,2.715,2.818359375,1100
+visa_macaroni1_v2_k2,normal,2.723,0.07745,2.62109375,2.725,2.8205078125,1000
+visa_macaroni1_v2_k2,abnormal,2.582,0.0815,2.486328125,2.59,2.6841796875,100

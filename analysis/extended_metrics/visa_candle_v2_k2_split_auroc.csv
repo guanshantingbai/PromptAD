@@ -1,0 +1,2 @@
+overall_semantic_auroc,overall_fusion_auroc,normal_semantic_auroc,normal_fusion_auroc,abnormal_semantic_auroc,abnormal_fusion_auroc,n_normal,n_abnormal,class
+0.8471249999999999,0.8338,1.0,1.0,1.0,1.0,1000,100,visa_candle_v2_k2

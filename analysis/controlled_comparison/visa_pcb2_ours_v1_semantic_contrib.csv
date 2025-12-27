@@ -1,0 +1,2 @@
+overall_pearson,overall_pearson_p,overall_spearman,overall_spearman_p,normal_pearson,normal_pearson_p,abnormal_pearson,abnormal_pearson_p,semantic_visual_diff_mean,semantic_visual_diff_normal,semantic_visual_diff_abnormal,class
+0.192,1.327436563802992e-10,0.18277681934857182,9.99925398203051e-10,0.1829,5.6281523035774145e-09,-0.0787,0.4365342755350334,0.10767,0.107,0.1141,visa_pcb2_k2

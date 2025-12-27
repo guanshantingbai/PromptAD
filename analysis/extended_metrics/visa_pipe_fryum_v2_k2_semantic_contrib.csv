@@ -1,0 +1,2 @@
+overall_pearson,overall_pearson_p,overall_spearman,overall_spearman_p,normal_pearson,normal_pearson_p,abnormal_pearson,abnormal_pearson_p,semantic_visual_diff_mean,semantic_visual_diff_normal,semantic_visual_diff_abnormal,class
+0.4956,1.6395064288911565e-38,0.385764054532235,1.0008556939737474e-22,0.3516,5.426367053559588e-16,0.6274,2.8411200937402646e-12,0.05838,0.05847,0.05783,visa_pipe_fryum_v2_k2

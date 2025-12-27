@@ -1,0 +1,12 @@
+{
+  "adaptive_repulsion": true,
+  "class_lambda_rep": {
+    "mvtec-capsule": 0.1,
+    "visa-pcb2": 0.1,
+    "mvtec-screw": 0.1,
+    "mvtec-toothbrush": 0.05,
+    "mvtec-carpet": 0.02,
+    "mvtec-leather": 0.02
+  },
+  "rationale": "Based on Prompt2 baseline AUROC and Separation analysis"
+}

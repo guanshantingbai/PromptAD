@@ -1,0 +1,2 @@
+overall_pearson,overall_pearson_p,overall_spearman,overall_spearman_p,normal_pearson,normal_pearson_p,abnormal_pearson,abnormal_pearson_p,semantic_visual_diff_mean,semantic_visual_diff_normal,semantic_visual_diff_abnormal,class
+0.4624,7.47910753538607e-10,0.3956093388128831,2.246617274514766e-07,0.557,0.00015464309527462764,0.4626,1.174970654251661e-07,0.3499,0.3462,0.351,mvtec_screw_k2

@@ -1,0 +1,4 @@
+class,group,mean,std,p10,median,p90,n
+mvtec_zipper_v2_k2,all,1.765,0.0767,1.66796875,1.772,1.853515625,151
+mvtec_zipper_v2_k2,normal,1.845,0.03473,1.8052734375,1.852,1.8802734375,32
+mvtec_zipper_v2_k2,abnormal,1.742,0.0702,1.64375,1.753,1.8177734375,119

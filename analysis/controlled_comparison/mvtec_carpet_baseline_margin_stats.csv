@@ -1,0 +1,4 @@
+class,group,mean,std,p10,median,p90,n
+mvtec_carpet_k2,all,0.0,0.0,0.0,0.0,0.0,117
+mvtec_carpet_k2,normal,0.0,0.0,0.0,0.0,0.0,28
+mvtec_carpet_k2,abnormal,0.0,0.0,0.0,0.0,0.0,89

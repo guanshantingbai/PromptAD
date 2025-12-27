@@ -1,0 +1,2 @@
+overall_pearson,overall_pearson_p,overall_spearman,overall_spearman_p,normal_pearson,normal_pearson_p,abnormal_pearson,abnormal_pearson_p,semantic_visual_diff_mean,semantic_visual_diff_normal,semantic_visual_diff_abnormal,class
+0.587,4.2543223448420226e-57,0.5134232325900014,7.361102224285058e-42,0.3276,4.7386911561914554e-14,0.6123,1.2948820504814985e-11,0.1161,0.115,0.12164,visa_chewinggum_v2_k2

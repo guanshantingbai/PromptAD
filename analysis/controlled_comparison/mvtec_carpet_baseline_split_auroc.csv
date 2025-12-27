@@ -1,0 +1,2 @@
+overall_semantic_auroc,overall_fusion_auroc,normal_semantic_auroc,normal_fusion_auroc,abnormal_semantic_auroc,abnormal_fusion_auroc,n_normal,n_abnormal,class
+0.5,0.5,,,,,28,89,mvtec_carpet_k2

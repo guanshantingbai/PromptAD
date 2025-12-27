@@ -1,0 +1,2 @@
+overall_semantic_auroc,overall_fusion_auroc,normal_semantic_auroc,normal_fusion_auroc,abnormal_semantic_auroc,abnormal_fusion_auroc,n_normal,n_abnormal,class
+0.8333333333333334,0.7611111111111112,1.0,1.0,1.0,1.0,12,30,mvtec_toothbrush_v1_k2

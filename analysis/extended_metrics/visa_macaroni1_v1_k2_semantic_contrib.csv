@@ -1,0 +1,2 @@
+overall_pearson,overall_pearson_p,overall_spearman,overall_spearman_p,normal_pearson,normal_pearson_p,abnormal_pearson,abnormal_pearson_p,semantic_visual_diff_mean,semantic_visual_diff_normal,semantic_visual_diff_abnormal,class
+0.4878,8.0072209835556e-67,0.473034369348434,2.054173724823939e-62,0.46,1.676410106302481e-53,0.3562,0.0002755212040418242,0.1177,0.11664,0.1274,visa_macaroni1_v1_k2

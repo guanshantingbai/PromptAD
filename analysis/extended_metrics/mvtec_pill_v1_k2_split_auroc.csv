@@ -1,0 +1,2 @@
+overall_semantic_auroc,overall_fusion_auroc,normal_semantic_auroc,normal_fusion_auroc,abnormal_semantic_auroc,abnormal_fusion_auroc,n_normal,n_abnormal,class
+0.8520185488270594,0.9210310965630115,1.0,1.0,1.0,1.0,26,141,mvtec_pill_v1_k2

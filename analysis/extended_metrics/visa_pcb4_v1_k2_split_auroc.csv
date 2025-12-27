@@ -1,0 +1,2 @@
+overall_semantic_auroc,overall_fusion_auroc,normal_semantic_auroc,normal_fusion_auroc,abnormal_semantic_auroc,abnormal_fusion_auroc,n_normal,n_abnormal,class
+0.8400447761194029,0.827547263681592,1.0,1.0,1.0,1.0,1005,100,visa_pcb4_v1_k2

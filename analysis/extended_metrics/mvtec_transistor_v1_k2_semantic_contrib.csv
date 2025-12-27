@@ -1,0 +1,2 @@
+overall_pearson,overall_pearson_p,overall_spearman,overall_spearman_p,normal_pearson,normal_pearson_p,abnormal_pearson,abnormal_pearson_p,semantic_visual_diff_mean,semantic_visual_diff_normal,semantic_visual_diff_abnormal,class
+0.607,2.1759518960681266e-11,0.5153060002079739,4.114283910408223e-08,0.261,0.04399698239200582,0.537,0.00035231990566586286,0.0891,0.08466,0.0959,mvtec_transistor_v1_k2

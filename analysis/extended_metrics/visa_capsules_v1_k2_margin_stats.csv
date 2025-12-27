@@ -1,0 +1,4 @@
+class,group,mean,std,p10,median,p90,n
+visa_capsules_v1_k2,all,3.246,0.04977,3.1896484375,3.25,3.306640625,702
+visa_capsules_v1_k2,normal,3.252,0.04556,3.197265625,3.256,3.30859375,602
+visa_capsules_v1_k2,abnormal,3.21,0.0587,3.14453125,3.223,3.267578125,100

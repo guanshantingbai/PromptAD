@@ -1,0 +1,2 @@
+overall_pearson,overall_pearson_p,overall_spearman,overall_spearman_p,normal_pearson,normal_pearson_p,abnormal_pearson,abnormal_pearson_p,semantic_visual_diff_mean,semantic_visual_diff_normal,semantic_visual_diff_abnormal,class
+0.635,2.724457619700054e-18,0.5000591176317384,7.257084360001966e-11,0.3364,0.009819778526269802,0.6216,3.79218229175147e-11,0.126,0.1231,0.1278,mvtec_cable_v1_k2

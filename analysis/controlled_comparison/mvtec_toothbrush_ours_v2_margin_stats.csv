@@ -1,0 +1,4 @@
+class,group,mean,std,p10,median,p90,n
+mvtec_toothbrush_k2,all,3.018,0.1631,2.7818359375,3.047,3.194921875,42
+mvtec_toothbrush_k2,normal,3.135,0.0726,3.0701171875,3.14,3.202734375,12
+mvtec_toothbrush_k2,abnormal,2.969,0.1652,2.726171875,3.0,3.160546875,30

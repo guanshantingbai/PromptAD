@@ -1,0 +1,4 @@
+class,group,mean,std,p10,median,p90,n
+mvtec_metal_nut_v2_k2,all,1.157,0.0747,1.0673828125,1.162,1.2421875,115
+mvtec_metal_nut_v2_k2,normal,1.237,0.02211,1.2130859375,1.238,1.26474609375,22
+mvtec_metal_nut_v2_k2,abnormal,1.139,0.0702,1.064453125,1.139,1.229296875,93

@@ -1,0 +1,4 @@
+class,group,mean,std,p10,median,p90,n
+mvtec_capsule_k2,all,1.117,0.0715,1.0205078125,1.125,1.1931640625,132
+mvtec_capsule_k2,normal,1.144,0.0486,1.071484375,1.164,1.192578125,23
+mvtec_capsule_k2,abnormal,1.112,0.0743,1.015625,1.123,1.191796875,109

@@ -1,0 +1,2 @@
+overall_pearson,overall_pearson_p,overall_spearman,overall_spearman_p,normal_pearson,normal_pearson_p,abnormal_pearson,abnormal_pearson_p,semantic_visual_diff_mean,semantic_visual_diff_normal,semantic_visual_diff_abnormal,class
+0.4521,5.256187077690335e-08,0.45683188818526166,3.672999168840337e-08,0.7495,3.846308155196102e-05,0.382,4.136642197754191e-05,0.2695,0.2703,0.2695,mvtec_capsule_v1_k2

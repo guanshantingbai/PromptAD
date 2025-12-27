@@ -1,0 +1,4 @@
+class,group,mean,std,p10,median,p90,n
+mvtec_bottle_v2_k2,all,1.219,0.1504,1.03203125,1.216,1.399609375,83
+mvtec_bottle_v2_k2,normal,1.389,0.02577,1.3599609375,1.395,1.4103515625,20
+mvtec_bottle_v2_k2,abnormal,1.164,0.1323,1.025390625,1.176,1.3322265625,63

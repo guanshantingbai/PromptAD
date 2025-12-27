@@ -1,0 +1,28 @@
+class,baseline_acc,prompt2_acc,delta_acc,dataset,class_name,performance_group
+mvtec-capsule,79.94,64.46,-15.480000000000004,mvtec,capsule,Severe Degrade
+mvtec-pill,95.61,82.73,-12.879999999999995,mvtec,pill,Severe Degrade
+mvtec-hazelnut,99.93,87.39,-12.540000000000006,mvtec,hazelnut,Severe Degrade
+visa-pcb3,79.78,67.68,-12.099999999999994,visa,pcb3,Severe Degrade
+mvtec-toothbrush,98.89,86.94,-11.950000000000003,mvtec,toothbrush,Severe Degrade
+visa-pcb2,77.09,66.71,-10.38000000000001,visa,pcb2,Severe Degrade
+visa-pipe_fryum,98.8,90.87,-7.929999999999993,visa,pipe_fryum,Severe Degrade
+visa-fryum,89.96,82.36,-7.599999999999994,visa,fryum,Severe Degrade
+visa-macaroni2,74.74,67.33,-7.409999999999997,visa,macaroni2,Severe Degrade
+mvtec-cable,96.38,89.47,-6.909999999999997,mvtec,cable,Severe Degrade
+visa-macaroni1,85.75,79.54,-6.209999999999994,visa,macaroni1,Severe Degrade
+mvtec-metal_nut,100.0,95.45,-4.549999999999997,mvtec,metal_nut,Mild Degrade
+visa-chewinggum,97.19,92.71,-4.480000000000004,visa,chewinggum,Mild Degrade
+visa-candle,94.86,91.11,-3.75,visa,candle,Mild Degrade
+visa-capsules,72.8,69.12,-3.6799999999999926,visa,capsules,Mild Degrade
+visa-cashew,90.4,87.0,-3.4000000000000057,visa,cashew,Mild Degrade
+mvtec-transistor,89.79,87.42,-2.3700000000000045,mvtec,transistor,Mild Degrade
+visa-pcb1,94.15,92.06,-2.0900000000000034,visa,pcb1,Mild Degrade
+mvtec-zipper,96.4,94.83,-1.5700000000000074,mvtec,zipper,Stable
+mvtec-bottle,100.0,99.21,-0.7900000000000063,mvtec,bottle,Stable
+mvtec-tile,100.0,99.86,-0.14000000000000057,mvtec,tile,Stable
+mvtec-wood,99.82,99.74,-0.0799999999999983,mvtec,wood,Stable
+mvtec-leather,100.0,100.0,0.0,mvtec,leather,Stable
+mvtec-carpet,100.0,100.0,0.0,mvtec,carpet,Stable
+mvtec-grid,99.08,99.75,0.6700000000000017,mvtec,grid,Stable
+visa-pcb4,83.45,84.86,1.4099999999999966,visa,pcb4,Stable
+mvtec-screw,58.66,73.36,14.700000000000003,mvtec,screw,Improved

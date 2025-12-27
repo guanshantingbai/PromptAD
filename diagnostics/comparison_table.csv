@@ -1,0 +1,2 @@
+class,A_normal_ab_max_mean,A_normal_ab_max_p95,B_normal_margin_mean,B_margin_separation,B_overlap_ratio,C_collapse_score,D_top1_bad_proto_count
+visa-pcb4,0.25048828125,0.267041015625,-0.0106048583984375,-0.000335693359375,0.84521484375,0.97705078125,103

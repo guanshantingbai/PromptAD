@@ -1,0 +1,4 @@
+class,group,mean,std,p10,median,p90,n
+mvtec_transistor_v1_k2,all,1.357,0.1272,1.196875,1.376,1.4947265625000001,100
+mvtec_transistor_v1_k2,normal,1.414,0.0765,1.3103515625,1.422,1.51611328125,60
+mvtec_transistor_v1_k2,abnormal,1.273,0.1403,1.08955078125,1.295,1.4099609375,40

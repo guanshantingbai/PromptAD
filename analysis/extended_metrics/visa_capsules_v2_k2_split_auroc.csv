@@ -1,0 +1,2 @@
+overall_semantic_auroc,overall_fusion_auroc,normal_semantic_auroc,normal_fusion_auroc,abnormal_semantic_auroc,abnormal_fusion_auroc,n_normal,n_abnormal,class
+0.6245431893687707,0.5620099667774086,1.0,1.0,1.0,1.0,602,100,visa_capsules_v2_k2

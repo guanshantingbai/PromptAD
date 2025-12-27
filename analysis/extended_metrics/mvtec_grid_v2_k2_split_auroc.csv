@@ -1,0 +1,2 @@
+overall_semantic_auroc,overall_fusion_auroc,normal_semantic_auroc,normal_fusion_auroc,abnormal_semantic_auroc,abnormal_fusion_auroc,n_normal,n_abnormal,class
+0.9728487886382624,0.4699248120300752,1.0,1.0,1.0,1.0,21,57,mvtec_grid_v2_k2
