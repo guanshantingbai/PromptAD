@@ -1,0 +1,8 @@
+class,baseline_i_roc,baseline_semantic,purge3_i_roc,purge3_semantic,delta_i_roc,delta_semantic,status
+metal_nut,99.66,88.51,99.56,92.35,-0.10,3.84,Purge2
+pill,93.40,84.72,94.24,88.48,0.84,3.76,Purge2
+cable,94.45,83.42,94.25,83.57,-0.20,0.15,Purge2
+screw,62.92,61.63,61.55,63.28,-1.37,1.65,Purge2
+capsule,85.16,85.16,85.20,82.37,0.04,-2.79,Purge1
+transistor,93.00,87.29,94.38,89.65,1.38,2.36,Purge2
+AVERAGE,88.10,81.79,88.20,83.28,0.10,1.49,Mixed

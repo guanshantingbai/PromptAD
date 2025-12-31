@@ -11,11 +11,11 @@ if __name__ == '__main__':
 
     pool = Pool(processes=2)
 
-#    datasets = ['mvtec', 'visa']
-    datasets = ['visa']
-    shots = [1, 2, 4]
+    datasets = ['mvtec', 'visa']
+#    datasets = ['visa']
+    shots = [2, 1, 4]
 #    shots = [1]
-    output_dir = './output_max_fusion'  # 指定输出目录
+    output_dir = './result/promptpurging'  # 指定输出目录
     gpu_id = 0
 
     # 创建日志目录

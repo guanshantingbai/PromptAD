@@ -1,0 +1,8 @@
+class,baseline_i_roc,baseline_semantic,purge2_i_roc,purge2_semantic,delta_i_roc,delta_semantic
+metal_nut,99.66,88.51,99.56,92.35,-0.10,3.84
+pill,93.40,84.72,94.24,88.48,0.84,3.76
+cable,94.45,83.42,94.25,83.57,-0.20,0.15
+screw,62.92,61.63,61.55,63.28,-1.37,1.65
+capsule,85.16,85.16,85.04,78.22,-0.12,-6.94
+transistor,93.00,87.29,94.38,89.65,1.38,2.36
+AVERAGE,88.10,81.79,88.17,82.59,0.07,0.80

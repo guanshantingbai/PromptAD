@@ -4,7 +4,19 @@ import os
 
 def write_results(results:dict, cur_class, total_classes, csv_path):
     keys_ = list(results.keys())
-    keys = ['i_roc', 'p_roc', 'semantic_i_roc', 'memory_i_roc', 'fusion_i_roc']
+    
+    # Determine which keys to use based on what's in results
+    # For CLS task: i_roc, semantic_i_roc, memory_i_roc (no p_roc)
+    # For SEG task: only p_roc
+    if 'p_roc' in results and 'i_roc' not in results:
+        # Segmentation task: only pixel-level metric
+        keys = ['p_roc']
+    elif 'p_roc' in results and 'i_roc' in results:
+        # Both image and pixel-level metrics
+        keys = ['i_roc', 'p_roc', 'semantic_i_roc', 'memory_i_roc']
+    else:
+        # Classification task: only image-level metrics
+        keys = ['i_roc', 'semantic_i_roc', 'memory_i_roc']
 
     if not os.path.exists(csv_path):
         df_all = None

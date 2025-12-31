@@ -1,6 +1,9 @@
 import argparse
 
+import torch
 import torch.optim.lr_scheduler
+import torch.nn.functional as F
+from scipy.ndimage import gaussian_filter
 
 from datasets import *
 from datasets import dataset_classes
@@ -35,7 +38,15 @@ def test(model,
     gt_list = []
     gt_mask_list = []
     names = []
-
+    
+    # Get semantic alpha (scaling factor for semantic scores)
+    semantic_alpha = getattr(args, 'semantic_alpha', 1.0)
+    use_alpha_scale = (semantic_alpha != 1.0)
+    
+    if use_alpha_scale:
+        print(f"[INFO] Semantic alpha scaling enabled: alpha={semantic_alpha}")
+    
+    # ===== MAIN INFERENCE LOOP =====
     for (data, mask, label, name, img_type) in dataloader:
 
         data = [model.transform(Image.fromarray(f.numpy())) for f in data]
@@ -52,28 +63,96 @@ def test(model,
             gt_mask_list += [m]
 
         data = data.to(device)
-        semantic_scores, memory_scores, fusion_scores, score_map = model(data, 'cls')
-        score_maps += score_map
-        scores_semantic += semantic_scores
-        scores_memory += memory_scores
-        scores_fusion += fusion_scores
+        
+        # Get visual features
+        visual_features = model.encode_image(data)
+        
+        # Calculate semantic scores
+        semantic_scores = model.calculate_textual_anomaly_score(visual_features, 'cls')
+        
+        # Calculate memory scores
+        memory_scores = model.calculate_memory_image_score(visual_features)
+        
+        # Calculate score maps (for pixel-level evaluation)
+        textual_anomaly_map = model.calculate_textual_anomaly_score(visual_features, 'seg')
+        visual_anomaly_map = model.calculate_visual_anomaly_score(visual_features)
+        anomaly_map = torch.maximum(textual_anomaly_map, visual_anomaly_map)
+        anomaly_map = torch.nn.functional.interpolate(
+            anomaly_map, size=(model.out_size_h, model.out_size_w), 
+            mode='bilinear', align_corners=False
+        )
+        am_pix = anomaly_map.squeeze(1).cpu().numpy()
+        
+        from scipy.ndimage import gaussian_filter
+        am_pix_list = []
+        for i in range(am_pix.shape[0]):
+            am_pix[i] = gaussian_filter(am_pix[i], sigma=4)
+            am_pix_list.append(am_pix[i])
+        
+        score_maps += am_pix_list
+        scores_semantic += semantic_scores.tolist()
+        scores_memory += memory_scores.tolist()
 
     test_imgs, score_maps, gt_mask_list = specify_resolution(test_imgs, score_maps, gt_mask_list,
                                                              resolution=(args.resolution, args.resolution))
     
+    # Convert to numpy arrays
+    semantic_img_scores = np.array(scores_semantic)
+    memory_img_scores = np.array(scores_memory)
+    
+    # ===== FUSION: Baseline vs Weighted Harmonic Mean =====
+    # Baseline fusion: standard harmonic mean (alpha=1.0)
+    # Formula: 1 / (1/memory + 1/semantic)
+    eps = 1e-10
+    fusion_baseline = 1.0 / (1.0 / (memory_img_scores + eps) + 1.0 / (semantic_img_scores + eps))
+    
+    if use_alpha_scale:
+        # Weighted harmonic mean: 1 / (1/memory + alpha/semantic)
+        # - alpha=0: fusion = memory (ignore semantic)
+        # - alpha=1: fusion = baseline (equal weights)
+        # - alpha>1: semantic has MORE weight
+        # - alpha<1: memory has MORE weight
+        fusion_weighted = 1.0 / (1.0 / (memory_img_scores + eps) + semantic_alpha / (semantic_img_scores + eps))
+        
+        print(f"[INFO] Weighted harmonic mean: 1/(1/memory + {semantic_alpha}/semantic)")
+        print(f"[INFO] Interpretation: alpha={semantic_alpha} → semantic weight = {semantic_alpha:.2f}, memory weight = 1.00")
+        
+        # Use weighted fusion as final score
+        fusion_img_scores = fusion_weighted
+    else:
+        # Use baseline fusion
+        fusion_img_scores = fusion_baseline
+    
     # Calculate metrics for each branch
     from utils.metrics import metric_cal_img_only
-    result_semantic = metric_cal_img_only(np.array(scores_semantic), gt_list)
-    result_memory = metric_cal_img_only(np.array(scores_memory), gt_list)
-    result_fusion = metric_cal_img_only(np.array(scores_fusion), gt_list)
+    result_semantic = metric_cal_img_only(semantic_img_scores, gt_list)
+    result_memory = metric_cal_img_only(memory_img_scores, gt_list)
+    result_fusion = metric_cal_img_only(fusion_img_scores, gt_list)
     
-    # Legacy fusion metric (for backward compatibility)
-    result_dict = metric_cal_img(np.array(scores_fusion), gt_list, np.array(score_maps))
+    # Classification task: only image-level metrics (no p_roc)
+    result_dict = {
+        'i_roc': result_fusion['i_roc'],
+        'semantic_i_roc': result_semantic['i_roc'],
+        'memory_i_roc': result_memory['i_roc'],
+        'fusion_i_roc': result_fusion['i_roc']
+    }
     
-    # Merge all metrics
-    result_dict['semantic_i_roc'] = result_semantic['i_roc']
-    result_dict['memory_i_roc'] = result_memory['i_roc']
-    result_dict['fusion_i_roc'] = result_fusion['i_roc']
+    # If alpha weighting enabled, also compute baseline metrics for comparison
+    if use_alpha_scale:
+        result_baseline = metric_cal_img_only(fusion_baseline, gt_list)
+        result_dict['fusion_baseline_i_roc'] = result_baseline['i_roc']
+        result_dict['fusion_weighted_i_roc'] = result_fusion['i_roc']
+        delta_roc = result_fusion['i_roc'] - result_baseline['i_roc']
+        result_dict['delta_i_roc'] = delta_roc
+        
+        print(f"\n[Weighted Harmonic Mean Results] (alpha={semantic_alpha})")
+        print(f"  Baseline Fusion AUROC: {result_baseline['i_roc']:.4f}")
+        print(f"  Weighted Fusion AUROC: {result_fusion['i_roc']:.4f}")
+        print(f"  Δ AUROC (weighted - baseline): {delta_roc:+.4f}")
+    
+    # Visualization (optional - can be implemented if needed)
+    # if args.vis:
+    #     pass
 
     return result_dict
 
@@ -92,11 +171,46 @@ def main(args):
         device = f"cpu"
     kwargs['device'] = device
 
-    # prepare the experiment dir
-    img_dir, csv_path, check_path = get_dir_from_args(TASK, **kwargs)
+    # Determine paths based on mode
+    dataset = kwargs['dataset']
+    k_shot = kwargs['k_shot']
+    seed = kwargs['seed']
+    class_name = kwargs['class_name']
+    semantic_alpha = kwargs.get('semantic_alpha', 1.0)
+    output_dir = kwargs.get('output_dir', None)
+    
+    # Always load checkpoint from baseline
+    baseline_root = "./result/baseline"
+    check_path = f"{baseline_root}/{dataset}/k_{k_shot}/checkpoint/CLS-Seed_{seed}-{class_name}-check_point.pt"
+    
+    if semantic_alpha != 1.0:
+        # Alpha scaling mode: save results to specified or default directory
+        if output_dir:
+            alpha_root = f"{output_dir}/{dataset}/k_{k_shot}"
+        else:
+            alpha_root = f"./result/alpha_scale/{dataset}/k_{k_shot}"
+        
+        os.makedirs(f"{alpha_root}/csv", exist_ok=True)
+        os.makedirs(f"{alpha_root}/images", exist_ok=True)
+        
+        img_dir = f"{alpha_root}/images"
+        csv_path = f"{alpha_root}/csv/{dataset}.csv"
+        
+        print(f"[INFO] Alpha scaling mode: Results will be saved to {alpha_root}")
+        print(f"[INFO] Checkpoint loaded from: {check_path}")
+    else:
+        # Baseline mode: use standard paths from get_dir_from_args
+        img_dir, csv_path, _ = get_dir_from_args(TASK, **kwargs)
+    
+    # Override checkpoint path if explicitly specified via checkpoint_dir argument
+    if kwargs['checkpoint_dir'] is not None:
+        check_path = f"{kwargs['checkpoint_dir']}/checkpoint/CLS-Seed_{kwargs['seed']}-{kwargs['class_name']}-check_point.pt"
+        print(f"[INFO] Using checkpoint from: {check_path}")
 
-    # get the test dataloader
-    test_dataloader, test_dataset_inst = get_dataloader_from_args(phase='test', perturbed=False, **kwargs)
+    # get the test dataloader (force num_workers=0 for compatibility)
+    kwargs_loader = kwargs.copy()
+    kwargs_loader['num_workers'] = 0
+    test_dataloader, test_dataset_inst = get_dataloader_from_args(phase='test', perturbed=False, **kwargs_loader)
 
     kwargs['out_size_h'] = kwargs['resolution']
     kwargs['out_size_w'] = kwargs['resolution']
@@ -112,7 +226,16 @@ def main(args):
     semantic_roc = round(metrics['semantic_i_roc'], 2)
     memory_roc = round(metrics['memory_i_roc'], 2)
     object = kwargs['class_name']
-    print(f'Object:{object} =========================== Fusion-AUROC:{fusion_roc}, Semantic:{semantic_roc}, Memory:{memory_roc}\n')
+    
+    # Print results based on mode
+    semantic_alpha = kwargs.get('semantic_alpha', 1.0)
+    if semantic_alpha != 1.0:
+        baseline_roc = round(metrics.get('fusion_baseline_i_roc', fusion_roc), 2)
+        scaled_roc = round(metrics.get('fusion_scaled_i_roc', fusion_roc), 2)
+        delta = round(metrics.get('delta_i_roc', 0), 4)
+        print(f'Object:{object} === [Alpha={semantic_alpha}] Baseline:{baseline_roc}, Scaled:{scaled_roc}, Δ:{delta:+.4f} | Semantic:{semantic_roc}, Memory:{memory_roc}\n')
+    else:
+        print(f'Object:{object} =========================== Fusion-AUROC:{fusion_roc}, Semantic:{semantic_roc}, Memory:{memory_roc}\n')
 
     save_metric(metrics, dataset_classes[kwargs['dataset']], kwargs['class_name'],
                 kwargs['dataset'], csv_path)
@@ -156,6 +279,14 @@ def get_args():
     parser.add_argument("--n_ctx_ab", type=int, default=1)
     parser.add_argument("--n_pro", type=int, default=1)
     parser.add_argument("--n_pro_ab", type=int, default=4)
+
+    # semantic alpha scaling parameter
+    parser.add_argument("--semantic-alpha", type=float, default=1.0,
+                        help="Semantic score scaling factor (default: 1.0 = no scaling)")
+    parser.add_argument("--output-dir", type=str, default=None,
+                        help="Override output directory for alpha scaling results (e.g., ./result/test_alpha)")
+    parser.add_argument("--checkpoint-dir", type=str, default=None,
+                        help="Override checkpoint directory (default: uses baseline checkpoint)")
 
     args = parser.parse_args()
 

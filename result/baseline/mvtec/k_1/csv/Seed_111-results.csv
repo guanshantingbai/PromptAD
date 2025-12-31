@@ -1,0 +1,16 @@
+,i_roc,p_roc,semantic_i_roc,memory_i_roc
+mvtec-carpet,100.00,99.36,99.96,99.88
+mvtec-grid,98.25,97.97,98.66,95.49
+mvtec-leather,100.00,99.45,100.00,99.80
+mvtec-tile,100.00,96.66,100.00,98.56
+mvtec-wood,99.39,95.33,99.39,98.07
+mvtec-bottle,100.00,98.59,96.87,99.76
+mvtec-cable,92.65,96.60,83.18,89.17
+mvtec-capsule,68.93,93.21,68.99,61.79
+mvtec-hazelnut,99.79,98.78,92.77,99.82
+mvtec-metal_nut,99.02,88.78,90.71,98.78
+mvtec-pill,94.11,95.31,85.99,93.37
+mvtec-screw,54.33,91.95,58.60,54.09
+mvtec-toothbrush,93.89,98.32,66.81,94.44
+mvtec-transistor,81.83,89.96,81.48,67.12
+mvtec-zipper,95.88,90.59,94.68,92.20

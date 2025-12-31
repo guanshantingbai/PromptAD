@@ -13,7 +13,7 @@ if __name__ == '__main__':
 
     datasets = ['mvtec', 'visa']
     shots = [1, 2, 4]
-    output_dir = './output_max_fusion'  # 指定输出目录
+    output_dir = './result/baseline'  # 指定输出目录
     gpu_id = 0
     
     # 创建日志目录
@@ -25,7 +25,7 @@ if __name__ == '__main__':
             classes = dataset_classes[dataset]
             for cls in classes[:]:
                 log_file = os.path.join(log_dir, f'k{shot}_{dataset}_{cls}.log')
-                sh_method = f'python train_cls.py ' \
+                sh_method = f'python train_seg.py ' \
                             f'--dataset {dataset} ' \
                             f'--gpu-id {gpu_id} ' \
                             f'--k-shot {shot} ' \

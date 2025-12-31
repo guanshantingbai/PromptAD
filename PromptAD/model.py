@@ -26,7 +26,7 @@ def _convert_to_rgb(image):
 
 
 class PromptLearner(nn.Module):
-    def __init__(self, n_ctx, n_pro, n_ctx_ab, n_pro_ab, classname, clip_model, pre):
+    def __init__(self, n_ctx, n_pro, n_ctx_ab, n_pro_ab, classname, clip_model, pre, use_lap=True):
         super().__init__()
 
         if pre == 'fp16':
@@ -34,7 +34,13 @@ class PromptLearner(nn.Module):
         else:
             dtype = torch.float32
 
-        state_anomaly1 = state_anomaly + class_state_abnormal[classname]
+        # Filter out LAP if use_lap=False (MAP-only mode)
+        if use_lap:
+            state_anomaly1 = state_anomaly + class_state_abnormal[classname]
+        else:
+            # MAP-only: use only class_state_abnormal (most anomalous)
+            state_anomaly1 = class_state_abnormal[classname]
+            print(f"[MAP-only Mode] Using {len(state_anomaly1)} MAP prompts, excluding {len(state_anomaly)} LAP prompts")
 
         if classname in class_mapping:
             classname = class_mapping[classname]
@@ -59,6 +65,16 @@ class PromptLearner(nn.Module):
 
         # abnormal prompt
         self.n_ab_handle = len(state_anomaly1)
+        print(f"\n{'='*60}")
+        print(f"[Prompt Configuration] Class: {classname}")
+        print(f"  - Mode: {'MAP+LAP (Baseline)' if use_lap else 'MAP-only (Experimental)'}")
+        print(f"  - MAP prompts: {self.n_ab_handle}")
+        if not use_lap:
+            print(f"  - LAP prompts: 0 (excluded, normally 8)")
+        else:
+            print(f"  - LAP prompts: 8 (generic anomaly templates)")
+        print(f"{'='*60}\n")
+        
         abnormal_prompts_handle = [normal_prompt_prefix + " " + state.format(classname) + "." for state in state_anomaly1 for _ in range(n_pro)]
         abnormal_prompts_learned = [normal_prompt_prefix + " " + abnormal_prompt_prefix + " " + classname + "." for _ in range(n_pro_ab) for _ in range(n_pro)]
 
@@ -168,6 +184,7 @@ class PromptAD(torch.nn.Module):
         super(PromptAD, self).__init__()
 
         self.shot = kwargs['k_shot']
+        self.use_lap = kwargs.get('use_lap', True)  # Extract use_lap parameter
 
         self.out_size_h = out_size_h
         self.out_size_w = out_size_w
@@ -177,6 +194,8 @@ class PromptAD(torch.nn.Module):
         self.get_model(n_ctx, n_pro, n_ctx_ab, n_pro_ab, class_name, backbone, pretrained_dataset)
         self.phrase_form = '{}'
         self.device = device
+        
+        print(f"\n[PromptAD] Initializing with use_lap={self.use_lap}")
 
         # version v1: no norm for each of linguistic embedding
         # version v1:    norm for each of linguistic embedding
@@ -208,7 +227,7 @@ class PromptAD(torch.nn.Module):
         tokenizer = CLIPAD.get_tokenizer(backbone)
         model.eval()
 
-        self.prompt_learner = PromptLearner(n_ctx, n_pro, n_ctx_ab, n_pro_ab, class_name, model, self.precision)
+        self.prompt_learner = PromptLearner(n_ctx, n_pro, n_ctx_ab, n_pro_ab, class_name, model, self.precision, use_lap=self.use_lap)
         self.model = model.to(self.device)
 
         self.tokenizer = tokenizer
@@ -399,6 +418,78 @@ class PromptAD(torch.nn.Module):
         # Take max over spatial dimensions for image-level score
         memory_img_scores = am_pix.reshape(am_pix.shape[0], -1).max(axis=1)
         return memory_img_scores
+    
+    def compute_semantic_confidence(self, visual_features, tau=0.05, k=20.0):
+        """
+        Compute semantic confidence (gating strength) based on logit margin.
+        
+        Args:
+            visual_features: visual features from encoder
+            tau: margin collapse threshold (default 0.05)
+            k: gating slope parameter (default 20.0)
+        
+        Returns:
+            alpha: np.array [N], semantic gating strength (0 = suppress, large = enhance)
+            margins: np.array [N], logit margins for analysis
+        """
+        import numpy as np
+        
+        # Compute logit margin: m(x) = s_normal - s_abnormal
+        margins, logits = self.calculate_margin_and_logits(visual_features)
+        
+        # Gating function: α(x) = σ(k · (|m(x)| - τ))
+        # Use sigmoid to ensure smooth transition
+        margin_abs = np.abs(margins)
+        alpha = 1.0 / (1.0 + np.exp(-k * (margin_abs - tau)))
+        
+        return alpha, margins
+    
+    def adaptive_harmonic_fusion(self, semantic_scores, memory_scores, alpha, epsilon=1e-8):
+        """
+        Memory-safeguarded adaptive harmonic fusion.
+        
+        **Corrected Formula**: s_final = max(s_mem, harmonic_fusion_when_semantic_agrees)
+        
+        Key design principle:
+        - Memory is the baseline/floor (cannot be pulled down by semantic)
+        - Semantic can ONLY enhance anomaly detection when:
+          1. It has high confidence (large |margin|)
+          2. It agrees with memory that sample is anomalous
+        - When semantic disagrees or is uncertain → fall back to memory
+        
+        Implementation:
+        1. Compute gated harmonic: h = 1 / (1/s_mem + α/s_sem)
+        2. Take max: s_final = max(s_mem, h)
+        
+        This ensures:
+        - α = 0 → s_final = s_mem (pure memory)
+        - α large AND s_sem high → s_final may exceed s_mem (anomaly enhancement)
+        - α large BUT s_sem low → s_final = s_mem (semantic suppressed)
+        
+        Args:
+            semantic_scores: np.array [N], semantic anomaly scores
+            memory_scores: np.array [N], memory anomaly scores
+            alpha: np.array [N], gating strength per sample
+            epsilon: small constant to avoid division by zero
+        
+        Returns:
+            fusion_scores: np.array [N], adaptively fused scores
+        """
+        import numpy as np
+        
+        # Clamp scores to avoid numerical issues
+        semantic_scores = np.clip(semantic_scores, epsilon, 1.0)
+        memory_scores = np.clip(memory_scores, epsilon, 1.0)
+        
+        # Compute gated harmonic fusion
+        # h = 1 / (1/s_mem + α/s_sem)
+        harmonic_fusion = 1.0 / (1.0 / memory_scores + alpha / semantic_scores)
+        
+        # Memory safeguard: fusion cannot be lower than memory baseline
+        # This prevents semantic from "pulling down" reliable memory predictions
+        fusion_scores = np.maximum(memory_scores, harmonic_fusion)
+        
+        return fusion_scores
 
     def forward(self, images, task):
 
@@ -434,19 +525,49 @@ class PromptAD(torch.nn.Module):
             # Calculate memory branch score (visual)
             memory_img_scores = self.calculate_memory_image_score(visual_features)
 
-            # Calculate fusion score (max fusion)
-            fusion_img_scores = np.maximum(semantic_img_scores, memory_img_scores)
-
-            # Also return pixel-level maps for compatibility
+            # Pixel-level maps for compatibility
             visual_anomaly_map = self.calculate_visual_anomaly_score(visual_features)
             anomaly_map = F.interpolate(visual_anomaly_map, size=(self.out_size_h, self.out_size_w), mode='bilinear',
                                         align_corners=False)
             am_pix = anomaly_map.squeeze(1).numpy()
             am_pix_list = [am_pix[i] for i in range(am_pix.shape[0])]
 
-            # Return: semantic_scores, memory_scores, fusion_scores, pixel_maps
+            # Return: semantic_scores, memory_scores, pixel_maps (no fusion in model)
+            return (list(semantic_img_scores), list(memory_img_scores), am_pix_list)
+        
+        elif task == 'cls_gated':
+            # Semantic-gated fusion (inference-only adaptive mechanism)
+            import numpy as np
+            
+            # Calculate semantic branch score
+            textual_anomaly = self.calculate_textual_anomaly_score(visual_features, 'cls')
+            semantic_img_scores = textual_anomaly
+            
+            # Calculate memory branch score
+            memory_img_scores = self.calculate_memory_image_score(visual_features)
+            
+            # Compute semantic confidence (gating strength)
+            # Get gating parameters from model attributes if available
+            tau = getattr(self, 'gating_tau', 0.05)
+            k = getattr(self, 'gating_k', 20.0)
+            alpha, margins = self.compute_semantic_confidence(visual_features, tau=tau, k=k)
+            
+            # Adaptive harmonic fusion with memory safeguard
+            fusion_img_scores = self.adaptive_harmonic_fusion(
+                semantic_img_scores, memory_img_scores, alpha
+            )
+            
+            # Pixel-level maps for compatibility
+            visual_anomaly_map = self.calculate_visual_anomaly_score(visual_features)
+            anomaly_map = F.interpolate(visual_anomaly_map, size=(self.out_size_h, self.out_size_w), mode='bilinear',
+                                        align_corners=False)
+            am_pix = anomaly_map.squeeze(1).numpy()
+            am_pix_list = [am_pix[i] for i in range(am_pix.shape[0])]
+            
+            # Return: semantic_scores, memory_scores, fusion_scores (gated), pixel_maps
+            # Also return alpha and margins for analysis
             return (list(semantic_img_scores), list(memory_img_scores), 
-                    list(fusion_img_scores), am_pix_list)
+                    list(fusion_img_scores), am_pix_list, list(alpha), list(margins))
         
         elif task == 'cls_detailed':
             # For detailed baseline analysis: return margins, logits, and scores

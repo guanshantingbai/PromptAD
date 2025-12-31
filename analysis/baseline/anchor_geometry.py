@@ -19,7 +19,7 @@ def analyze_anchor_geometry(
     
     Args:
         mu_normal: Normal anchor, shape [D]
-        mu_abnormal: Abnormal anchor, shape [D]
+        mu_abnormal: Abnormal anchor, shape [D] 
     
     Returns:
         {
@@ -167,6 +167,7 @@ def evaluate_with_decomposed_anchors(
         }
     """
     from sklearn.metrics import roc_auc_score
+    from PIL import Image
     
     model.eval()
     
@@ -182,7 +183,10 @@ def evaluate_with_decomposed_anchors(
     
     with torch.no_grad():
         for (data, mask, label, name, img_type) in dataloader:
-            data = data.to(device)
+            # Transform data to correct format
+            data = [model.transform(Image.fromarray(f.numpy())) for f in data]
+            data = torch.stack(data, dim=0).to(device)
+            
             visual_features = model.encode_image(data)
             all_visual_features.append(visual_features[0].cpu())  # CLS token
             all_labels.extend(label.numpy())
@@ -201,8 +205,8 @@ def evaluate_with_decomposed_anchors(
         model.text_features.copy_(text_features)
         
         # Calculate scores
-        t = model.logit_scale
-        logits = (t * all_visual_features @ model.text_features.T).cpu().numpy()
+        t = model.model.logit_scale
+        logits = (t * all_visual_features @ model.text_features.T).detach().cpu().numpy()
         margins = logits[:, 0] - logits[:, 1]
         scores = logits[:, 1]  # Abnormality score
         

@@ -1,0 +1,209 @@
+
+================================================================================
+MAP/LAP Reliability Metrics Summary Report
+================================================================================
+
+Generated from: Harmonic Fusion Baseline
+Total classes analyzed: 27
+
+================================================================================
+SECTION I: Normal-side Risk Indicators
+================================================================================
+
+Average Risk across all classes:
+  MAP: R_0=0.9259, R_ε=0.9630
+  LAP: R_0=0.1296, R_ε=0.3519
+
+Classes with HIGH MAP risk (R_MAP_eps > 0.5): 26 classes
+           class  R_MAP_eps  margin_MAP_median  semantic_auroc
+    mvtec-bottle        1.0          -0.055900           95.71
+   mvtec-capsule        1.0          -0.163600           85.16
+       visa-pcb4        1.0          -0.031250           81.02
+       visa-pcb3        1.0           0.017090           70.62
+       visa-pcb2        1.0          -0.007324           64.16
+       visa-pcb1        1.0          -0.013180           90.83
+  visa-macaroni2        1.0          -0.208300           68.50
+  visa-macaroni1        1.0          -0.124760           85.20
+      visa-fryum        1.0          -0.017460           86.77
+ visa-chewinggum        1.0          -0.026610           92.54
+     visa-cashew        1.0          -0.171600           91.74
+   visa-capsules        1.0          -0.064700           66.54
+     visa-candle        1.0          -0.093260           94.46
+    mvtec-zipper        1.0          -0.139900           97.26
+      mvtec-wood        1.0          -0.142600           99.12
+mvtec-transistor        1.0          -0.250700           87.29
+mvtec-toothbrush        1.0          -0.096900           65.00
+      mvtec-tile        1.0          -0.220200           99.89
+     mvtec-screw        1.0          -0.061040           61.63
+      mvtec-pill        1.0          -0.161100           84.72
+ mvtec-metal_nut        1.0          -0.149900           88.51
+   mvtec-leather        1.0          -0.056900          100.00
+  mvtec-hazelnut        1.0          -0.166300           91.21
+      mvtec-grid        1.0          -0.112060           98.25
+    mvtec-carpet        1.0          -0.102050           99.96
+ visa-pipe_fryum        1.0          -0.106100           83.32
+
+Classes with HIGH LAP risk (R_LAP_eps > 0.5): 8 classes
+           class  R_LAP_eps  margin_LAP_median  semantic_auroc
+    mvtec-bottle        1.0          -0.052730           95.71
+     mvtec-cable        1.0          -0.012940           83.42
+      mvtec-tile        1.0           0.036620           99.89
+mvtec-toothbrush        1.0           0.005615           65.00
+     visa-candle        1.0           0.029300           94.46
+   visa-capsules        1.0           0.034180           66.54
+      visa-fryum        1.0           0.040400           86.77
+       visa-pcb1        1.0          -0.022220           90.83
+
+Risk Comparison (R_0):
+  MAP higher risk: 23/27 classes (85.2%)
+  LAP higher risk: 1/27 classes (3.7%)
+
+
+================================================================================
+SECTION II: Consistency / Stability Indicators
+================================================================================
+
+Average Consistency metrics:
+  Margin discrepancy: 0.1796 ± 0.1047
+  Disagreement rate: 0.8704 ± 0.3279
+  Margin correlation: -0.0769 ± 1.0168
+
+Classes with HIGH MAP-LAP disagreement (rate > 0.5): 23 classes
+           class  disagreement_rate  margin_discrepancy_mean  semantic_auroc  fusion_auroc
+     mvtec-cable                1.0                  0.07520           83.42         94.45
+    mvtec-zipper                1.0                  0.22310           97.26         97.06
+       visa-pcb4                1.0                  0.10547           81.02         83.96
+       visa-pcb2                1.0                  0.09620           64.16         76.89
+  visa-macaroni2                1.0                  0.31740           68.50         78.37
+  visa-macaroni1                1.0                  0.22780           85.20         88.11
+      visa-fryum                1.0                  0.05786           86.77         87.10
+ visa-chewinggum                1.0                  0.09250           92.54         96.11
+     visa-cashew                1.0                  0.22120           91.74         92.43
+   visa-capsules                1.0                  0.09890           66.54         76.55
+     visa-candle                1.0                  0.12256           94.46         94.33
+      mvtec-wood                1.0                  0.22950           99.12         99.56
+   mvtec-capsule                1.0                  0.24370           85.16         85.16
+mvtec-transistor                1.0                  0.41630           87.29         93.00
+      mvtec-tile                1.0                  0.25680           99.89         99.93
+     mvtec-screw                1.0                  0.28150           61.63         62.92
+      mvtec-pill                1.0                  0.28690           84.72         93.40
+ mvtec-metal_nut                1.0                  0.22880           88.51         99.66
+   mvtec-leather                1.0                  0.14920          100.00        100.00
+  mvtec-hazelnut                1.0                  0.21170           91.21         99.93
+      mvtec-grid                1.0                  0.25440           98.25         97.91
+    mvtec-carpet                1.0                  0.32710           99.96        100.00
+ visa-pipe_fryum                1.0                  0.15640           83.32         98.70
+
+Classes with NEGATIVE margin correlation: 14 classes
+           class  margin_correlation  semantic_auroc  fusion_auroc
+    mvtec-carpet                -1.0           99.96        100.00
+      mvtec-grid                -1.0           98.25         97.91
+     mvtec-screw                -1.0           61.63         62.92
+mvtec-transistor                -1.0           87.29         93.00
+      mvtec-wood                -1.0           99.12         99.56
+    mvtec-zipper                -1.0           97.26         97.06
+   visa-capsules                -1.0           66.54         76.55
+     visa-cashew                -1.0           91.74         92.43
+      visa-fryum                -1.0           86.77         87.10
+  visa-macaroni1                -1.0           85.20         88.11
+
+
+================================================================================
+SECTION III: Anchor Geometry Indicators
+================================================================================
+
+Average Anchor Similarities:
+  cos(μ_n, μ_MAP): 0.9738 ± 0.0070
+  cos(μ_n, μ_LAP): 0.9696 ± 0.0118
+  cos(μ_MAP, μ_LAP): 0.9507 ± 0.0156
+
+Classes with HIGH MAP-LAP alignment (cos > 0.92): 26 classes
+           class  cos_MAP_LAP  semantic_auroc  fusion_auroc
+       visa-pcb2     0.974609           64.16         76.89
+       visa-pcb1     0.972168           90.83         94.63
+ visa-pipe_fryum     0.968262           83.32         98.70
+      visa-fryum     0.966797           86.77         87.10
+       visa-pcb4     0.966309           81.02         83.96
+  visa-macaroni1     0.961426           85.20         88.11
+ visa-chewinggum     0.961426           92.54         96.11
+   mvtec-capsule     0.960938           85.16         85.16
+  visa-macaroni2     0.959473           68.50         78.37
+mvtec-toothbrush     0.959473           65.00         93.89
+     visa-cashew     0.958496           91.74         92.43
+     mvtec-cable     0.953613           83.42         94.45
+    mvtec-bottle     0.952148           95.71         99.60
+   visa-capsules     0.951660           66.54         76.55
+     mvtec-screw     0.950684           61.63         62.92
+    mvtec-zipper     0.948730           97.26         97.06
+ mvtec-metal_nut     0.948242           88.51         99.66
+      mvtec-tile     0.946777           99.89         99.93
+mvtec-transistor     0.945312           87.29         93.00
+       visa-pcb3     0.945312           70.62         75.25
+      mvtec-wood     0.942871           99.12         99.56
+      mvtec-grid     0.941895           98.25         97.91
+  mvtec-hazelnut     0.938965           91.21         99.93
+   mvtec-leather     0.933105          100.00        100.00
+     visa-candle     0.932129           94.46         94.33
+      mvtec-pill     0.923340           84.72         93.40
+
+Classes with Normal-MAP anchor collapse (cos > 0.95): 27 classes
+          class  cos_normal_MAP  margin_MAP_mean  semantic_auroc
+      visa-pcb1        0.988770        -0.013180           90.83
+      visa-pcb3        0.985840         0.017090           70.62
+      visa-pcb4        0.983398        -0.031250           81.02
+      visa-pcb2        0.983398        -0.007324           64.16
+  visa-capsules        0.979980        -0.064700           66.54
+visa-chewinggum        0.978516        -0.026610           92.54
+   mvtec-bottle        0.977051        -0.055900           95.71
+    mvtec-cable        0.977051         0.062260           83.42
+  mvtec-leather        0.977051        -0.056900          100.00
+     visa-fryum        0.976562        -0.017460           86.77
+
+
+================================================================================
+SECTION IV: Failure Mode vs MAP/LAP Reliability
+================================================================================
+
+Reliability metrics by Failure Mode:
+
+Mode             Count    R_MAP_0    R_LAP_0   Disagree   cos(M,L)   Semantic
+--------------------------------------------------------------------------------
+A+B                  5      0.800      0.200      0.600      0.962      84.36
+A+B+C                1      1.000      0.000      1.000      0.975      64.16
+B                    9      1.000      0.111      0.889      0.950      86.77
+B+C                  6      0.833      0.250      0.917      0.953      75.25
+B+D                  5      1.000      0.000      1.000      0.943      98.90
+D                    1      1.000      0.000      1.000      0.904      99.96
+
+
+================================================================================
+KEY INSIGHTS FOR GATING MECHANISM DESIGN
+================================================================================
+
+1. When to DISTRUST MAP:
+   - High normal-side risk: R_MAP_0 > 1.000
+   - High anchor overlap with normal: cos(μ_n, μ_MAP) > 0.977
+   - Affected classes: 0/27
+
+2. When to TRUST LAP:
+   - Low normal-side risk: R_LAP_0 < 0.000
+   - Good separation from normal: cos(μ_n, μ_LAP) < 0.961
+   - Candidate classes: 0/27
+
+3. When to USE ENSEMBLE (both unreliable):
+   - High disagreement: disagreement_rate > 1.000
+   - High discrepancy: margin_discrepancy > 0.249
+   - Affected classes: 0/27
+
+4. LAP vs MAP Performance:
+   - MAP more reliable: 1/27 classes (3.7%)
+   - LAP more reliable: 23/27 classes (85.2%)
+
+5. Risk vs Semantic Performance:
+   - R_MAP_0 correlation: r=0.206, p=0.3029
+   - R_LAP_0 correlation: r=0.026, p=0.8988
+
+
+================================================================================
+END OF REPORT
+================================================================================

@@ -14,12 +14,12 @@ class_mapping = {
 
 
 state_anomaly = ["damaged {}",
-                 "flawed {}",
-                 "abnormal {}",
-                 "imperfect {}",
-                 "blemished {}",
-                 "{} with flaw",
-                 "{} with defect",
+                 # "flawed {}",
+                 # "abnormal {}",
+                 # "imperfect {}",
+                 # "blemished {}",
+                 # "{} with flaw",
+                 # "{} with defect",
                  "{} with damage"]
 
 abnormal_state0 = ['damaged {}', 'broken {}', '{} with flaw', '{} with defect', '{} with damage']
@@ -31,12 +31,41 @@ class_state_abnormal = {
     'carpet': ['{} with hole', '{} with color stain', '{} with metal contamination', '{} with thread residue', '{} with thread', '{} with cut'],
     'hazelnut': ['{} with crack', '{} with cut', '{} with hole', '{} with print'],
     'leather': ['{} with color stain', '{} with cut', '{} with fold', '{} with glue', '{} with poke'],
-    'cable': ['{} with bent wire', '{} with missing part', '{} with missing wire', '{} with cut', '{} with poke'],
-    'capsule': ['{} with crack', '{} with faulty imprint', '{} with poke', '{} with scratch', '{} squeezed with compression'],
+    'cable': [
+        '{} with bent wire',
+        # '{} with missing part',  # ❌ Useless: Gap=-0.094
+        # '{} with missing wire',  # ❌ Useless: Gap=-0.156
+        '{} with cut',
+        '{} with poke'
+    ],
+    'capsule': [
+        '{} with crack',
+        '{} with faulty imprint',
+        '{} with poke',  # ✅ Restored: Purge2 showed -6.94 degradation
+        '{} with scratch',
+        '{} squeezed with compression'  # ✅ Restored: Purge2 showed -6.94 degradation
+    ],
     'grid': ['{} with breakage',  '{} with thread residue', '{} with thread', '{} with metal contamination', '{} with glue', '{} with a bent shape'],
-    'pill': ['{} with color stain', '{} with contamination', '{} with crack', '{} with faulty imprint', '{} with scratch', '{} with abnormal type'],
-    'transistor': ['{} with bent lead', '{} with cut lead', '{} with damage', '{} with misplaced transistor'],
-    'metal_nut': ['{} with a bent shape ', '{} with color stain', '{} with a flipped orientation', '{} with scratch'],
+    'pill': [
+        '{} with color stain',
+        '{} with contamination',
+        '{} with crack',
+        '{} with faulty imprint',
+        # '{} with scratch',  # ❌ Useless: Gap=-0.055
+        '{} with abnormal type'
+    ],
+    'transistor': [
+        '{} with bent lead',
+        '{} with cut lead',
+        # '{} with damage',  # ❌ Useless: Gap=-0.094
+        # '{} with misplaced transistor'  # ❌ Useless: Gap=-0.109
+    ],
+    'metal_nut': [
+        # '{} with a bent shape ',  # ❌ Useless: Gap=-0.082
+        '{} with color stain',
+        # '{} with a flipped orientation',  # ❌ Useless: Gap=-0.266
+        '{} with scratch'
+    ],
     'screw': ['{} with manipulated front',  '{} with scratch neck', '{} with scratch head'],
     'zipper': ['{} with broken teeth', '{} with fabric border', '{} with defect fabric', '{} with broken fabric', '{} with split teeth', '{} with squeezed teeth'],
     'tile': ['{} with crack', '{} with glue strip', '{} with gray stroke', '{} with oil', '{} with rough surface'],

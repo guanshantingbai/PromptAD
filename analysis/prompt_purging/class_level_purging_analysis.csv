@@ -1,0 +1,8 @@
+class,baseline_i_roc,baseline_semantic,baseline_memory,purged_i_roc,purged_semantic,purged_memory,delta_i_roc,delta_semantic,delta_memory
+mvtec-metal_nut,99.66,88.51,99.41,99.56,92.35,99.41,-0.10,3.84,0.00
+mvtec-pill,93.40,84.72,92.80,94.24,88.48,92.80,0.84,3.76,0.00
+mvtec-cable,94.45,83.42,92.82,94.25,83.57,92.82,-0.20,0.15,0.00
+mvtec-screw,62.92,61.63,55.87,61.55,63.28,55.87,-1.37,1.65,0.00
+mvtec-capsule,85.16,85.16,84.72,85.04,78.22,84.72,-0.12,-6.94,0.00
+mvtec-transistor,93.00,87.29,86.87,94.38,89.65,86.87,1.38,2.36,0.00
+AVERAGE,88.10,81.79,85.42,88.17,82.59,85.42,0.07,0.80,0.00
