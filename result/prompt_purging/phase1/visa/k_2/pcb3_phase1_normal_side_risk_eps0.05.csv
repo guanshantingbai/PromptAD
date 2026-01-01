@@ -1,0 +1,13 @@
+prompt_index,prompt_id,class,display_name,type,template,full_text,R_j_0,R_j_eps,median_margin,q10_margin,mean_margin,std_margin,num_samples,risk_level
+6,227,pcb3,printed circuit board,generic,{} with defect,printed circuit board with defect,0.005952380952380952,0.006944444444444444,1.671875,0.90625,1.6427796378968254,0.569765632979253,1008,high
+1,222,pcb3,printed circuit board,generic,flawed {},flawed printed circuit board,0.003968253968253968,0.00496031746031746,1.8828125,1.140625,1.8894469246031746,0.6126702400768781,1008,high
+9,230,pcb3,printed circuit board,specific,{} with scratch,printed circuit board with scratch,0.000992063492063492,0.002976190476190476,1.65625,0.875,1.6458023313492063,0.559260724661876,1008,high
+5,226,pcb3,printed circuit board,generic,{} with flaw,printed circuit board with flaw,0.000992063492063492,0.001984126984126984,1.671875,0.921875,1.6342695932539681,0.5429580963930578,1008,medium
+11,232,pcb3,printed circuit board,specific,{} with melt,printed circuit board with melt,0.000992063492063492,0.001984126984126984,2.0625,1.328125,2.043666294642857,0.5522492474890013,1008,medium
+8,229,pcb3,printed circuit board,specific,{} with bent,printed circuit board with bent,0.0,0.000992063492063492,1.859375,1.03125,1.8532831101190477,0.6210845423006807,1008,medium
+10,231,pcb3,printed circuit board,specific,{} with missing,printed circuit board with missing,0.000992063492063492,0.000992063492063492,1.890625,1.21875,1.8514074900793651,0.5007139650787175,1008,medium
+0,221,pcb3,printed circuit board,generic,damaged {},damaged printed circuit board,0.0,0.0,4.015625,3.109375,3.983615451388889,0.6742278633821673,1008,low
+2,223,pcb3,printed circuit board,generic,abnormal {},abnormal printed circuit board,0.0,0.0,4.59375,3.375,4.521685887896825,0.7972155436544599,1008,low
+3,224,pcb3,printed circuit board,generic,imperfect {},imperfect printed circuit board,0.0,0.0,3.3125,2.6875,3.295619419642857,0.4678310506726204,1008,low
+4,225,pcb3,printed circuit board,generic,blemished {},blemished printed circuit board,0.0,0.0,3.359375,2.625,3.366086929563492,0.5668572025923946,1008,low
+7,228,pcb3,printed circuit board,generic,{} with damage,printed circuit board with damage,0.0,0.0,3.125,2.3078125,3.0737692212301586,0.5757031688534814,1008,low

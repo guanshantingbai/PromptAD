@@ -1,0 +1,16 @@
+class,total_prompts,safe,dangerous_useful,dangerous_useless,useless_percentage
+bottle,11,2,5,4,36.36363636363637
+cable,13,0,9,4,30.76923076923077
+capsule,13,1,7,5,38.46153846153847
+carpet,14,1,8,5,35.714285714285715
+grid,14,3,11,0,0.0
+hazelnut,12,5,4,3,25.0
+leather,13,5,5,3,23.076923076923077
+metal_nut,12,0,9,3,25.0
+pill,14,0,10,4,28.57142857142857
+screw,11,2,7,2,18.181818181818183
+tile,13,2,7,4,30.76923076923077
+toothbrush,10,2,2,6,60.0
+transistor,12,0,6,6,50.0
+wood,12,1,5,6,50.0
+zipper,14,6,5,3,21.428571428571427

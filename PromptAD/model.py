@@ -35,10 +35,19 @@ class PromptLearner(nn.Module):
         else:
             dtype = torch.float32
 
-        state_anomaly1 = state_anomaly + class_state_abnormal[classname]
-
+        # 从主Prompt表格加载静态prompt（而非代码拼接）
+        # 表格路径: prompts/manual_prompts_master_table.csv
+        # 只会加载enabled=True的prompts
+        self.manual_prompts_templates, self.manual_prompts_info = load_prompts_from_table(classname)
+        
+        # 存储原始类别名
+        self.original_classname = classname
+        
         if classname in class_mapping:
             classname = class_mapping[classname]
+        
+        # 存储显示用的类别名
+        self.display_classname = classname
 
         ctx_dim = clip_model.ln_final.weight.shape[0]
 
@@ -58,9 +67,9 @@ class PromptLearner(nn.Module):
         # normal prompt
         normal_prompts = [normal_prompt_prefix + " " + classname + "." for _ in range(n_pro)]
 
-        # abnormal prompt
-        self.n_ab_handle = len(state_anomaly1)
-        abnormal_prompts_handle = [normal_prompt_prefix + " " + state.format(classname) + "." for state in state_anomaly1 for _ in range(n_pro)]
+        # abnormal prompt - 直接使用从表格加载的完整文本（无需format）
+        self.n_ab_handle = len(self.manual_prompts_templates)
+        abnormal_prompts_handle = [normal_prompt_prefix + " " + text + "." for text in self.manual_prompts_templates for _ in range(n_pro)]
         abnormal_prompts_learned = [normal_prompt_prefix + " " + abnormal_prompt_prefix + " " + classname + "." for _ in range(n_pro_ab) for _ in range(n_pro)]
 
         # abnormal_prompts = abnormal_prompts_learned + abnormal_prompts_handle
@@ -303,6 +312,103 @@ class PromptAD(torch.nn.Module):
         
         self.normal_prototypes.copy_(normal_text_features)
         self.abnormal_prototypes.copy_(abnormal_text_features)
+    
+    def get_manual_prompt_info(self):
+        """
+        获取manual prompt的完整信息
+        
+        Returns:
+            dict: 包含所有manual prompt的详细信息
+        """
+        n_pro = self.prompt_learner.n_pro
+        num_handle = self.prompt_learner.n_ab_handle
+        
+        info = {
+            'classname': self.prompt_learner.original_classname,
+            'display_name': self.prompt_learner.display_classname,
+            'n_pro': n_pro,
+            'num_manual_templates': num_handle,
+            'num_manual_prototypes': num_handle * n_pro,  # 每个模板重复n_pro次
+            'templates': self.prompt_learner.manual_prompts_templates,
+            'prompt_details': self.prompt_learner.manual_prompts_info,
+        }
+        return info
+    
+    @torch.no_grad()
+    def analyze_manual_prompt_contribution(self, image_features, task='seg', return_details=False):
+        """
+        分析每个manual prompt对异常检测的贡献度
+        
+        Args:
+            image_features: 图像特征 (encode_image的输出)
+            task: 'cls' 或 'seg'
+            return_details: 是否返回详细的相似度矩阵
+            
+        Returns:
+            dict: 每个manual prompt的统计信息
+        """
+        if task == 'seg':
+            cls_feature, patch_features, layer1_feature, layer2_feature = image_features
+        else:
+            cls_feature, _, _, _ = image_features
+        
+        n_pro = self.prompt_learner.n_pro
+        num_handle = self.prompt_learner.n_ab_handle
+        
+        # 获取manual abnormal prototypes (前面的部分)
+        manual_prototypes = self.abnormal_prototypes[:num_handle * n_pro]  # [num_handle * n_pro, D]
+        
+        # 计算相似度
+        if task == 'seg':
+            # patch级别
+            features = patch_features  # [N, H*W, D]
+            t = 100
+            sim = t * features @ manual_prototypes.T  # [N, H*W, num_handle * n_pro]
+        else:
+            # 图像级别
+            features = cls_feature  # [N, D]
+            t = 100
+            sim = t * features @ manual_prototypes.T  # [N, num_handle * n_pro]
+        
+        # 重组为 [N, ..., num_handle, n_pro] 方便按模板分析
+        if task == 'seg':
+            N, HW = sim.shape[0], sim.shape[1]
+            sim_reshaped = sim.reshape(N, HW, num_handle, n_pro)
+            # 每个模板取n_pro个中的最大值
+            max_sim_per_template = sim_reshaped.max(dim=-1)[0]  # [N, HW, num_handle]
+        else:
+            N = sim.shape[0]
+            sim_reshaped = sim.reshape(N, num_handle, n_pro)
+            max_sim_per_template = sim_reshaped.max(dim=-1)[0]  # [N, num_handle]
+        
+        # 统计信息
+        prompt_info = self.prompt_learner.manual_prompts_info
+        stats = []
+        
+        for i in range(num_handle):
+            template_sim = max_sim_per_template[..., i]  # [N, HW] 或 [N]
+            
+            stat = {
+                'index': i,
+                'template': prompt_info[i]['template'],
+                'text': prompt_info[i]['text'],
+                'type': prompt_info[i]['type'],
+                'mean_similarity': template_sim.mean().item(),
+                'max_similarity': template_sim.max().item(),
+                'min_similarity': template_sim.min().item(),
+                'std_similarity': template_sim.std().item(),
+            }
+            stats.append(stat)
+        
+        result = {
+            'stats': stats,
+            'task': task,
+        }
+        
+        if return_details:
+            result['similarity_matrix'] = max_sim_per_template.cpu().numpy()
+        
+        return result
 
     @torch.no_grad()
     def build_image_feature_gallery(self, features1, features2):

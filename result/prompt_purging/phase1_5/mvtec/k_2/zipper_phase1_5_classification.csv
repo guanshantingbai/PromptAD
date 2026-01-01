@@ -1,0 +1,15 @@
+prompt_index,prompt_id,class,display_name,type,template,full_text,R_j_0,R_j_eps,median_margin_normal,mean_margin_normal,std_margin_normal,q10_margin_normal,q90_margin_normal,num_normal_samples,median_margin_abnormal,mean_margin_abnormal,std_margin_abnormal,q10_margin_abnormal,q90_margin_abnormal,num_abnormal_samples,separation_gap,prompt_classification
+0,334,zipper,zipper,generic,damaged {},damaged zipper,1.0,1.0,-2.207,-2.236,0.3362,-2.6640625,-1.82734375,34,-2.477,-2.53,0.4937,-3.290625,-1.9734374999999997,119,0.2695,dangerous_useful
+1,335,zipper,zipper,generic,flawed {},flawed zipper,1.0,1.0,-0.5547,-0.758,0.536,-1.6242187499999998,-0.23828125000000003,34,-0.6406,-0.7905,0.4763,-1.534375,-0.32343749999999993,119,0.08594,dangerous_useful
+2,336,zipper,zipper,generic,abnormal {},abnormal zipper,0.17647058823529413,0.17647058823529413,0.9688,0.853,0.786,-0.5375,1.71875,34,1.0625,0.8677,0.8813,-0.40625,1.775,119,-0.09375,safe
+3,337,zipper,zipper,generic,imperfect {},imperfect zipper,1.0,1.0,-3.078,-3.008,0.7676,-4.1171875,-1.94140625,34,-2.992,-2.951,0.944,-4.203125,-1.7562499999999999,119,-0.08594,dangerous_useless
+4,338,zipper,zipper,generic,blemished {},blemished zipper,0.0,0.0,1.227,1.234,0.1354,1.0578125,1.38828125,34,1.016,1.028,0.18,0.8359375,1.2296875,119,0.2109,safe
+5,339,zipper,zipper,generic,{} with flaw,zipper with flaw,0.0,0.0,2.05,2.041,0.2642,1.665625,2.303125,34,1.883,1.823,0.4424,1.303125,2.3109375,119,0.168,safe
+6,340,zipper,zipper,generic,{} with defect,zipper with defect,1.0,1.0,-2.273,-2.229,0.7563,-3.23828125,-1.1632812500000003,34,-2.227,-2.312,1.016,-3.64375,-1.1906249999999998,119,-0.04688,dangerous_useless
+7,341,zipper,zipper,generic,{} with damage,zipper with damage,0.0,0.0,2.773,2.543,0.876,1.25234375,3.540625,34,2.586,2.105,1.192,0.3828125,3.2671875,119,0.1875,safe
+8,342,zipper,zipper,specific,{} with broken teeth,zipper with broken teeth,0.0,0.0,2.031,1.946,0.555,1.23359375,2.59375,34,1.711,1.583,0.667,0.846875,2.378125,119,0.3203,safe
+9,343,zipper,zipper,specific,{} with fabric border,zipper with fabric border,1.0,1.0,-5.86,-5.695,0.5474,-6.25546875,-5.0046875,34,-5.523,-5.418,0.676,-6.2359375,-4.56875,119,-0.336,dangerous_useless
+10,344,zipper,zipper,specific,{} with defect fabric,zipper with defect fabric,1.0,1.0,-5.03,-5.05,0.628,-5.83203125,-4.11015625,34,-5.227,-5.234,0.838,-6.2484375,-4.1984375,119,0.1953,dangerous_useful
+11,345,zipper,zipper,specific,{} with broken fabric,zipper with broken fabric,1.0,1.0,-4.887,-4.785,0.9165,-6.0140625,-3.459375,34,-5.125,-5.21,1.144,-6.7125,-3.7359375,119,0.2383,dangerous_useful
+12,346,zipper,zipper,specific,{} with split teeth,zipper with split teeth,1.0,1.0,-4.06,-3.998,0.799,-5.06015625,-2.9234375,34,-4.08,-4.06,0.91,-5.271875,-2.878125,119,0.01953,dangerous_useful
+13,347,zipper,zipper,specific,{} with squeezed teeth,zipper with squeezed teeth,0.0,0.0,1.8125,1.757,0.554,1.021875,2.51328125,34,1.273,1.279,0.5874,0.434375,2.03125,119,0.539,safe

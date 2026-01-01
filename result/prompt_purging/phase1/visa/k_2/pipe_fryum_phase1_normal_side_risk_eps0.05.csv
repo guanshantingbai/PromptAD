@@ -1,0 +1,15 @@
+prompt_index,prompt_id,class,display_name,type,template,full_text,R_j_0,R_j_eps,median_margin,q10_margin,mean_margin,std_margin,num_samples,risk_level
+3,265,pipe_fryum,pipe fryum,generic,imperfect {},imperfect pipe fryum,1.0,1.0,-2.9765625,-3.7109375,-2.9895729581673307,0.5981286700911429,502,high
+5,267,pipe_fryum,pipe fryum,generic,{} with flaw,pipe fryum with flaw,0.99800796812749,1.0,-1.59375,-2.1875,-1.5864666334661355,0.4809832089803779,502,high
+9,271,pipe_fryum,pipe fryum,specific,{} with small scratches,pipe fryum with small scratches,1.0,1.0,-2.7421875,-3.62421875,-2.7449265438247012,0.7197429866990696,502,high
+11,273,pipe_fryum,pipe fryum,specific,{} with stuck together,pipe fryum with stuck together,1.0,1.0,-2.37109375,-2.9140625,-2.3742841135458166,0.4306151399116172,502,high
+12,274,pipe_fryum,pipe fryum,specific,{} with colour spot,pipe fryum with colour spot,1.0,1.0,-3.015625,-3.87265625,-2.9787879731075697,0.7209027467528886,502,high
+13,275,pipe_fryum,pipe fryum,specific,{} with cracks,pipe fryum with cracks,1.0,1.0,-1.203125,-1.89765625,-1.2457669322709164,0.4708316449789902,502,high
+4,266,pipe_fryum,pipe fryum,generic,blemished {},blemished pipe fryum,0.9960159362549801,0.9960159362549801,-1.703125,-2.42109375,-1.717629482071713,0.5643764690348586,502,medium
+10,272,pipe_fryum,pipe fryum,specific,{} with burnt,pipe fryum with burnt,0.9721115537848606,0.9800796812749004,-1.234375,-1.928125,-1.1971489043824701,0.5834509263788391,502,low
+6,268,pipe_fryum,pipe fryum,generic,{} with defect,pipe fryum with defect,0.950199203187251,0.9641434262948207,-0.9375,-1.6625,-0.9439429780876494,0.5574973038284727,502,low
+8,270,pipe_fryum,pipe fryum,specific,{} with breakage,pipe fryum with breakage,0.9203187250996016,0.9382470119521913,-0.5,-1.053125,-0.5181150398406374,0.3962065445294117,502,low
+7,269,pipe_fryum,pipe fryum,generic,{} with damage,pipe fryum with damage,0.6812749003984063,0.7111553784860558,-0.28125,-1.16328125,-0.3018706424302789,0.7120538697432469,502,low
+0,262,pipe_fryum,pipe fryum,generic,damaged {},damaged pipe fryum,0.4601593625498008,0.5059760956175299,0.0390625,-0.67890625,0.006474103585657371,0.5267240769174124,502,low
+2,264,pipe_fryum,pipe fryum,generic,abnormal {},abnormal pipe fryum,0.2649402390438247,0.31274900398406374,0.26171875,-0.28125,0.2689709910358566,0.4424865278955678,502,low
+1,263,pipe_fryum,pipe fryum,generic,flawed {},flawed pipe fryum,0.0398406374501992,0.045816733067729085,0.9609375,0.31328125,0.9670380976095617,0.5372682071625686,502,low

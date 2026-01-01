@@ -1,0 +1,11 @@
+prompt_index,prompt_id,class,display_name,type,template,full_text,R_j_0,R_j_eps,median_margin,q10_margin,mean_margin,std_margin,num_samples,risk_level
+3,303,toothbrush,toothbrush,generic,imperfect {},imperfect toothbrush,0.7857142857142857,0.8571428571428571,-1.234375,-2.2984375,-1.15625,1.1610962626974561,14,high
+5,305,toothbrush,toothbrush,generic,{} with flaw,toothbrush with flaw,0.6428571428571429,0.6428571428571429,-0.2734375,-0.959375,-0.25613839285714285,0.4843946080009185,14,high
+6,306,toothbrush,toothbrush,generic,{} with defect,toothbrush with defect,0.5,0.5,-0.0078125,-0.8828125,0.09151785714285714,0.8710821316260972,14,medium
+8,308,toothbrush,toothbrush,specific,{} with defect,toothbrush with defect,0.5,0.5,-0.0078125,-0.8828125,0.09151785714285714,0.8710821316260972,14,medium
+1,301,toothbrush,toothbrush,generic,flawed {},flawed toothbrush,0.2857142857142857,0.2857142857142857,0.9453125,-0.4640625,0.8359375,1.208371417067129,14,medium
+4,304,toothbrush,toothbrush,generic,blemished {},blemished toothbrush,0.14285714285714285,0.14285714285714285,1.8125,0.03437500000000002,1.6010044642857142,1.1287854231469718,14,low
+0,300,toothbrush,toothbrush,generic,damaged {},damaged toothbrush,0.0,0.0,1.0390625,0.1453125,1.0418526785714286,0.6177283961682168,14,low
+2,302,toothbrush,toothbrush,generic,abnormal {},abnormal toothbrush,0.0,0.0,2.59375,0.9859375,2.2293526785714284,0.9566387548965687,14,low
+7,307,toothbrush,toothbrush,generic,{} with damage,toothbrush with damage,0.0,0.0,2.09375,1.4109375,2.0033482142857144,0.4710575113189742,14,low
+9,309,toothbrush,toothbrush,specific,{} with anomaly,toothbrush with anomaly,0.0,0.0,3.5625,2.2421875,3.4386160714285716,0.9389630378325956,14,low

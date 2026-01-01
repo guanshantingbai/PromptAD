@@ -1,0 +1,13 @@
+prompt_index,prompt_id,class,display_name,type,template,full_text,R_j_0,R_j_eps,median_margin,q10_margin,mean_margin,std_margin,num_samples,risk_level
+0,134,hazelnut,hazelnut,generic,damaged {},damaged hazelnut,1.0,1.0,-5.296875,-6.8515625,-5.543898809523809,1.3088810123366554,42,high
+1,135,hazelnut,hazelnut,generic,flawed {},flawed hazelnut,1.0,1.0,-2.9296875,-4.1078125,-3.06640625,0.8575285392014745,42,high
+3,137,hazelnut,hazelnut,generic,imperfect {},imperfect hazelnut,1.0,1.0,-5.0390625,-5.9375,-4.9140625,1.1274774308795974,42,high
+4,138,hazelnut,hazelnut,generic,blemished {},blemished hazelnut,1.0,1.0,-3.1953125,-4.2109375,-3.056361607142857,1.0054370186639972,42,high
+5,139,hazelnut,hazelnut,generic,{} with flaw,hazelnut with flaw,1.0,1.0,-3.5390625,-5.1,-3.5855654761904763,1.230951344304361,42,high
+6,140,hazelnut,hazelnut,generic,{} with defect,hazelnut with defect,1.0,1.0,-2.796875,-4.2875,-2.9187127976190474,1.0741346145674502,42,high
+7,141,hazelnut,hazelnut,generic,{} with damage,hazelnut with damage,1.0,1.0,-3.9296875,-4.8890625,-3.8017113095238093,0.9820795828734029,42,high
+8,142,hazelnut,hazelnut,specific,{} with crack,hazelnut with crack,1.0,1.0,-2.34375,-3.665625,-2.5260416666666665,0.8041286682593572,42,high
+9,143,hazelnut,hazelnut,specific,{} with cut,hazelnut with cut,1.0,1.0,-3.2265625,-4.2765625,-3.2847842261904763,0.8713488782325763,42,high
+10,144,hazelnut,hazelnut,specific,{} with hole,hazelnut with hole,1.0,1.0,-4.25,-5.7328125,-4.357514880952381,1.2283038631270775,42,high
+11,145,hazelnut,hazelnut,specific,{} with print,hazelnut with print,1.0,1.0,-3.859375,-5.684375,-3.98828125,1.3364924290400317,42,high
+2,136,hazelnut,hazelnut,generic,abnormal {},abnormal hazelnut,0.8571428571428571,0.8809523809523809,-1.3828125,-3.4953125,-1.6415550595238095,1.5003189013190512,42,low

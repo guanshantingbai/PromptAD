@@ -1,0 +1,12 @@
+prompt_index,prompt_id,class,display_name,type,template,full_text,R_j_0,R_j_eps,median_margin,q10_margin,mean_margin,std_margin,num_samples,risk_level
+0,276,screw,screw,generic,damaged {},damaged screw,1.0,1.0,-2.46875,-3.178125,-2.4680232558139537,0.5851188902592677,43,high
+5,281,screw,screw,generic,{} with flaw,screw with flaw,1.0,1.0,-1.75,-2.70625,-1.8001453488372092,0.7341744077505076,43,high
+6,282,screw,screw,generic,{} with defect,screw with defect,1.0,1.0,-1.75,-2.653125,-1.698764534883721,0.764428835270365,43,high
+7,283,screw,screw,generic,{} with damage,screw with damage,1.0,1.0,-2.46875,-3.29375,-2.4251453488372094,0.7003827187409215,43,high
+8,284,screw,screw,specific,{} with manipulated front,screw with manipulated front,1.0,1.0,-2.5625,-3.371875,-2.5134447674418605,0.8025199158500632,43,high
+10,286,screw,screw,specific,{} with scratch head,screw with scratch head,1.0,1.0,-3.21875,-4.153125,-3.244549418604651,0.7560160521953139,43,high
+9,285,screw,screw,specific,{} with scratch neck,screw with scratch neck,0.8837209302325582,0.9069767441860465,-1.84375,-2.94375,-1.6813226744186047,1.1297498421498517,43,low
+2,278,screw,screw,generic,abnormal {},abnormal screw,0.3023255813953488,0.32558139534883723,0.703125,-0.6,0.46838662790697677,0.8097875703057985,43,low
+1,277,screw,screw,generic,flawed {},flawed screw,0.023255813953488372,0.023255813953488372,1.609375,0.47187500000000004,1.5337936046511629,0.871012836361988,43,low
+3,279,screw,screw,generic,imperfect {},imperfect screw,0.023255813953488372,0.023255813953488372,1.53125,0.665625,1.646075581395349,0.8039710820845177,43,low
+4,280,screw,screw,generic,blemished {},blemished screw,0.023255813953488372,0.023255813953488372,1.140625,0.253125,1.2521802325581395,0.7830907195685342,43,low

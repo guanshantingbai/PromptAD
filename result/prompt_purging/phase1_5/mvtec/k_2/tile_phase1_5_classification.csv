@@ -1,0 +1,14 @@
+prompt_index,prompt_id,class,display_name,type,template,full_text,R_j_0,R_j_eps,median_margin_normal,mean_margin_normal,std_margin_normal,q10_margin_normal,q90_margin_normal,num_normal_samples,median_margin_abnormal,mean_margin_abnormal,std_margin_abnormal,q10_margin_abnormal,q90_margin_abnormal,num_abnormal_samples,separation_gap,prompt_classification
+0,287,tile,tile,generic,damaged {},damaged tile,0.9428571428571428,0.9428571428571428,-0.3906,-0.4138,0.2432,-0.728125,-0.1499999999999999,35,-1.609,-1.602,0.9546,-2.7015625,-0.41093749999999996,84,1.219,dangerous_useful
+1,288,tile,tile,generic,flawed {},flawed tile,1.0,1.0,-2.953,-2.773,0.694,-3.4375,-1.8593749999999996,35,-2.672,-2.479,1.148,-3.73125,-0.9156249999999999,84,-0.2812,dangerous_useless
+2,289,tile,tile,generic,abnormal {},abnormal tile,0.2857142857142857,0.3142857142857143,0.2812,0.3228,0.3843,-0.16562499999999997,0.828125,35,0.02344,-0.03348,0.757,-1.071875,1.0328125000000001,84,0.2578,dangerous_useful
+3,290,tile,tile,generic,imperfect {},imperfect tile,0.0,0.0,1.4375,1.467,0.4702,0.90625,2.1437500000000003,35,1.242,1.179,0.964,-0.13124999999999998,2.421875,84,0.1953,safe
+4,291,tile,tile,generic,blemished {},blemished tile,0.0,0.0,1.625,1.761,0.42,1.41875,2.4125000000000005,35,0.922,1.123,0.91,0.08125000000000004,2.4171875,84,0.703,safe
+5,292,tile,tile,generic,{} with flaw,tile with flaw,1.0,1.0,-3.047,-2.883,0.594,-3.48125,-2.0093749999999995,35,-2.414,-2.29,0.8555,-3.2875,-1.1281249999999998,84,-0.633,dangerous_useless
+6,293,tile,tile,generic,{} with defect,tile with defect,1.0,1.0,-1.953,-1.788,0.6055,-2.39375,-0.9593749999999999,35,-2.516,-2.404,1.131,-3.8375,-0.7484374999999999,84,0.5625,dangerous_useful
+7,294,tile,tile,generic,{} with damage,tile with damage,1.0,1.0,-1.578,-1.424,0.5356,-2.009375,-0.725,35,-2.273,-2.34,0.8345,-3.4171875,-1.4359374999999999,84,0.6953,dangerous_useful
+8,295,tile,tile,specific,{} with crack,tile with crack,1.0,1.0,-2.781,-2.549,0.6934,-3.203125,-1.5,35,-3.164,-3.377,0.9897,-4.5515625,-2.3874999999999997,84,0.3828,dangerous_useful
+9,296,tile,tile,specific,{} with glue strip,tile with glue strip,0.6571428571428571,0.6857142857142857,-0.1094,-0.1571,0.4324,-0.725,0.5125000000000001,35,-1.852,-1.921,1.643,-3.8171874999999997,0.28281250000000013,84,1.742,dangerous_useful
+10,297,tile,tile,specific,{} with gray stroke,tile with gray stroke,1.0,1.0,-4.906,-4.895,0.4653,-5.40625,-4.21875,35,-5.484,-5.473,1.207,-6.98125,-3.9843749999999996,84,0.578,dangerous_useful
+11,298,tile,tile,specific,{} with oil,tile with oil,0.9428571428571428,0.9428571428571428,-1.906,-1.667,0.801,-2.4875,-0.43749999999999967,35,-1.781,-1.601,1.004,-2.6515625,-0.234375,84,-0.125,dangerous_useless
+12,299,tile,tile,specific,{} with rough surface,tile with rough surface,1.0,1.0,-6.688,-6.312,0.8726,-7.128125,-4.91875,35,-6.29,-6.184,1.313,-7.7765625,-4.5625,84,-0.3984,dangerous_useless

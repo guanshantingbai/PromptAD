@@ -1,0 +1,348 @@
+class,display_name,index,type,template,text,dataset
+bottle,bottle,0,generic,damaged {},damaged bottle,MVTec
+bottle,bottle,1,generic,flawed {},flawed bottle,MVTec
+bottle,bottle,2,generic,abnormal {},abnormal bottle,MVTec
+bottle,bottle,3,generic,imperfect {},imperfect bottle,MVTec
+bottle,bottle,4,generic,blemished {},blemished bottle,MVTec
+bottle,bottle,5,generic,{} with flaw,bottle with flaw,MVTec
+bottle,bottle,6,generic,{} with defect,bottle with defect,MVTec
+bottle,bottle,7,generic,{} with damage,bottle with damage,MVTec
+bottle,bottle,8,specific,{} with large breakage,bottle with large breakage,MVTec
+bottle,bottle,9,specific,{} with small breakage,bottle with small breakage,MVTec
+bottle,bottle,10,specific,{} with contamination,bottle with contamination,MVTec
+cable,cable,0,generic,damaged {},damaged cable,MVTec
+cable,cable,1,generic,flawed {},flawed cable,MVTec
+cable,cable,2,generic,abnormal {},abnormal cable,MVTec
+cable,cable,3,generic,imperfect {},imperfect cable,MVTec
+cable,cable,4,generic,blemished {},blemished cable,MVTec
+cable,cable,5,generic,{} with flaw,cable with flaw,MVTec
+cable,cable,6,generic,{} with defect,cable with defect,MVTec
+cable,cable,7,generic,{} with damage,cable with damage,MVTec
+cable,cable,8,specific,{} with bent wire,cable with bent wire,MVTec
+cable,cable,9,specific,{} with missing part,cable with missing part,MVTec
+cable,cable,10,specific,{} with missing wire,cable with missing wire,MVTec
+cable,cable,11,specific,{} with cut,cable with cut,MVTec
+cable,cable,12,specific,{} with poke,cable with poke,MVTec
+candle,candle,0,generic,damaged {},damaged candle,VisA
+candle,candle,1,generic,flawed {},flawed candle,VisA
+candle,candle,2,generic,abnormal {},abnormal candle,VisA
+candle,candle,3,generic,imperfect {},imperfect candle,VisA
+candle,candle,4,generic,blemished {},blemished candle,VisA
+candle,candle,5,generic,{} with flaw,candle with flaw,VisA
+candle,candle,6,generic,{} with defect,candle with defect,VisA
+candle,candle,7,generic,{} with damage,candle with damage,VisA
+candle,candle,8,specific,{} with melded wax,candle with melded wax,VisA
+candle,candle,9,specific,{} with foreign particals,candle with foreign particals,VisA
+candle,candle,10,specific,{} with extra wax,candle with extra wax,VisA
+candle,candle,11,specific,{} with chunk of wax missing,candle with chunk of wax missing,VisA
+candle,candle,12,specific,{} with weird candle wick,candle with weird candle wick,VisA
+candle,candle,13,specific,{} with damaged corner of packaging,candle with damaged corner of packaging,VisA
+candle,candle,14,specific,{} with different colour spot,candle with different colour spot,VisA
+capsule,capsule,0,generic,damaged {},damaged capsule,MVTec
+capsule,capsule,1,generic,flawed {},flawed capsule,MVTec
+capsule,capsule,2,generic,abnormal {},abnormal capsule,MVTec
+capsule,capsule,3,generic,imperfect {},imperfect capsule,MVTec
+capsule,capsule,4,generic,blemished {},blemished capsule,MVTec
+capsule,capsule,5,generic,{} with flaw,capsule with flaw,MVTec
+capsule,capsule,6,generic,{} with defect,capsule with defect,MVTec
+capsule,capsule,7,generic,{} with damage,capsule with damage,MVTec
+capsule,capsule,8,specific,{} with crack,capsule with crack,MVTec
+capsule,capsule,9,specific,{} with faulty imprint,capsule with faulty imprint,MVTec
+capsule,capsule,10,specific,{} with poke,capsule with poke,MVTec
+capsule,capsule,11,specific,{} with scratch,capsule with scratch,MVTec
+capsule,capsule,12,specific,{} squeezed with compression,capsule squeezed with compression,MVTec
+capsules,capsules,0,generic,damaged {},damaged capsules,VisA
+capsules,capsules,1,generic,flawed {},flawed capsules,VisA
+capsules,capsules,2,generic,abnormal {},abnormal capsules,VisA
+capsules,capsules,3,generic,imperfect {},imperfect capsules,VisA
+capsules,capsules,4,generic,blemished {},blemished capsules,VisA
+capsules,capsules,5,generic,{} with flaw,capsules with flaw,VisA
+capsules,capsules,6,generic,{} with defect,capsules with defect,VisA
+capsules,capsules,7,generic,{} with damage,capsules with damage,VisA
+capsules,capsules,8,specific,{} with scratch,capsules with scratch,VisA
+capsules,capsules,9,specific,{} with discolor,capsules with discolor,VisA
+capsules,capsules,10,specific,{} with misshape,capsules with misshape,VisA
+capsules,capsules,11,specific,{} with leak,capsules with leak,VisA
+capsules,capsules,12,specific,{} with bubble,capsules with bubble,VisA
+carpet,carpet,0,generic,damaged {},damaged carpet,MVTec
+carpet,carpet,1,generic,flawed {},flawed carpet,MVTec
+carpet,carpet,2,generic,abnormal {},abnormal carpet,MVTec
+carpet,carpet,3,generic,imperfect {},imperfect carpet,MVTec
+carpet,carpet,4,generic,blemished {},blemished carpet,MVTec
+carpet,carpet,5,generic,{} with flaw,carpet with flaw,MVTec
+carpet,carpet,6,generic,{} with defect,carpet with defect,MVTec
+carpet,carpet,7,generic,{} with damage,carpet with damage,MVTec
+carpet,carpet,8,specific,{} with hole,carpet with hole,MVTec
+carpet,carpet,9,specific,{} with color stain,carpet with color stain,MVTec
+carpet,carpet,10,specific,{} with metal contamination,carpet with metal contamination,MVTec
+carpet,carpet,11,specific,{} with thread residue,carpet with thread residue,MVTec
+carpet,carpet,12,specific,{} with thread,carpet with thread,MVTec
+carpet,carpet,13,specific,{} with cut,carpet with cut,MVTec
+cashew,cashew,0,generic,damaged {},damaged cashew,VisA
+cashew,cashew,1,generic,flawed {},flawed cashew,VisA
+cashew,cashew,2,generic,abnormal {},abnormal cashew,VisA
+cashew,cashew,3,generic,imperfect {},imperfect cashew,VisA
+cashew,cashew,4,generic,blemished {},blemished cashew,VisA
+cashew,cashew,5,generic,{} with flaw,cashew with flaw,VisA
+cashew,cashew,6,generic,{} with defect,cashew with defect,VisA
+cashew,cashew,7,generic,{} with damage,cashew with damage,VisA
+cashew,cashew,8,specific,{} with breakage,cashew with breakage,VisA
+cashew,cashew,9,specific,{} with small scratches,cashew with small scratches,VisA
+cashew,cashew,10,specific,{} with burnt,cashew with burnt,VisA
+cashew,cashew,11,specific,{} with stuck together,cashew with stuck together,VisA
+cashew,cashew,12,specific,{} with spot,cashew with spot,VisA
+chewinggum,chewing gum,0,generic,damaged {},damaged chewing gum,VisA
+chewinggum,chewing gum,1,generic,flawed {},flawed chewing gum,VisA
+chewinggum,chewing gum,2,generic,abnormal {},abnormal chewing gum,VisA
+chewinggum,chewing gum,3,generic,imperfect {},imperfect chewing gum,VisA
+chewinggum,chewing gum,4,generic,blemished {},blemished chewing gum,VisA
+chewinggum,chewing gum,5,generic,{} with flaw,chewing gum with flaw,VisA
+chewinggum,chewing gum,6,generic,{} with defect,chewing gum with defect,VisA
+chewinggum,chewing gum,7,generic,{} with damage,chewing gum with damage,VisA
+chewinggum,chewing gum,8,specific,{} with corner missing,chewing gum with corner missing,VisA
+chewinggum,chewing gum,9,specific,{} with scratches,chewing gum with scratches,VisA
+chewinggum,chewing gum,10,specific,{} with chunk of gum missing,chewing gum with chunk of gum missing,VisA
+chewinggum,chewing gum,11,specific,{} with colour spot,chewing gum with colour spot,VisA
+chewinggum,chewing gum,12,specific,{} with cracks,chewing gum with cracks,VisA
+fryum,fryum,0,generic,damaged {},damaged fryum,VisA
+fryum,fryum,1,generic,flawed {},flawed fryum,VisA
+fryum,fryum,2,generic,abnormal {},abnormal fryum,VisA
+fryum,fryum,3,generic,imperfect {},imperfect fryum,VisA
+fryum,fryum,4,generic,blemished {},blemished fryum,VisA
+fryum,fryum,5,generic,{} with flaw,fryum with flaw,VisA
+fryum,fryum,6,generic,{} with defect,fryum with defect,VisA
+fryum,fryum,7,generic,{} with damage,fryum with damage,VisA
+fryum,fryum,8,specific,{} with breakage,fryum with breakage,VisA
+fryum,fryum,9,specific,{} with scratches,fryum with scratches,VisA
+fryum,fryum,10,specific,{} with burnt,fryum with burnt,VisA
+fryum,fryum,11,specific,{} with colour spot,fryum with colour spot,VisA
+fryum,fryum,12,specific,{} with fryum stuck together,fryum with fryum stuck together,VisA
+fryum,fryum,13,specific,{} with colour spot,fryum with colour spot,VisA
+grid,grid,0,generic,damaged {},damaged grid,MVTec
+grid,grid,1,generic,flawed {},flawed grid,MVTec
+grid,grid,2,generic,abnormal {},abnormal grid,MVTec
+grid,grid,3,generic,imperfect {},imperfect grid,MVTec
+grid,grid,4,generic,blemished {},blemished grid,MVTec
+grid,grid,5,generic,{} with flaw,grid with flaw,MVTec
+grid,grid,6,generic,{} with defect,grid with defect,MVTec
+grid,grid,7,generic,{} with damage,grid with damage,MVTec
+grid,grid,8,specific,{} with breakage,grid with breakage,MVTec
+grid,grid,9,specific,{} with thread residue,grid with thread residue,MVTec
+grid,grid,10,specific,{} with thread,grid with thread,MVTec
+grid,grid,11,specific,{} with metal contamination,grid with metal contamination,MVTec
+grid,grid,12,specific,{} with glue,grid with glue,MVTec
+grid,grid,13,specific,{} with a bent shape,grid with a bent shape,MVTec
+hazelnut,hazelnut,0,generic,damaged {},damaged hazelnut,MVTec
+hazelnut,hazelnut,1,generic,flawed {},flawed hazelnut,MVTec
+hazelnut,hazelnut,2,generic,abnormal {},abnormal hazelnut,MVTec
+hazelnut,hazelnut,3,generic,imperfect {},imperfect hazelnut,MVTec
+hazelnut,hazelnut,4,generic,blemished {},blemished hazelnut,MVTec
+hazelnut,hazelnut,5,generic,{} with flaw,hazelnut with flaw,MVTec
+hazelnut,hazelnut,6,generic,{} with defect,hazelnut with defect,MVTec
+hazelnut,hazelnut,7,generic,{} with damage,hazelnut with damage,MVTec
+hazelnut,hazelnut,8,specific,{} with crack,hazelnut with crack,MVTec
+hazelnut,hazelnut,9,specific,{} with cut,hazelnut with cut,MVTec
+hazelnut,hazelnut,10,specific,{} with hole,hazelnut with hole,MVTec
+hazelnut,hazelnut,11,specific,{} with print,hazelnut with print,MVTec
+leather,leather,0,generic,damaged {},damaged leather,MVTec
+leather,leather,1,generic,flawed {},flawed leather,MVTec
+leather,leather,2,generic,abnormal {},abnormal leather,MVTec
+leather,leather,3,generic,imperfect {},imperfect leather,MVTec
+leather,leather,4,generic,blemished {},blemished leather,MVTec
+leather,leather,5,generic,{} with flaw,leather with flaw,MVTec
+leather,leather,6,generic,{} with defect,leather with defect,MVTec
+leather,leather,7,generic,{} with damage,leather with damage,MVTec
+leather,leather,8,specific,{} with color stain,leather with color stain,MVTec
+leather,leather,9,specific,{} with cut,leather with cut,MVTec
+leather,leather,10,specific,{} with fold,leather with fold,MVTec
+leather,leather,11,specific,{} with glue,leather with glue,MVTec
+leather,leather,12,specific,{} with poke,leather with poke,MVTec
+macaroni1,macaroni,0,generic,damaged {},damaged macaroni,VisA
+macaroni1,macaroni,1,generic,flawed {},flawed macaroni,VisA
+macaroni1,macaroni,2,generic,abnormal {},abnormal macaroni,VisA
+macaroni1,macaroni,3,generic,imperfect {},imperfect macaroni,VisA
+macaroni1,macaroni,4,generic,blemished {},blemished macaroni,VisA
+macaroni1,macaroni,5,generic,{} with flaw,macaroni with flaw,VisA
+macaroni1,macaroni,6,generic,{} with defect,macaroni with defect,VisA
+macaroni1,macaroni,7,generic,{} with damage,macaroni with damage,VisA
+macaroni1,macaroni,8,specific,{} with color spot,macaroni with color spot,VisA
+macaroni1,macaroni,9,specific,{} with small chip around edge,macaroni with small chip around edge,VisA
+macaroni1,macaroni,10,specific,{} with small scratches,macaroni with small scratches,VisA
+macaroni1,macaroni,11,specific,{} with breakage,macaroni with breakage,VisA
+macaroni1,macaroni,12,specific,{} with cracks,macaroni with cracks,VisA
+macaroni2,macaroni,0,generic,damaged {},damaged macaroni,VisA
+macaroni2,macaroni,1,generic,flawed {},flawed macaroni,VisA
+macaroni2,macaroni,2,generic,abnormal {},abnormal macaroni,VisA
+macaroni2,macaroni,3,generic,imperfect {},imperfect macaroni,VisA
+macaroni2,macaroni,4,generic,blemished {},blemished macaroni,VisA
+macaroni2,macaroni,5,generic,{} with flaw,macaroni with flaw,VisA
+macaroni2,macaroni,6,generic,{} with defect,macaroni with defect,VisA
+macaroni2,macaroni,7,generic,{} with damage,macaroni with damage,VisA
+macaroni2,macaroni,8,specific,{} with color spot,macaroni with color spot,VisA
+macaroni2,macaroni,9,specific,{} with small chip around edge,macaroni with small chip around edge,VisA
+macaroni2,macaroni,10,specific,{} with small scratches,macaroni with small scratches,VisA
+macaroni2,macaroni,11,specific,{} with breakage,macaroni with breakage,VisA
+macaroni2,macaroni,12,specific,{} with cracks,macaroni with cracks,VisA
+metal_nut,metal nut,0,generic,damaged {},damaged metal nut,MVTec
+metal_nut,metal nut,1,generic,flawed {},flawed metal nut,MVTec
+metal_nut,metal nut,2,generic,abnormal {},abnormal metal nut,MVTec
+metal_nut,metal nut,3,generic,imperfect {},imperfect metal nut,MVTec
+metal_nut,metal nut,4,generic,blemished {},blemished metal nut,MVTec
+metal_nut,metal nut,5,generic,{} with flaw,metal nut with flaw,MVTec
+metal_nut,metal nut,6,generic,{} with defect,metal nut with defect,MVTec
+metal_nut,metal nut,7,generic,{} with damage,metal nut with damage,MVTec
+metal_nut,metal nut,8,specific,{} with a bent shape ,metal nut with a bent shape ,MVTec
+metal_nut,metal nut,9,specific,{} with color stain,metal nut with color stain,MVTec
+metal_nut,metal nut,10,specific,{} with a flipped orientation,metal nut with a flipped orientation,MVTec
+metal_nut,metal nut,11,specific,{} with scratch,metal nut with scratch,MVTec
+pcb1,printed circuit board,0,generic,damaged {},damaged printed circuit board,VisA
+pcb1,printed circuit board,1,generic,flawed {},flawed printed circuit board,VisA
+pcb1,printed circuit board,2,generic,abnormal {},abnormal printed circuit board,VisA
+pcb1,printed circuit board,3,generic,imperfect {},imperfect printed circuit board,VisA
+pcb1,printed circuit board,4,generic,blemished {},blemished printed circuit board,VisA
+pcb1,printed circuit board,5,generic,{} with flaw,printed circuit board with flaw,VisA
+pcb1,printed circuit board,6,generic,{} with defect,printed circuit board with defect,VisA
+pcb1,printed circuit board,7,generic,{} with damage,printed circuit board with damage,VisA
+pcb1,printed circuit board,8,specific,{} with bent,printed circuit board with bent,VisA
+pcb1,printed circuit board,9,specific,{} with scratch,printed circuit board with scratch,VisA
+pcb1,printed circuit board,10,specific,{} with missing,printed circuit board with missing,VisA
+pcb1,printed circuit board,11,specific,{} with melt,printed circuit board with melt,VisA
+pcb2,printed circuit board,0,generic,damaged {},damaged printed circuit board,VisA
+pcb2,printed circuit board,1,generic,flawed {},flawed printed circuit board,VisA
+pcb2,printed circuit board,2,generic,abnormal {},abnormal printed circuit board,VisA
+pcb2,printed circuit board,3,generic,imperfect {},imperfect printed circuit board,VisA
+pcb2,printed circuit board,4,generic,blemished {},blemished printed circuit board,VisA
+pcb2,printed circuit board,5,generic,{} with flaw,printed circuit board with flaw,VisA
+pcb2,printed circuit board,6,generic,{} with defect,printed circuit board with defect,VisA
+pcb2,printed circuit board,7,generic,{} with damage,printed circuit board with damage,VisA
+pcb2,printed circuit board,8,specific,{} with bent,printed circuit board with bent,VisA
+pcb2,printed circuit board,9,specific,{} with scratch,printed circuit board with scratch,VisA
+pcb2,printed circuit board,10,specific,{} with missing,printed circuit board with missing,VisA
+pcb2,printed circuit board,11,specific,{} with melt,printed circuit board with melt,VisA
+pcb3,printed circuit board,0,generic,damaged {},damaged printed circuit board,VisA
+pcb3,printed circuit board,1,generic,flawed {},flawed printed circuit board,VisA
+pcb3,printed circuit board,2,generic,abnormal {},abnormal printed circuit board,VisA
+pcb3,printed circuit board,3,generic,imperfect {},imperfect printed circuit board,VisA
+pcb3,printed circuit board,4,generic,blemished {},blemished printed circuit board,VisA
+pcb3,printed circuit board,5,generic,{} with flaw,printed circuit board with flaw,VisA
+pcb3,printed circuit board,6,generic,{} with defect,printed circuit board with defect,VisA
+pcb3,printed circuit board,7,generic,{} with damage,printed circuit board with damage,VisA
+pcb3,printed circuit board,8,specific,{} with bent,printed circuit board with bent,VisA
+pcb3,printed circuit board,9,specific,{} with scratch,printed circuit board with scratch,VisA
+pcb3,printed circuit board,10,specific,{} with missing,printed circuit board with missing,VisA
+pcb3,printed circuit board,11,specific,{} with melt,printed circuit board with melt,VisA
+pcb4,printed circuit board,0,generic,damaged {},damaged printed circuit board,VisA
+pcb4,printed circuit board,1,generic,flawed {},flawed printed circuit board,VisA
+pcb4,printed circuit board,2,generic,abnormal {},abnormal printed circuit board,VisA
+pcb4,printed circuit board,3,generic,imperfect {},imperfect printed circuit board,VisA
+pcb4,printed circuit board,4,generic,blemished {},blemished printed circuit board,VisA
+pcb4,printed circuit board,5,generic,{} with flaw,printed circuit board with flaw,VisA
+pcb4,printed circuit board,6,generic,{} with defect,printed circuit board with defect,VisA
+pcb4,printed circuit board,7,generic,{} with damage,printed circuit board with damage,VisA
+pcb4,printed circuit board,8,specific,{} with scratch,printed circuit board with scratch,VisA
+pcb4,printed circuit board,9,specific,{} with extra,printed circuit board with extra,VisA
+pcb4,printed circuit board,10,specific,{} with missing,printed circuit board with missing,VisA
+pcb4,printed circuit board,11,specific,{} with wrong place,printed circuit board with wrong place,VisA
+pcb4,printed circuit board,12,specific,{} with damage,printed circuit board with damage,VisA
+pcb4,printed circuit board,13,specific,{} with burnt,printed circuit board with burnt,VisA
+pcb4,printed circuit board,14,specific,{} with dirt,printed circuit board with dirt,VisA
+pill,pill,0,generic,damaged {},damaged pill,MVTec
+pill,pill,1,generic,flawed {},flawed pill,MVTec
+pill,pill,2,generic,abnormal {},abnormal pill,MVTec
+pill,pill,3,generic,imperfect {},imperfect pill,MVTec
+pill,pill,4,generic,blemished {},blemished pill,MVTec
+pill,pill,5,generic,{} with flaw,pill with flaw,MVTec
+pill,pill,6,generic,{} with defect,pill with defect,MVTec
+pill,pill,7,generic,{} with damage,pill with damage,MVTec
+pill,pill,8,specific,{} with color stain,pill with color stain,MVTec
+pill,pill,9,specific,{} with contamination,pill with contamination,MVTec
+pill,pill,10,specific,{} with crack,pill with crack,MVTec
+pill,pill,11,specific,{} with faulty imprint,pill with faulty imprint,MVTec
+pill,pill,12,specific,{} with scratch,pill with scratch,MVTec
+pill,pill,13,specific,{} with abnormal type,pill with abnormal type,MVTec
+pipe_fryum,pipe fryum,0,generic,damaged {},damaged pipe fryum,VisA
+pipe_fryum,pipe fryum,1,generic,flawed {},flawed pipe fryum,VisA
+pipe_fryum,pipe fryum,2,generic,abnormal {},abnormal pipe fryum,VisA
+pipe_fryum,pipe fryum,3,generic,imperfect {},imperfect pipe fryum,VisA
+pipe_fryum,pipe fryum,4,generic,blemished {},blemished pipe fryum,VisA
+pipe_fryum,pipe fryum,5,generic,{} with flaw,pipe fryum with flaw,VisA
+pipe_fryum,pipe fryum,6,generic,{} with defect,pipe fryum with defect,VisA
+pipe_fryum,pipe fryum,7,generic,{} with damage,pipe fryum with damage,VisA
+pipe_fryum,pipe fryum,8,specific,{} with breakage,pipe fryum with breakage,VisA
+pipe_fryum,pipe fryum,9,specific,{} with small scratches,pipe fryum with small scratches,VisA
+pipe_fryum,pipe fryum,10,specific,{} with burnt,pipe fryum with burnt,VisA
+pipe_fryum,pipe fryum,11,specific,{} with stuck together,pipe fryum with stuck together,VisA
+pipe_fryum,pipe fryum,12,specific,{} with colour spot,pipe fryum with colour spot,VisA
+pipe_fryum,pipe fryum,13,specific,{} with cracks,pipe fryum with cracks,VisA
+screw,screw,0,generic,damaged {},damaged screw,MVTec
+screw,screw,1,generic,flawed {},flawed screw,MVTec
+screw,screw,2,generic,abnormal {},abnormal screw,MVTec
+screw,screw,3,generic,imperfect {},imperfect screw,MVTec
+screw,screw,4,generic,blemished {},blemished screw,MVTec
+screw,screw,5,generic,{} with flaw,screw with flaw,MVTec
+screw,screw,6,generic,{} with defect,screw with defect,MVTec
+screw,screw,7,generic,{} with damage,screw with damage,MVTec
+screw,screw,8,specific,{} with manipulated front,screw with manipulated front,MVTec
+screw,screw,9,specific,{} with scratch neck,screw with scratch neck,MVTec
+screw,screw,10,specific,{} with scratch head,screw with scratch head,MVTec
+tile,tile,0,generic,damaged {},damaged tile,MVTec
+tile,tile,1,generic,flawed {},flawed tile,MVTec
+tile,tile,2,generic,abnormal {},abnormal tile,MVTec
+tile,tile,3,generic,imperfect {},imperfect tile,MVTec
+tile,tile,4,generic,blemished {},blemished tile,MVTec
+tile,tile,5,generic,{} with flaw,tile with flaw,MVTec
+tile,tile,6,generic,{} with defect,tile with defect,MVTec
+tile,tile,7,generic,{} with damage,tile with damage,MVTec
+tile,tile,8,specific,{} with crack,tile with crack,MVTec
+tile,tile,9,specific,{} with glue strip,tile with glue strip,MVTec
+tile,tile,10,specific,{} with gray stroke,tile with gray stroke,MVTec
+tile,tile,11,specific,{} with oil,tile with oil,MVTec
+tile,tile,12,specific,{} with rough surface,tile with rough surface,MVTec
+toothbrush,toothbrush,0,generic,damaged {},damaged toothbrush,MVTec
+toothbrush,toothbrush,1,generic,flawed {},flawed toothbrush,MVTec
+toothbrush,toothbrush,2,generic,abnormal {},abnormal toothbrush,MVTec
+toothbrush,toothbrush,3,generic,imperfect {},imperfect toothbrush,MVTec
+toothbrush,toothbrush,4,generic,blemished {},blemished toothbrush,MVTec
+toothbrush,toothbrush,5,generic,{} with flaw,toothbrush with flaw,MVTec
+toothbrush,toothbrush,6,generic,{} with defect,toothbrush with defect,MVTec
+toothbrush,toothbrush,7,generic,{} with damage,toothbrush with damage,MVTec
+toothbrush,toothbrush,8,specific,{} with defect,toothbrush with defect,MVTec
+toothbrush,toothbrush,9,specific,{} with anomaly,toothbrush with anomaly,MVTec
+transistor,transistor,0,generic,damaged {},damaged transistor,MVTec
+transistor,transistor,1,generic,flawed {},flawed transistor,MVTec
+transistor,transistor,2,generic,abnormal {},abnormal transistor,MVTec
+transistor,transistor,3,generic,imperfect {},imperfect transistor,MVTec
+transistor,transistor,4,generic,blemished {},blemished transistor,MVTec
+transistor,transistor,5,generic,{} with flaw,transistor with flaw,MVTec
+transistor,transistor,6,generic,{} with defect,transistor with defect,MVTec
+transistor,transistor,7,generic,{} with damage,transistor with damage,MVTec
+transistor,transistor,8,specific,{} with bent lead,transistor with bent lead,MVTec
+transistor,transistor,9,specific,{} with cut lead,transistor with cut lead,MVTec
+transistor,transistor,10,specific,{} with damage,transistor with damage,MVTec
+transistor,transistor,11,specific,{} with misplaced transistor,transistor with misplaced transistor,MVTec
+wood,wood,0,generic,damaged {},damaged wood,MVTec
+wood,wood,1,generic,flawed {},flawed wood,MVTec
+wood,wood,2,generic,abnormal {},abnormal wood,MVTec
+wood,wood,3,generic,imperfect {},imperfect wood,MVTec
+wood,wood,4,generic,blemished {},blemished wood,MVTec
+wood,wood,5,generic,{} with flaw,wood with flaw,MVTec
+wood,wood,6,generic,{} with defect,wood with defect,MVTec
+wood,wood,7,generic,{} with damage,wood with damage,MVTec
+wood,wood,8,specific,{} with color stain,wood with color stain,MVTec
+wood,wood,9,specific,{} with hole,wood with hole,MVTec
+wood,wood,10,specific,{} with scratch,wood with scratch,MVTec
+wood,wood,11,specific,{} with liquid,wood with liquid,MVTec
+zipper,zipper,0,generic,damaged {},damaged zipper,MVTec
+zipper,zipper,1,generic,flawed {},flawed zipper,MVTec
+zipper,zipper,2,generic,abnormal {},abnormal zipper,MVTec
+zipper,zipper,3,generic,imperfect {},imperfect zipper,MVTec
+zipper,zipper,4,generic,blemished {},blemished zipper,MVTec
+zipper,zipper,5,generic,{} with flaw,zipper with flaw,MVTec
+zipper,zipper,6,generic,{} with defect,zipper with defect,MVTec
+zipper,zipper,7,generic,{} with damage,zipper with damage,MVTec
+zipper,zipper,8,specific,{} with broken teeth,zipper with broken teeth,MVTec
+zipper,zipper,9,specific,{} with fabric border,zipper with fabric border,MVTec
+zipper,zipper,10,specific,{} with defect fabric,zipper with defect fabric,MVTec
+zipper,zipper,11,specific,{} with broken fabric,zipper with broken fabric,MVTec
+zipper,zipper,12,specific,{} with split teeth,zipper with split teeth,MVTec
+zipper,zipper,13,specific,{} with squeezed teeth,zipper with squeezed teeth,MVTec

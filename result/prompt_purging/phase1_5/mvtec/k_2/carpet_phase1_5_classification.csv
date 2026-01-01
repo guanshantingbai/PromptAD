@@ -1,0 +1,15 @@
+prompt_index,prompt_id,class,display_name,type,template,full_text,R_j_0,R_j_eps,median_margin_normal,mean_margin_normal,std_margin_normal,q10_margin_normal,q90_margin_normal,num_normal_samples,median_margin_abnormal,mean_margin_abnormal,std_margin_abnormal,q10_margin_abnormal,q90_margin_abnormal,num_abnormal_samples,separation_gap,prompt_classification
+0,66,carpet,carpet,generic,damaged {},damaged carpet,1.0,1.0,-1.402,-1.384,0.2416,-1.70078125,-1.078125,30,-2.5,-2.543,0.6724,-3.403125,-1.7687499999999998,89,1.098,dangerous_useful
+1,67,carpet,carpet,generic,flawed {},flawed carpet,0.0,0.0,1.328,1.373,0.1982,1.1296875,1.63359375,30,1.078,1.062,0.3645,0.53125,1.51875,89,0.25,safe
+2,68,carpet,carpet,generic,abnormal {},abnormal carpet,1.0,1.0,-2.191,-2.145,0.1832,-2.3828125,-1.93125,30,-1.477,-1.282,0.8755,-2.134375,-0.1812499999999998,89,-0.715,dangerous_useless
+3,69,carpet,carpet,generic,imperfect {},imperfect carpet,1.0,1.0,-1.98,-1.973,0.2169,-2.21953125,-1.68515625,30,-1.1875,-1.227,0.3774,-1.63125,-0.7046874999999998,89,-0.793,dangerous_useless
+4,70,carpet,carpet,generic,blemished {},blemished carpet,0.8666666666666667,0.9,-0.3672,-0.2993,0.2588,-0.57890625,0.028906250000000078,30,0.10156,-0.002459,0.3484,-0.5249999999999999,0.3765625,89,-0.4688,dangerous_useless
+5,71,carpet,carpet,generic,{} with flaw,carpet with flaw,1.0,1.0,-1.082,-1.07,0.1615,-1.2359375,-0.903125,30,-1.5625,-1.561,0.3464,-1.9609375,-1.171875,89,0.4805,dangerous_useful
+6,72,carpet,carpet,generic,{} with defect,carpet with defect,1.0,1.0,-3.785,-3.787,0.357,-4.26875,-3.31484375,30,-4.203,-4.203,0.653,-5.125,-3.35,89,0.418,dangerous_useful
+7,73,carpet,carpet,generic,{} with damage,carpet with damage,1.0,1.0,-1.246,-1.241,0.271,-1.56484375,-0.91796875,30,-1.953,-1.972,0.46,-2.5390625,-1.43125,89,0.707,dangerous_useful
+8,74,carpet,carpet,specific,{} with hole,carpet with hole,1.0,1.0,-4.824,-4.83,0.303,-5.125,-4.61796875,30,-5.758,-5.797,0.635,-6.4625,-5.1296875,89,0.9336,dangerous_useful
+9,75,carpet,carpet,specific,{} with color stain,carpet with color stain,1.0,1.0,-1.617,-1.574,0.2737,-1.88046875,-1.32421875,30,-1.375,-1.323,0.6787,-2.1796875,-0.53125,89,-0.2422,dangerous_useless
+10,76,carpet,carpet,specific,{} with metal contamination,carpet with metal contamination,1.0,1.0,-2.906,-2.88,0.2974,-3.196875,-2.58046875,30,-3.734,-3.664,0.488,-4.215625,-3.00625,89,0.828,dangerous_useful
+11,77,carpet,carpet,specific,{} with thread residue,carpet with thread residue,1.0,1.0,-4.86,-4.816,0.307,-5.1921875,-4.41875,30,-4.92,-5.06,0.632,-5.971875,-4.321875,89,0.0625,dangerous_useful
+12,78,carpet,carpet,specific,{} with thread,carpet with thread,1.0,1.0,-4.633,-4.645,0.2751,-4.9890625,-4.27890625,30,-4.758,-4.824,0.521,-5.5640625,-4.290625,89,0.125,dangerous_useful
+13,79,carpet,carpet,specific,{} with cut,carpet with cut,1.0,1.0,-2.7,-2.6,0.2457,-2.84609375,-2.27265625,30,-2.61,-2.662,0.4097,-3.2109375,-2.165625,89,-0.08984,dangerous_useless

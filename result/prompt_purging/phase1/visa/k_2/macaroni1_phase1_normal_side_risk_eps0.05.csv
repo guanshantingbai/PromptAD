@@ -1,0 +1,14 @@
+prompt_index,prompt_id,class,display_name,type,template,full_text,R_j_0,R_j_eps,median_margin,q10_margin,mean_margin,std_margin,num_samples,risk_level
+0,159,macaroni1,macaroni,generic,damaged {},damaged macaroni,1.0,1.0,-2.390625,-3.45234375,-2.4540528318363273,0.7478313904980637,1002,high
+3,162,macaroni1,macaroni,generic,imperfect {},imperfect macaroni,1.0,1.0,-4.25,-5.140625,-4.320406062874252,0.5918024965317215,1002,high
+8,167,macaroni1,macaroni,specific,{} with color spot,macaroni with color spot,1.0,1.0,-4.0234375,-4.8359375,-4.0659774201596806,0.5651339242508278,1002,high
+9,168,macaroni1,macaroni,specific,{} with small chip around edge,macaroni with small chip around edge,1.0,1.0,-5.109375,-6.015625,-5.1128524201596806,0.6906764347792134,1002,high
+10,169,macaroni1,macaroni,specific,{} with small scratches,macaroni with small scratches,1.0,1.0,-3.70703125,-4.91328125,-3.7238491766467066,0.9156295057532938,1002,high
+12,171,macaroni1,macaroni,specific,{} with cracks,macaroni with cracks,1.0,1.0,-1.99609375,-2.89765625,-2.0444345683632736,0.6465670782330303,1002,high
+1,160,macaroni1,macaroni,generic,flawed {},flawed macaroni,0.9940119760479041,0.9960079840319361,-1.84765625,-2.8828125,-1.8664078093812375,0.777267403959017,1002,medium
+11,170,macaroni1,macaroni,specific,{} with breakage,macaroni with breakage,0.9870259481037924,0.9910179640718563,-0.984375,-1.6007812499999998,-0.9964134231536926,0.46379150479121606,1002,low
+7,166,macaroni1,macaroni,generic,{} with damage,macaroni with damage,0.9730538922155688,0.9800399201596807,-1.0,-1.6953125,-1.0183773078842315,0.517669797595626,1002,low
+4,163,macaroni1,macaroni,generic,blemished {},blemished macaroni,0.9520958083832335,0.9630738522954092,-0.765625,-1.3976562499999998,-0.779090256986028,0.46696229663568023,1002,low
+2,161,macaroni1,macaroni,generic,abnormal {},abnormal macaroni,0.9191616766467066,0.9341317365269461,-0.734375,-1.609375,-0.7958458083832335,0.605616727799111,1002,low
+5,164,macaroni1,macaroni,generic,{} with flaw,macaroni with flaw,0.8912175648702595,0.9121756487025948,-0.5703125,-1.328125,-0.6011570608782435,0.521842598728569,1002,low
+6,165,macaroni1,macaroni,generic,{} with defect,macaroni with defect,0.3463073852295409,0.36926147704590817,0.28515625,-0.6875,0.21981037924151697,0.6807305683001128,1002,low

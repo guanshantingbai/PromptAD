@@ -1,0 +1,14 @@
+prompt_index,prompt_id,class,display_name,type,template,full_text,R_j_0,R_j_eps,median_margin,q10_margin,mean_margin,std_margin,num_samples,risk_level
+0,80,cashew,cashew,generic,damaged {},damaged cashew,1.0,1.0,-1.875,-2.55390625,-1.8609935258964143,0.5276580186045245,502,high
+3,83,cashew,cashew,generic,imperfect {},imperfect cashew,1.0,1.0,-1.5546875,-2.0703125,-1.5345959910358566,0.4497477639142223,502,high
+6,86,cashew,cashew,generic,{} with defect,cashew with defect,1.0,1.0,-2.421875,-3.26484375,-2.4781965886454183,0.5677648625691852,502,high
+9,89,cashew,cashew,specific,{} with small scratches,cashew with small scratches,1.0,1.0,-5.0,-5.6625,-4.99609375,0.5248035553334042,502,high
+12,92,cashew,cashew,specific,{} with spot,cashew with spot,1.0,1.0,-2.234375,-3.11640625,-2.287677415338645,0.6587323086077648,502,high
+11,91,cashew,cashew,specific,{} with stuck together,cashew with stuck together,0.9681274900398407,0.9780876494023905,-0.87890625,-1.4765625,-0.8762138944223108,0.4704621319962723,502,medium
+10,90,cashew,cashew,specific,{} with burnt,cashew with burnt,0.41832669322709165,0.4721115537848606,0.08203125,-0.559375,0.05495206673306773,0.46896969768287794,502,medium
+4,84,cashew,cashew,generic,blemished {},blemished cashew,0.07768924302788845,0.08764940239043825,0.5859375,0.078125,0.5972516185258964,0.42949450026922503,502,low
+8,88,cashew,cashew,specific,{} with breakage,cashew with breakage,0.03187250996015936,0.0398406374501992,1.0,0.35234375,1.008870766932271,0.5149979573904098,502,low
+7,87,cashew,cashew,generic,{} with damage,cashew with damage,0.00597609561752988,0.013944223107569721,0.9453125,0.48515625,0.9489230577689243,0.37469068938889943,502,low
+1,81,cashew,cashew,generic,flawed {},flawed cashew,0.0,0.0,3.2578125,2.4140625,3.1950790587649402,0.5552915484611247,502,low
+2,82,cashew,cashew,generic,abnormal {},abnormal cashew,0.0,0.0,2.46875,1.953125,2.4467598356573705,0.37241313584687796,502,low
+5,85,cashew,cashew,generic,{} with flaw,cashew with flaw,0.0,0.0,2.1015625,1.609375,2.076304158366534,0.36856399984858634,502,low

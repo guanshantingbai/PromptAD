@@ -1,0 +1,13 @@
+prompt_index,prompt_id,class,display_name,type,template,full_text,R_j_0,R_j_eps,median_margin,q10_margin,mean_margin,std_margin,num_samples,risk_level
+5,315,transistor,transistor,generic,{} with flaw,transistor with flaw,1.0,1.0,-3.32421875,-4.409375,-3.388608870967742,0.7700570874685982,62,high
+6,316,transistor,transistor,generic,{} with defect,transistor with defect,1.0,1.0,-5.2890625,-6.25625,-5.201864919354839,0.8335732052932463,62,high
+8,318,transistor,transistor,specific,{} with bent lead,transistor with bent lead,1.0,1.0,-5.52734375,-7.4109375,-5.532258064516129,1.2573659012545173,62,high
+9,319,transistor,transistor,specific,{} with cut lead,transistor with cut lead,1.0,1.0,-4.9765625,-6.79921875,-5.114163306451613,1.2242330352577018,62,high
+11,321,transistor,transistor,specific,{} with misplaced transistor,transistor with misplaced transistor,1.0,1.0,-2.3515625,-3.3828125,-2.3665574596774195,0.8478206233557884,62,high
+7,317,transistor,transistor,generic,{} with damage,transistor with damage,0.9838709677419355,0.9838709677419355,-1.65625,-2.36640625,-1.5386844758064515,0.7142109196204354,62,medium
+10,320,transistor,transistor,specific,{} with damage,transistor with damage,0.9838709677419355,0.9838709677419355,-1.65625,-2.36640625,-1.5386844758064515,0.7142109196204354,62,medium
+0,310,transistor,transistor,generic,damaged {},damaged transistor,0.9032258064516129,0.9032258064516129,-1.265625,-2.17734375,-1.1999747983870968,0.808622615287312,62,low
+3,313,transistor,transistor,generic,imperfect {},imperfect transistor,0.5967741935483871,0.6290322580645161,-0.1484375,-1.0984375,-0.15032762096774194,0.7063625138471272,62,low
+4,314,transistor,transistor,generic,blemished {},blemished transistor,0.0967741935483871,0.0967741935483871,1.2734375,0.0703125,1.2511340725806452,0.8159999046327963,62,low
+1,311,transistor,transistor,generic,flawed {},flawed transistor,0.03225806451612903,0.06451612903225806,1.29296875,0.21875,1.1665826612903225,0.634237080964792,62,low
+2,312,transistor,transistor,generic,abnormal {},abnormal transistor,0.0,0.0,3.6796875,2.53359375,3.5942540322580645,0.6972379993450707,62,low

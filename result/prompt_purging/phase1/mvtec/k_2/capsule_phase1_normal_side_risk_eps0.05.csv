@@ -1,0 +1,14 @@
+prompt_index,prompt_id,class,display_name,type,template,full_text,R_j_0,R_j_eps,median_margin,q10_margin,mean_margin,std_margin,num_samples,risk_level
+9,49,capsule,capsule,specific,{} with faulty imprint,capsule with faulty imprint,0.76,0.76,-1.515625,-2.446875,-1.176875,1.0498578772862543,25,high
+5,45,capsule,capsule,generic,{} with flaw,capsule with flaw,0.64,0.68,-0.515625,-1.371875,-0.3225,1.0041309208713773,25,high
+12,52,capsule,capsule,specific,{} squeezed with compression,capsule squeezed with compression,0.6,0.6,-0.5625,-1.359375,0.01875,1.4332546005507885,25,high
+6,46,capsule,capsule,generic,{} with defect,capsule with defect,0.44,0.52,0.046875,-0.9093749999999999,0.2075,0.8525870556723225,25,medium
+0,40,capsule,capsule,generic,damaged {},damaged capsule,0.08,0.08,1.0,0.11562500000000003,1.576875,1.4357048573784237,25,medium
+7,47,capsule,capsule,generic,{} with damage,capsule with damage,0.04,0.04,1.125,0.20937500000000003,1.45875,1.1556069157589877,25,medium
+8,48,capsule,capsule,specific,{} with crack,capsule with crack,0.04,0.04,1.0,0.36250000000000004,1.4725,1.1907954274349561,25,medium
+11,51,capsule,capsule,specific,{} with scratch,capsule with scratch,0.04,0.04,1.0625,0.28125,1.34375,1.0488740242517212,25,medium
+1,41,capsule,capsule,generic,flawed {},flawed capsule,0.0,0.0,2.671875,1.78125,2.946875,1.1164693933332879,25,low
+2,42,capsule,capsule,generic,abnormal {},abnormal capsule,0.0,0.0,2.734375,2.0375,3.24,1.1445598225955689,25,low
+3,43,capsule,capsule,generic,imperfect {},imperfect capsule,0.0,0.0,4.28125,3.34375,4.8765625,1.426455534051097,25,low
+4,44,capsule,capsule,generic,blemished {},blemished capsule,0.0,0.0,2.28125,1.565625,2.954375,1.4876570295266311,25,low
+10,50,capsule,capsule,specific,{} with poke,capsule with poke,0.0,0.0,1.921875,1.1656250000000001,2.69625,1.5722264766088887,25,low

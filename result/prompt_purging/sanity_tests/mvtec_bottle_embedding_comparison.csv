@@ -1,0 +1,45 @@
+prompt_id,replica,template,full_text,type,cosine_similarity,l2_distance
+0,0,damaged {},damaged bottle,generic,0.3225,1.164
+0,1,damaged {},damaged bottle,generic,0.3743,1.119
+0,2,damaged {},damaged bottle,generic,0.3923,1.103
+0,3,damaged {},damaged bottle,generic,0.3694,1.123
+1,0,flawed {},flawed bottle,generic,0.39,1.1045
+1,1,flawed {},flawed bottle,generic,0.3972,1.098
+1,2,flawed {},flawed bottle,generic,0.288,1.193
+1,3,flawed {},flawed bottle,generic,0.3057,1.179
+2,0,abnormal {},abnormal bottle,generic,0.4202,1.077
+2,1,abnormal {},abnormal bottle,generic,0.3926,1.103
+2,2,abnormal {},abnormal bottle,generic,0.3906,1.104
+2,3,abnormal {},abnormal bottle,generic,0.5493,0.9497
+3,0,imperfect {},imperfect bottle,generic,0.336,1.152
+3,1,imperfect {},imperfect bottle,generic,0.3606,1.131
+3,2,imperfect {},imperfect bottle,generic,0.3447,1.145
+3,3,imperfect {},imperfect bottle,generic,0.343,1.146
+4,0,blemished {},blemished bottle,generic,0.2443,1.2295
+4,1,blemished {},blemished bottle,generic,0.3108,1.174
+4,2,blemished {},blemished bottle,generic,0.2334,1.238
+4,3,blemished {},blemished bottle,generic,0.295,1.1875
+5,0,{} with flaw,bottle with flaw,generic,0.3882,1.106
+5,1,{} with flaw,bottle with flaw,generic,0.353,1.138
+5,2,{} with flaw,bottle with flaw,generic,0.3296,1.157
+5,3,{} with flaw,bottle with flaw,generic,0.374,1.118
+6,0,{} with defect,bottle with defect,generic,0.2673,1.211
+6,1,{} with defect,bottle with defect,generic,0.3328,1.155
+6,2,{} with defect,bottle with defect,generic,0.3518,1.139
+6,3,{} with defect,bottle with defect,generic,0.359,1.132
+7,0,{} with damage,bottle with damage,generic,0.3335,1.154
+7,1,{} with damage,bottle with damage,generic,0.4077,1.089
+7,2,{} with damage,bottle with damage,generic,0.4285,1.069
+7,3,{} with damage,bottle with damage,generic,0.384,1.11
+8,0,{} with large breakage,bottle with large breakage,specific,0.286,1.195
+8,1,{} with large breakage,bottle with large breakage,specific,0.3406,1.148
+8,2,{} with large breakage,bottle with large breakage,specific,0.33,1.157
+8,3,{} with large breakage,bottle with large breakage,specific,0.3499,1.141
+9,0,{} with small breakage,bottle with small breakage,specific,0.2678,1.21
+9,1,{} with small breakage,bottle with small breakage,specific,0.3513,1.14
+9,2,{} with small breakage,bottle with small breakage,specific,0.319,1.167
+9,3,{} with small breakage,bottle with small breakage,specific,0.2932,1.189
+10,0,{} with contamination,bottle with contamination,specific,0.4158,1.08
+10,1,{} with contamination,bottle with contamination,specific,0.3372,1.151
+10,2,{} with contamination,bottle with contamination,specific,0.4246,1.072
+10,3,{} with contamination,bottle with contamination,specific,0.39,1.1045

@@ -1,0 +1,13 @@
+prompt_index,prompt_id,class,display_name,type,template,full_text,R_j_0,R_j_eps,median_margin_normal,mean_margin_normal,std_margin_normal,q10_margin_normal,q90_margin_normal,num_normal_samples,median_margin_abnormal,mean_margin_abnormal,std_margin_abnormal,q10_margin_abnormal,q90_margin_abnormal,num_abnormal_samples,separation_gap,prompt_classification
+0,322,wood,wood,generic,damaged {},damaged wood,0.8571428571428571,0.8571428571428571,-1.172,-1.136,0.8564,-2.1640625,0.109375,21,-2.23,-2.262,1.285,-4.20390625,-0.54375,60,1.059,dangerous_useful
+1,323,wood,wood,generic,flawed {},flawed wood,1.0,1.0,-1.047,-1.007,0.2031,-1.1796875,-0.65625,21,-0.5156,-0.6206,0.51,-1.2984375,-0.07343749999999993,60,-0.5312,dangerous_useless
+2,324,wood,wood,generic,abnormal {},abnormal wood,1.0,1.0,-1.344,-1.366,0.6885,-2.0625,-0.5625,21,-0.633,-0.8745,0.9893,-2.2359375,0.3046875000000001,60,-0.711,dangerous_useless
+3,325,wood,wood,generic,imperfect {},imperfect wood,1.0,1.0,-1.836,-1.808,0.2546,-2.125,-1.421875,21,-2.11,-2.186,0.6494,-3.0265625,-1.546875,60,0.2734,dangerous_useful
+4,326,wood,wood,generic,blemished {},blemished wood,0.2857142857142857,0.3333333333333333,0.0703,0.05582,0.12,-0.109375,0.171875,21,0.03906,0.01458,0.3882,-0.4375,0.484375,60,0.03125,dangerous_useful
+5,327,wood,wood,generic,{} with flaw,wood with flaw,0.38095238095238093,0.5714285714285714,0.03906,0.01637,0.344,-0.4375,0.421875,21,-0.457,-0.3975,0.522,-1.059375,0.26953125000000006,60,0.496,dangerous_useful
+6,328,wood,wood,generic,{} with defect,wood with defect,1.0,1.0,-1.828,-1.826,0.4058,-2.4765625,-1.3671875,21,-1.695,-1.674,0.6987,-2.8265625,-0.9640624999999999,60,-0.1328,dangerous_useless
+7,329,wood,wood,generic,{} with damage,wood with damage,0.09523809523809523,0.09523809523809523,0.828,0.722,0.3816,0.140625,1.03125,21,-0.1797,-0.1914,0.581,-0.959375,0.50078125,60,1.008,safe
+8,330,wood,wood,specific,{} with color stain,wood with color stain,1.0,1.0,-9.266,-9.2,0.645,-9.7734375,-8.265625,21,-7.39,-7.566,1.539,-9.509375,-5.2578125,60,-1.875,dangerous_useless
+9,331,wood,wood,specific,{} with hole,wood with hole,1.0,1.0,-2.484,-2.475,0.239,-2.7890625,-2.2265625,21,-2.719,-2.934,1.03,-4.36875,-1.8281249999999998,60,0.2344,dangerous_useful
+10,332,wood,wood,specific,{} with scratch,wood with scratch,1.0,1.0,-2.062,-2.059,0.217,-2.2890625,-1.8125,21,-1.992,-1.985,0.5347,-2.6421875,-1.41875,60,-0.0703,dangerous_useless
+11,333,wood,wood,specific,{} with liquid,wood with liquid,1.0,1.0,-1.945,-2.004,0.4712,-2.4453125,-1.609375,21,-1.875,-1.981,0.5884,-2.803125,-1.30859375,60,-0.0703,dangerous_useless

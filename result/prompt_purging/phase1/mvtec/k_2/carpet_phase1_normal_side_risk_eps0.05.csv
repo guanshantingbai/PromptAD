@@ -1,0 +1,15 @@
+prompt_index,prompt_id,class,display_name,type,template,full_text,R_j_0,R_j_eps,median_margin,q10_margin,mean_margin,std_margin,num_samples,risk_level
+5,71,carpet,carpet,generic,{} with flaw,carpet with flaw,1.0,1.0,-2.2109375,-2.64375,-2.2317708333333335,0.31537952844438966,30,high
+6,72,carpet,carpet,generic,{} with defect,carpet with defect,1.0,1.0,-1.0859375,-1.40625,-1.01875,0.31623805972189156,30,high
+8,74,carpet,carpet,specific,{} with hole,carpet with hole,1.0,1.0,-4.140625,-4.5765625,-4.191666666666666,0.32488312535262415,30,high
+9,75,carpet,carpet,specific,{} with color stain,carpet with color stain,1.0,1.0,-2.671875,-3.1875,-2.6359375,0.4142668520888237,30,high
+11,77,carpet,carpet,specific,{} with thread residue,carpet with thread residue,1.0,1.0,-3.7421875,-4.0546875,-3.7552083333333335,0.2890226136144982,30,high
+12,78,carpet,carpet,specific,{} with thread,carpet with thread,1.0,1.0,-4.703125,-5.0453125,-4.6703125,0.3081031833892395,30,high
+13,79,carpet,carpet,specific,{} with cut,carpet with cut,1.0,1.0,-3.921875,-4.2,-3.870833333333333,0.33859614946209227,30,high
+10,76,carpet,carpet,specific,{} with metal contamination,carpet with metal contamination,0.3,0.4,0.1796875,-0.2515625,0.17291666666666666,0.31591708157450993,30,low
+3,69,carpet,carpet,generic,imperfect {},imperfect carpet,0.13333333333333333,0.13333333333333333,0.453125,-0.159375,0.5,0.4675679540630075,30,low
+0,66,carpet,carpet,generic,damaged {},damaged carpet,0.03333333333333333,0.1,0.796875,0.14531250000000004,0.7536458333333333,0.4077832311761633,30,low
+1,67,carpet,carpet,generic,flawed {},flawed carpet,0.0,0.0,2.2890625,1.784375,2.2544270833333333,0.3367642644541847,30,low
+2,68,carpet,carpet,generic,abnormal {},abnormal carpet,0.0,0.0,0.84375,0.26875000000000004,0.8057291666666667,0.3435293641672264,30,low
+4,70,carpet,carpet,generic,blemished {},blemished carpet,0.0,0.0,0.9609375,0.45,0.9489583333333333,0.36999554239056565,30,low
+7,73,carpet,carpet,generic,{} with damage,carpet with damage,0.0,0.0,1.0234375,0.41250000000000003,0.9919270833333333,0.39419454141329097,30,low

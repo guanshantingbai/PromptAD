@@ -1,0 +1,14 @@
+prompt_index,prompt_id,class,display_name,type,template,full_text,R_j_0,R_j_eps,median_margin,q10_margin,mean_margin,std_margin,num_samples,risk_level
+7,100,chewinggum,chewing gum,generic,{} with damage,chewing gum with damage,1.0,1.0,-2.4140625,-3.10625,-2.391034962871287,0.5645115019473853,505,high
+9,102,chewinggum,chewing gum,specific,{} with scratches,chewing gum with scratches,1.0,1.0,-6.2734375,-7.0515625,-6.257038985148514,0.6403037267851274,505,high
+10,103,chewinggum,chewing gum,specific,{} with chunk of gum missing,chewing gum with chunk of gum missing,1.0,1.0,-2.1484375,-2.996875,-2.173027537128713,0.6134962208180738,505,high
+11,104,chewinggum,chewing gum,specific,{} with colour spot,chewing gum with colour spot,1.0,1.0,-4.1015625,-5.15625,-4.079818997524752,0.8519098371743595,505,high
+12,105,chewinggum,chewing gum,specific,{} with cracks,chewing gum with cracks,1.0,1.0,-1.9140625,-2.7421875,-1.9141939975247524,0.6310272790835981,505,high
+0,93,chewinggum,chewing gum,generic,damaged {},damaged chewing gum,0.996039603960396,0.998019801980198,-1.4765625,-2.1609375,-1.4863474628712872,0.5262564778491283,505,medium
+8,101,chewinggum,chewing gum,specific,{} with corner missing,chewing gum with corner missing,0.9821782178217822,0.9861386138613861,-1.578125,-2.6140625,-1.5922107054455445,0.7686775853442432,505,medium
+1,94,chewinggum,chewing gum,generic,flawed {},flawed chewing gum,0.9504950495049505,0.9623762376237623,-1.28125,-2.434375,-1.3213258044554455,0.8830847458223899,505,low
+5,98,chewinggum,chewing gum,generic,{} with flaw,chewing gum with flaw,0.9465346534653465,0.9504950495049505,-1.0546875,-2.0,-1.0713103341584158,0.6970722367488217,505,low
+3,96,chewinggum,chewing gum,generic,imperfect {},imperfect chewing gum,0.6712871287128713,0.7108910891089109,-0.328125,-1.1796875,-0.35048731435643565,0.6277376310364768,505,low
+4,97,chewinggum,chewing gum,generic,blemished {},blemished chewing gum,0.4514851485148515,0.47326732673267324,0.1015625,-1.0671875,0.044856126237623764,0.8351285706425018,505,low
+6,99,chewinggum,chewing gum,generic,{} with defect,chewing gum with defect,0.38811881188118813,0.4297029702970297,0.1640625,-0.5453124999999999,0.12260983910891089,0.5329807619287287,505,low
+2,95,chewinggum,chewing gum,generic,abnormal {},abnormal chewing gum,0.07326732673267326,0.08712871287128712,0.875,0.09375,0.8826191212871287,0.617298322058066,505,low

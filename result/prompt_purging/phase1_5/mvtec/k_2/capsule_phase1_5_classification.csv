@@ -1,0 +1,14 @@
+prompt_index,prompt_id,class,display_name,type,template,full_text,R_j_0,R_j_eps,median_margin_normal,mean_margin_normal,std_margin_normal,q10_margin_normal,q90_margin_normal,num_normal_samples,median_margin_abnormal,mean_margin_abnormal,std_margin_abnormal,q10_margin_abnormal,q90_margin_abnormal,num_abnormal_samples,separation_gap,prompt_classification
+0,40,capsule,capsule,generic,damaged {},damaged capsule,0.36,0.36,0.3906,-0.3914,1.239,-2.2125,0.7468750000000002,25,0.1875,-0.3367,1.098,-1.990625,0.6875,109,0.2031,dangerous_useful
+1,41,capsule,capsule,generic,flawed {},flawed capsule,0.88,0.88,-0.9062,-0.739,0.47,-1.140625,0.02812500000000029,25,-0.8125,-0.7925,0.4954,-1.38125,-0.26874999999999993,109,-0.09375,dangerous_useless
+2,42,capsule,capsule,generic,abnormal {},abnormal capsule,0.36,0.36,0.9688,0.2764,1.16,-1.5687499999999999,1.265625,25,1.094,0.5767,1.118,-1.44375,1.440625,109,-0.125,dangerous_useless
+3,43,capsule,capsule,generic,imperfect {},imperfect capsule,0.04,0.04,0.7344,0.6826,0.2827,0.35000000000000003,0.946875,25,0.703,0.6323,0.3352,0.16875,0.9875,109,0.03125,safe
+4,44,capsule,capsule,generic,blemished {},blemished capsule,0.32,0.56,0.04688,-0.07623,0.399,-0.74375,0.203125,25,0.03125,-0.0526,0.439,-0.6421875,0.296875,109,0.01563,dangerous_useful
+5,45,capsule,capsule,generic,{} with flaw,capsule with flaw,1.0,1.0,-1.875,-1.921,0.2861,-2.153125,-1.621875,25,-1.859,-1.908,0.4355,-2.40625,-1.453125,109,-0.01563,dangerous_useless
+6,46,capsule,capsule,generic,{} with defect,capsule with defect,1.0,1.0,-1.969,-2.393,0.8555,-3.6312499999999996,-1.5031249999999998,25,-2.11,-2.205,0.7856,-3.2671875,-1.3468749999999998,109,0.1406,dangerous_useful
+7,47,capsule,capsule,generic,{} with damage,capsule with damage,1.0,1.0,-2.625,-2.703,0.3247,-3.14375,-2.34375,25,-2.656,-2.674,0.464,-3.2203125,-2.2249999999999996,109,0.03125,dangerous_useful
+8,48,capsule,capsule,specific,{} with crack,capsule with crack,1.0,1.0,-1.797,-2.076,0.6514,-3.109375,-1.48125,25,-1.844,-2.043,0.666,-3.025,-1.390625,109,0.04688,dangerous_useful
+9,49,capsule,capsule,specific,{} with faulty imprint,capsule with faulty imprint,1.0,1.0,-4.344,-4.25,0.4507,-4.678125,-3.53125,25,-4.39,-4.39,0.5864,-5.140625,-3.6375,109,0.04688,dangerous_useful
+10,50,capsule,capsule,specific,{} with poke,capsule with poke,0.44,0.56,0.03125,-0.1907,0.5903,-0.8125,0.36875,25,0.1094,-0.145,0.7124,-1.20625,0.578125,109,-0.0781,dangerous_useless
+11,51,capsule,capsule,specific,{} with scratch,capsule with scratch,1.0,1.0,-1.875,-2.096,0.4475,-2.815625,-1.6749999999999998,25,-1.906,-2.05,0.513,-2.771875,-1.5999999999999999,109,0.03125,dangerous_useful
+12,52,capsule,capsule,specific,{} squeezed with compression,capsule squeezed with compression,1.0,1.0,-3.422,-3.426,0.646,-4.109375,-2.61875,25,-3.422,-3.377,0.7485,-4.3,-2.25,109,0.0,dangerous_useless

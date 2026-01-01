@@ -1,0 +1,15 @@
+prompt_index,prompt_id,class,display_name,type,template,full_text,R_j_0,R_j_eps,median_margin_normal,mean_margin_normal,std_margin_normal,q10_margin_normal,q90_margin_normal,num_normal_samples,median_margin_abnormal,mean_margin_abnormal,std_margin_abnormal,q10_margin_abnormal,q90_margin_abnormal,num_abnormal_samples,separation_gap,prompt_classification
+0,120,grid,grid,generic,damaged {},damaged grid,1.0,1.0,-0.9844,-1.2,0.727,-2.16875,-0.425,23,-3.766,-3.59,1.253,-5.2875,-1.7656250000000004,57,2.781,dangerous_useful
+1,121,grid,grid,generic,flawed {},flawed grid,0.043478260869565216,0.043478260869565216,1.391,1.411,0.6987,0.54375,2.15625,23,-0.04688,0.1121,0.8613,-0.9375,1.490625,57,1.4375,safe
+2,122,grid,grid,generic,abnormal {},abnormal grid,0.0,0.0,1.969,1.967,0.55,1.278125,2.528125,23,1.578,1.593,0.5693,0.7906250000000001,2.275,57,0.3906,safe
+3,123,grid,grid,generic,imperfect {},imperfect grid,0.2608695652173913,0.2608695652173913,0.797,0.67,0.8403,-0.55625,1.6656250000000001,23,-1.0,-0.7773,0.986,-1.903125,0.6593749999999996,57,1.797,dangerous_useful
+4,124,grid,grid,generic,blemished {},blemished grid,0.0,0.0,1.375,1.294,0.336,1.021875,1.6515625,23,0.5938,0.66,0.5557,-0.03749999999999999,1.35625,57,0.7812,safe
+5,125,grid,grid,generic,{} with flaw,grid with flaw,0.5652173913043478,0.5652173913043478,-0.03125,-0.03262,0.6616,-0.8937499999999999,0.8906250000000002,23,-1.0625,-1.037,0.562,-1.578125,-0.375,57,1.031,dangerous_useful
+6,126,grid,grid,generic,{} with defect,grid with defect,0.7391304347826086,0.782608695652174,-0.2656,-0.2092,0.4834,-0.66875,0.23125,23,-1.531,-1.413,0.6973,-2.1125,-0.375,57,1.266,dangerous_useful
+7,127,grid,grid,generic,{} with damage,grid with damage,0.30434782608695654,0.34782608695652173,0.2031,0.303,0.455,-0.20625,0.978125,23,-1.156,-1.108,0.753,-1.96875,-0.13750000000000007,57,1.359,dangerous_useful
+8,128,grid,grid,specific,{} with breakage,grid with breakage,1.0,1.0,-0.797,-0.833,0.3452,-1.25625,-0.43437499999999996,23,-1.016,-0.9854,0.5215,-1.609375,-0.4,57,0.2188,dangerous_useful
+9,129,grid,grid,specific,{} with thread residue,grid with thread residue,0.6956521739130435,0.6956521739130435,-0.125,-0.237,0.4612,-0.7625,0.36875,23,-0.6406,-0.7646,0.4949,-1.478125,-0.09375000000000011,57,0.5156,dangerous_useful
+10,130,grid,grid,specific,{} with thread,grid with thread,0.6521739130434783,0.7391304347826086,-0.2656,-0.2479,0.4956,-0.96875,0.4281250000000001,23,-1.297,-1.192,0.7344,-1.984375,-0.2781250000000002,57,1.031,dangerous_useful
+11,131,grid,grid,specific,{} with metal contamination,grid with metal contamination,1.0,1.0,-0.8125,-0.7637,0.3625,-1.159375,-0.13749999999999996,23,-1.219,-1.149,0.5957,-1.890625,-0.375,57,0.4062,dangerous_useful
+12,132,grid,grid,specific,{} with glue,grid with glue,1.0,1.0,-1.453,-1.706,0.8145,-2.7625,-0.7687499999999999,23,-2.938,-3.098,1.079,-4.665625,-1.7000000000000002,57,1.484,dangerous_useful
+13,133,grid,grid,specific,{} with a bent shape,grid with a bent shape,1.0,1.0,-4.484,-4.73,1.316,-6.625,-3.040625,23,-6.703,-6.73,1.07,-8.25,-5.196875,57,2.219,dangerous_useful

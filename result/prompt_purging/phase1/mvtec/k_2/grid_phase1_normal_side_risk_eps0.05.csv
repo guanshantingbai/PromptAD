@@ -1,0 +1,15 @@
+prompt_index,prompt_id,class,display_name,type,template,full_text,R_j_0,R_j_eps,median_margin,q10_margin,mean_margin,std_margin,num_samples,risk_level
+0,120,grid,grid,generic,damaged {},damaged grid,1.0,1.0,-4.9140625,-5.9984375,-4.852581521739131,0.9807811172793931,23,high
+1,121,grid,grid,generic,flawed {},flawed grid,1.0,1.0,-2.7734375,-3.653125,-2.889266304347826,0.6945226040182713,23,high
+3,123,grid,grid,generic,imperfect {},imperfect grid,1.0,1.0,-5.78125,-6.9765625,-5.826766304347826,0.9067817621326214,23,high
+4,124,grid,grid,generic,blemished {},blemished grid,1.0,1.0,-4.109375,-4.7984375,-3.8963994565217392,0.8952172836611999,23,high
+5,125,grid,grid,generic,{} with flaw,grid with flaw,1.0,1.0,-4.8046875,-5.6609375,-4.930027173913044,0.5968413796091491,23,high
+6,126,grid,grid,generic,{} with defect,grid with defect,1.0,1.0,-5.609375,-6.5859375,-5.5040760869565215,0.8892081764308216,23,high
+7,127,grid,grid,generic,{} with damage,grid with damage,1.0,1.0,-4.9453125,-5.8515625,-4.8084239130434785,0.6847534594706117,23,high
+8,128,grid,grid,specific,{} with breakage,grid with breakage,1.0,1.0,-3.6875,-4.5296875,-3.653872282608696,0.6593661248831569,23,high
+9,129,grid,grid,specific,{} with thread residue,grid with thread residue,1.0,1.0,-6.453125,-7.5203125,-6.432404891304348,0.8977463926708482,23,high
+10,130,grid,grid,specific,{} with thread,grid with thread,1.0,1.0,-6.0390625,-6.85,-6.185801630434782,0.6632486081810764,23,high
+11,131,grid,grid,specific,{} with metal contamination,grid with metal contamination,1.0,1.0,-5.6953125,-7.4296875,-5.979959239130435,0.9535337073837947,23,high
+12,132,grid,grid,specific,{} with glue,grid with glue,1.0,1.0,-5.6484375,-6.7328125,-5.516644021739131,0.8988680571224431,23,high
+13,133,grid,grid,specific,{} with a bent shape,grid with a bent shape,1.0,1.0,-10.3046875,-11.2265625,-10.411345108695652,0.7298899259229757,23,high
+2,122,grid,grid,generic,abnormal {},abnormal grid,0.6956521739130435,0.6956521739130435,-0.828125,-1.396875,-0.618546195652174,0.881781309581408,23,low

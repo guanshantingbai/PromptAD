@@ -1,0 +1,14 @@
+prompt_index,prompt_id,class,display_name,type,template,full_text,R_j_0,R_j_eps,median_margin,q10_margin,mean_margin,std_margin,num_samples,risk_level
+10,297,tile,tile,specific,{} with gray stroke,tile with gray stroke,1.0,1.0,-1.9375,-2.54375,-1.9441964285714286,0.42286236498343965,35,high
+12,299,tile,tile,specific,{} with rough surface,tile with rough surface,0.9714285714285714,0.9714285714285714,-0.953125,-1.41875,-0.871875,0.452852442658123,35,high
+0,287,tile,tile,generic,damaged {},damaged tile,0.02857142857142857,0.02857142857142857,1.1875,0.709375,1.2169642857142857,0.498459840920213,35,high
+1,288,tile,tile,generic,flawed {},flawed tile,0.0,0.0,4.890625,4.521875,4.9227678571428575,0.3700744762675398,35,medium
+2,289,tile,tile,generic,abnormal {},abnormal tile,0.0,0.0,2.859375,2.54375,2.899107142857143,0.3537179530446857,35,medium
+3,290,tile,tile,generic,imperfect {},imperfect tile,0.0,0.0,1.359375,1.03125,1.4464285714285714,0.41507055046370717,35,medium
+4,291,tile,tile,generic,blemished {},blemished tile,0.0,0.0,3.6875,3.303125,3.7754464285714286,0.4836484429071706,35,medium
+5,292,tile,tile,generic,{} with flaw,tile with flaw,0.0,0.0,4.34375,3.89375,4.3254464285714285,0.3559421781464982,35,medium
+6,293,tile,tile,generic,{} with defect,tile with defect,0.0,0.0,1.171875,0.59375,1.2008928571428572,0.44351953989695675,35,medium
+7,294,tile,tile,generic,{} with damage,tile with damage,0.0,0.0,3.421875,2.821875,3.4589285714285714,0.549973184643152,35,medium
+8,295,tile,tile,specific,{} with crack,tile with crack,0.0,0.0,2.40625,1.93125,2.4258928571428573,0.424131578243433,35,medium
+9,296,tile,tile,specific,{} with glue strip,tile with glue strip,0.0,0.0,5.375,4.6156250000000005,5.273214285714285,0.49955855831801693,35,medium
+11,298,tile,tile,specific,{} with oil,tile with oil,0.0,0.0,1.9375,1.41875,1.8580357142857142,0.3942487527965468,35,medium

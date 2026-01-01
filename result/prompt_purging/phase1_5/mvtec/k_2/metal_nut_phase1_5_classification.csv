@@ -1,0 +1,13 @@
+prompt_index,prompt_id,class,display_name,type,template,full_text,R_j_0,R_j_eps,median_margin_normal,mean_margin_normal,std_margin_normal,q10_margin_normal,q90_margin_normal,num_normal_samples,median_margin_abnormal,mean_margin_abnormal,std_margin_abnormal,q10_margin_abnormal,q90_margin_abnormal,num_abnormal_samples,separation_gap,prompt_classification
+0,185,metal_nut,metal nut,generic,damaged {},damaged metal nut,1.0,1.0,-2.848,-3.127,0.6216,-4.06328125,-2.49453125,24,-3.203,-3.17,0.605,-3.9265625,-2.3671875,93,0.3555,dangerous_useful
+1,186,metal_nut,metal nut,generic,flawed {},flawed metal nut,1.0,1.0,-2.664,-2.695,0.3286,-3.02265625,-2.321875,24,-2.734,-2.72,0.5215,-3.396875,-2.0562500000000004,93,0.0703,dangerous_useful
+2,187,metal_nut,metal nut,generic,abnormal {},abnormal metal nut,1.0,1.0,-1.391,-1.501,0.51,-2.2828125,-0.88984375,24,-1.492,-1.516,0.499,-2.175,-0.8921875,93,0.10156,dangerous_useful
+3,188,metal_nut,metal nut,generic,imperfect {},imperfect metal nut,1.0,1.0,-2.695,-2.904,1.223,-4.69296875,-1.625,24,-3.305,-3.285,1.101,-4.725,-1.9546875000000004,93,0.6094,dangerous_useful
+4,189,metal_nut,metal nut,generic,blemished {},blemished metal nut,0.8333333333333334,0.875,-0.617,-0.889,0.8735,-2.26875,0.1085937499999999,24,-1.047,-1.073,0.6626,-2.05,-0.36250000000000004,93,0.4297,dangerous_useful
+5,190,metal_nut,metal nut,generic,{} with flaw,metal nut with flaw,1.0,1.0,-2.262,-2.223,0.3943,-2.7015625,-1.875,24,-2.688,-2.7,0.7866,-3.75625,-1.6953125,93,0.4258,dangerous_useful
+6,191,metal_nut,metal nut,generic,{} with defect,metal nut with defect,1.0,1.0,-3.926,-3.889,0.4866,-4.41875,-3.15,24,-3.758,-3.71,0.821,-4.81875,-2.796875,93,-0.168,dangerous_useless
+7,192,metal_nut,metal nut,generic,{} with damage,metal nut with damage,1.0,1.0,-2.457,-2.508,0.431,-3.09609375,-1.9296875000000002,24,-2.656,-2.672,0.619,-3.4828125,-1.9859375,93,0.1992,dangerous_useful
+8,193,metal_nut,metal nut,specific,{} with a bent shape ,metal nut with a bent shape ,1.0,1.0,-4.926,-4.902,0.4592,-5.4109375,-4.17578125,24,-4.844,-4.8,0.549,-5.528125,-4.10625,93,-0.08203,dangerous_useless
+9,194,metal_nut,metal nut,specific,{} with color stain,metal nut with color stain,0.25,0.25,0.9805,0.7095,0.9253,-0.7570312499999999,1.625,24,0.7188,0.523,0.749,-0.5265624999999999,1.4203125,93,0.2617,dangerous_useful
+10,195,metal_nut,metal nut,specific,{} with a flipped orientation,metal nut with a flipped orientation,1.0,1.0,-2.75,-2.74,0.639,-3.48984375,-2.07734375,24,-2.484,-2.494,0.7046,-3.4140625,-1.596875,93,-0.2656,dangerous_useless
+11,196,metal_nut,metal nut,specific,{} with scratch,metal nut with scratch,1.0,1.0,-1.117,-1.108,0.289,-1.453125,-0.69921875,24,-1.156,-1.162,0.306,-1.54375,-0.8093750000000001,93,0.03906,dangerous_useful

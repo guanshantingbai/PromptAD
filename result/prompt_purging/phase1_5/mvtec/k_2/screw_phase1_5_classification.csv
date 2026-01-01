@@ -1,0 +1,12 @@
+prompt_index,prompt_id,class,display_name,type,template,full_text,R_j_0,R_j_eps,median_margin_normal,mean_margin_normal,std_margin_normal,q10_margin_normal,q90_margin_normal,num_normal_samples,median_margin_abnormal,mean_margin_abnormal,std_margin_abnormal,q10_margin_abnormal,q90_margin_abnormal,num_abnormal_samples,separation_gap,prompt_classification
+0,276,screw,screw,generic,damaged {},damaged screw,1.0,1.0,-2.797,-2.748,0.704,-3.784375,-1.9749999999999996,43,-2.875,-2.941,0.7,-3.86875,-2.0625,119,0.0781,dangerous_useful
+1,277,screw,screw,generic,flawed {},flawed screw,0.0,0.0,2.125,1.99,0.5034,1.2828125000000001,2.4781250000000004,43,2.0,1.926,0.522,1.25,2.55,119,0.125,safe
+2,278,screw,screw,generic,abnormal {},abnormal screw,0.18604651162790697,0.18604651162790697,1.109,0.939,0.6826,-0.159375,1.6218750000000002,43,0.9375,1.031,0.762,0.215625,2.14375,119,0.1719,safe
+3,279,screw,screw,generic,imperfect {},imperfect screw,1.0,1.0,-3.531,-3.377,0.629,-4.109375,-2.5749999999999997,43,-3.484,-3.443,0.6226,-4.284375,-2.571875,119,-0.04688,dangerous_useless
+4,280,screw,screw,generic,blemished {},blemished screw,0.7674418604651163,0.8604651162790697,-0.2656,-0.2517,0.2903,-0.6375,0.07500000000000007,43,-0.0625,-0.081,0.344,-0.578125,0.33125000000000004,119,-0.2031,dangerous_useless
+5,281,screw,screw,generic,{} with flaw,screw with flaw,1.0,1.0,-1.875,-1.896,0.3708,-2.371875,-1.4,43,-1.891,-1.932,0.3262,-2.39375,-1.55625,119,0.01563,dangerous_useful
+6,282,screw,screw,generic,{} with defect,screw with defect,1.0,1.0,-3.156,-3.125,0.404,-3.69375,-2.58125,43,-3.422,-3.35,0.4353,-3.859375,-2.7718749999999996,119,0.2656,dangerous_useful
+7,283,screw,screw,generic,{} with damage,screw with damage,0.46511627906976744,0.5348837209302325,0.03125,-0.0814,0.3992,-0.615625,0.35312500000000013,43,-0.2188,-0.2717,0.4116,-0.846875,0.140625,119,0.25,dangerous_useful
+8,284,screw,screw,specific,{} with manipulated front,screw with manipulated front,1.0,1.0,-3.562,-3.666,0.6216,-4.621875,-2.9281249999999996,43,-3.64,-3.74,0.6904,-4.771875,-2.85625,119,0.0781,dangerous_useful
+9,285,screw,screw,specific,{} with scratch neck,screw with scratch neck,0.9767441860465116,0.9767441860465116,-1.422,-1.389,0.706,-2.371875,-0.47187499999999927,43,-1.578,-1.52,0.989,-2.859375,-0.29374999999999996,119,0.1562,dangerous_useful
+10,286,screw,screw,specific,{} with scratch head,screw with scratch head,1.0,1.0,-5.703,-5.832,0.61,-6.584375,-5.153124999999999,43,-5.812,-5.824,0.72,-6.625,-4.93125,119,0.1094,dangerous_useful

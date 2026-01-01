@@ -1,0 +1,189 @@
+prompt_index,prompt_id,class,display_name,type,template,full_text,R_j_0,R_j_eps,median_margin_normal,mean_margin_normal,std_margin_normal,q10_margin_normal,q90_margin_normal,num_normal_samples,median_margin_abnormal,mean_margin_abnormal,std_margin_abnormal,q10_margin_abnormal,q90_margin_abnormal,num_abnormal_samples,separation_gap,prompt_classification
+0,1,bottle,bottle,generic,damaged {},damaged bottle,1.0,1.0,-2.164,-2.172,0.2203,-2.47109375,-1.93359375,22,-2.094,-2.102,0.5674,-2.65625,-1.4234375,63,-0.0703,dangerous_useless
+1,2,bottle,bottle,generic,flawed {},flawed bottle,1.0,1.0,-0.922,-0.8906,0.213,-1.11484375,-0.6601562499999998,22,-0.1094,-0.1716,0.6343,-1.03125,0.64375,63,-0.8125,dangerous_useless
+2,3,bottle,bottle,generic,abnormal {},abnormal bottle,0.3181818181818182,0.3636363636363636,0.3281,0.4634,0.6987,-0.315625,1.4703125,22,0.1953,0.3857,0.8594,-0.4875,1.3375,63,0.1328,dangerous_useful
+3,4,bottle,bottle,generic,imperfect {},imperfect bottle,1.0,1.0,-3.676,-3.709,0.3713,-4.25390625,-3.1460937499999995,22,-2.508,-2.518,1.165,-4.00625,-0.9734374999999996,63,-1.168,dangerous_useless
+4,5,bottle,bottle,generic,blemished {},blemished bottle,1.0,1.0,-1.48,-1.465,0.1864,-1.71484375,-1.23046875,22,-0.6797,-0.5513,0.9893,-1.6875,0.890625,63,-0.801,dangerous_useless
+5,6,bottle,bottle,generic,{} with flaw,bottle with flaw,0.0909090909090909,0.1363636363636363,0.2188,0.2397,0.2032,0.0125,0.475,22,0.0703,0.05368,0.6157,-0.6484375,0.8296875000000004,63,0.1484,safe
+6,7,bottle,bottle,generic,{} with defect,bottle with defect,0.3181818181818182,0.3636363636363636,0.1211,0.0966,0.2874,-0.24140625,0.4320312500000003,22,-0.3672,-0.3594,0.9297,-1.5390625,0.8031250000000003,63,0.4883,dangerous_useful
+7,8,bottle,bottle,generic,{} with damage,bottle with damage,0.9090909090909092,0.9545454545454546,-0.4648,-0.4797,0.359,-0.90546875,-0.1234374999999998,22,-1.078,-1.134,0.6562,-2.075,-0.3749999999999998,63,0.6133,dangerous_useful
+8,9,bottle,bottle,specific,{} with large breakage,bottle with large breakage,1.0,1.0,-1.109,-1.065,0.6,-1.909375,-0.2968749999999998,22,-1.719,-1.747,0.5522,-2.2890625,-1.1203124999999998,63,0.6094,dangerous_useful
+9,10,bottle,bottle,specific,{} with small breakage,bottle with small breakage,1.0,1.0,-1.895,-1.79,0.7065,-2.74921875,-0.7960937499999997,22,-2.43,-2.361,0.581,-2.9703125,-1.5343749999999998,63,0.535,dangerous_useful
+10,11,bottle,bottle,specific,{} with contamination,bottle with contamination,0.0909090909090909,0.0909090909090909,0.2734,0.3508,0.269,0.103125,0.7515625000000001,22,0.3047,0.2478,0.5825,-0.375,1.1000000000000003,63,-0.03125,safe
+0,12,cable,cable,generic,damaged {},damaged cable,0.9666666666666668,0.9666666666666668,-0.8945,-0.9146,0.4966,-1.54609375,-0.3617187499999999,60,-0.965,-0.959,0.518,-1.59296875,-0.4390624999999999,92,0.0703,dangerous_useful
+1,13,cable,cable,generic,flawed {},flawed cable,0.2333333333333333,0.25,0.633,0.4844,0.8086,-0.8765625,1.38359375,60,0.2188,0.0062,0.8647,-1.18359375,1.078125,92,0.414,dangerous_useful
+2,14,cable,cable,generic,abnormal {},abnormal cable,0.6166666666666667,0.65,-0.1094,-0.2416,0.4944,-0.89140625,0.36796875,60,-0.3828,-0.4807,0.6333,-1.18515625,0.3125,92,0.2734,dangerous_useful
+3,15,cable,cable,generic,imperfect {},imperfect cable,1.0,1.0,-2.508,-2.521,0.2878,-2.9078125,-2.18984375,60,-2.562,-2.451,0.49,-2.94375,-1.89375,92,0.0547,dangerous_useful
+4,16,cable,cable,generic,blemished {},blemished cable,0.1833333333333333,0.2,0.4336,0.292,0.541,-0.671875,0.75859375,60,0.2852,-0.0366,0.7324,-1.13125,0.7265625,92,0.1484,dangerous_useful
+5,17,cable,cable,generic,{} with flaw,cable with flaw,0.2166666666666666,0.25,0.3203,0.2964,0.3843,-0.1507812499999999,0.81640625,60,0.3555,0.362,0.5645,-0.3453125,1.11484375,92,-0.03516,dangerous_useless
+6,18,cable,cable,generic,{} with defect,cable with defect,1.0,1.0,-2.473,-2.42,0.552,-3.02578125,-1.7734375,60,-1.914,-1.931,0.786,-2.878125,-0.7820312499999995,92,-0.5586,dangerous_useless
+7,19,cable,cable,generic,{} with damage,cable with damage,0.95,0.9666666666666668,-0.6484,-0.6265,0.3572,-1.06328125,-0.1382812499999999,60,-0.7227,-0.724,0.5137,-1.225,-0.1093749999999995,92,0.0742,dangerous_useful
+8,20,cable,cable,specific,{} with bent wire,cable with bent wire,0.2666666666666666,0.2666666666666666,0.3398,0.3157,0.5854,-0.3953124999999999,1.0625,60,0.1953,0.1971,0.874,-0.89453125,1.11640625,92,0.1445,dangerous_useful
+9,21,cable,cable,specific,{} with missing part,cable with missing part,1.0,1.0,-0.8555,-0.8696,0.2625,-1.23515625,-0.57734375,60,-0.7617,-0.8037,0.5176,-1.51484375,-0.2601562499999998,92,-0.09375,dangerous_useless
+10,22,cable,cable,specific,{} with missing wire,cable with missing wire,1.0,1.0,-1.453,-1.455,0.3403,-1.8328125,-0.9828125,60,-1.297,-1.264,0.631,-2.0546875,-0.5906249999999997,92,-0.1562,dangerous_useless
+11,23,cable,cable,specific,{} with cut,cable with cut,1.0,1.0,-1.152,-1.132,0.2423,-1.440625,-0.81953125,60,-1.176,-1.025,0.5767,-1.4984375,-0.4562499999999994,92,0.02344,dangerous_useful
+12,24,cable,cable,specific,{} with poke,cable with poke,0.7833333333333333,0.7833333333333333,-0.836,-0.8228,0.998,-2.00859375,0.4828125000000001,60,-1.258,-1.215,1.065,-2.571875,0.1523437500000006,92,0.4219,dangerous_useful
+0,40,capsule,capsule,generic,damaged {},damaged capsule,0.36,0.36,0.3906,-0.3914,1.239,-2.2125,0.7468750000000002,25,0.1875,-0.3367,1.098,-1.990625,0.6875,109,0.2031,dangerous_useful
+1,41,capsule,capsule,generic,flawed {},flawed capsule,0.88,0.88,-0.9062,-0.739,0.47,-1.140625,0.0281250000000002,25,-0.8125,-0.7925,0.4954,-1.38125,-0.2687499999999999,109,-0.09375,dangerous_useless
+2,42,capsule,capsule,generic,abnormal {},abnormal capsule,0.36,0.36,0.9688,0.2764,1.16,-1.56875,1.265625,25,1.094,0.5767,1.118,-1.44375,1.440625,109,-0.125,dangerous_useless
+3,43,capsule,capsule,generic,imperfect {},imperfect capsule,0.04,0.04,0.7344,0.6826,0.2827,0.35,0.946875,25,0.703,0.6323,0.3352,0.16875,0.9875,109,0.03125,safe
+4,44,capsule,capsule,generic,blemished {},blemished capsule,0.32,0.56,0.04688,-0.07623,0.399,-0.74375,0.203125,25,0.03125,-0.0526,0.439,-0.6421875,0.296875,109,0.01563,dangerous_useful
+5,45,capsule,capsule,generic,{} with flaw,capsule with flaw,1.0,1.0,-1.875,-1.921,0.2861,-2.153125,-1.621875,25,-1.859,-1.908,0.4355,-2.40625,-1.453125,109,-0.01563,dangerous_useless
+6,46,capsule,capsule,generic,{} with defect,capsule with defect,1.0,1.0,-1.969,-2.393,0.8555,-3.63125,-1.5031249999999998,25,-2.11,-2.205,0.7856,-3.2671875,-1.3468749999999998,109,0.1406,dangerous_useful
+7,47,capsule,capsule,generic,{} with damage,capsule with damage,1.0,1.0,-2.625,-2.703,0.3247,-3.14375,-2.34375,25,-2.656,-2.674,0.464,-3.2203125,-2.225,109,0.03125,dangerous_useful
+8,48,capsule,capsule,specific,{} with crack,capsule with crack,1.0,1.0,-1.797,-2.076,0.6514,-3.109375,-1.48125,25,-1.844,-2.043,0.666,-3.025,-1.390625,109,0.04688,dangerous_useful
+9,49,capsule,capsule,specific,{} with faulty imprint,capsule with faulty imprint,1.0,1.0,-4.344,-4.25,0.4507,-4.678125,-3.53125,25,-4.39,-4.39,0.5864,-5.140625,-3.6375,109,0.04688,dangerous_useful
+10,50,capsule,capsule,specific,{} with poke,capsule with poke,0.44,0.56,0.03125,-0.1907,0.5903,-0.8125,0.36875,25,0.1094,-0.145,0.7124,-1.20625,0.578125,109,-0.0781,dangerous_useless
+11,51,capsule,capsule,specific,{} with scratch,capsule with scratch,1.0,1.0,-1.875,-2.096,0.4475,-2.815625,-1.6749999999999998,25,-1.906,-2.05,0.513,-2.771875,-1.6,109,0.03125,dangerous_useful
+12,52,capsule,capsule,specific,{} squeezed with compression,capsule squeezed with compression,1.0,1.0,-3.422,-3.426,0.646,-4.109375,-2.61875,25,-3.422,-3.377,0.7485,-4.3,-2.25,109,0.0,dangerous_useless
+0,66,carpet,carpet,generic,damaged {},damaged carpet,1.0,1.0,-1.402,-1.384,0.2416,-1.70078125,-1.078125,30,-2.5,-2.543,0.6724,-3.403125,-1.7687499999999998,89,1.098,dangerous_useful
+1,67,carpet,carpet,generic,flawed {},flawed carpet,0.0,0.0,1.328,1.373,0.1982,1.1296875,1.63359375,30,1.078,1.062,0.3645,0.53125,1.51875,89,0.25,safe
+2,68,carpet,carpet,generic,abnormal {},abnormal carpet,1.0,1.0,-2.191,-2.145,0.1832,-2.3828125,-1.93125,30,-1.477,-1.282,0.8755,-2.134375,-0.1812499999999998,89,-0.715,dangerous_useless
+3,69,carpet,carpet,generic,imperfect {},imperfect carpet,1.0,1.0,-1.98,-1.973,0.2169,-2.21953125,-1.68515625,30,-1.1875,-1.227,0.3774,-1.63125,-0.7046874999999998,89,-0.793,dangerous_useless
+4,70,carpet,carpet,generic,blemished {},blemished carpet,0.8666666666666667,0.9,-0.3672,-0.2993,0.2588,-0.57890625,0.02890625,30,0.10156,-0.002459,0.3484,-0.5249999999999999,0.3765625,89,-0.4688,dangerous_useless
+5,71,carpet,carpet,generic,{} with flaw,carpet with flaw,1.0,1.0,-1.082,-1.07,0.1615,-1.2359375,-0.903125,30,-1.5625,-1.561,0.3464,-1.9609375,-1.171875,89,0.4805,dangerous_useful
+6,72,carpet,carpet,generic,{} with defect,carpet with defect,1.0,1.0,-3.785,-3.787,0.357,-4.26875,-3.31484375,30,-4.203,-4.203,0.653,-5.125,-3.35,89,0.418,dangerous_useful
+7,73,carpet,carpet,generic,{} with damage,carpet with damage,1.0,1.0,-1.246,-1.241,0.271,-1.56484375,-0.91796875,30,-1.953,-1.972,0.46,-2.5390625,-1.43125,89,0.707,dangerous_useful
+8,74,carpet,carpet,specific,{} with hole,carpet with hole,1.0,1.0,-4.824,-4.83,0.303,-5.125,-4.61796875,30,-5.758,-5.797,0.635,-6.4625,-5.1296875,89,0.9336,dangerous_useful
+9,75,carpet,carpet,specific,{} with color stain,carpet with color stain,1.0,1.0,-1.617,-1.574,0.2737,-1.88046875,-1.32421875,30,-1.375,-1.323,0.6787,-2.1796875,-0.53125,89,-0.2422,dangerous_useless
+10,76,carpet,carpet,specific,{} with metal contamination,carpet with metal contamination,1.0,1.0,-2.906,-2.88,0.2974,-3.196875,-2.58046875,30,-3.734,-3.664,0.488,-4.215625,-3.00625,89,0.828,dangerous_useful
+11,77,carpet,carpet,specific,{} with thread residue,carpet with thread residue,1.0,1.0,-4.86,-4.816,0.307,-5.1921875,-4.41875,30,-4.92,-5.06,0.632,-5.971875,-4.321875,89,0.0625,dangerous_useful
+12,78,carpet,carpet,specific,{} with thread,carpet with thread,1.0,1.0,-4.633,-4.645,0.2751,-4.9890625,-4.27890625,30,-4.758,-4.824,0.521,-5.5640625,-4.290625,89,0.125,dangerous_useful
+13,79,carpet,carpet,specific,{} with cut,carpet with cut,1.0,1.0,-2.7,-2.6,0.2457,-2.84609375,-2.27265625,30,-2.61,-2.662,0.4097,-3.2109375,-2.165625,89,-0.08984,dangerous_useless
+0,120,grid,grid,generic,damaged {},damaged grid,1.0,1.0,-0.9844,-1.2,0.727,-2.16875,-0.425,23,-3.766,-3.59,1.253,-5.2875,-1.7656250000000004,57,2.781,dangerous_useful
+1,121,grid,grid,generic,flawed {},flawed grid,0.0434782608695652,0.0434782608695652,1.391,1.411,0.6987,0.54375,2.15625,23,-0.04688,0.1121,0.8613,-0.9375,1.490625,57,1.4375,safe
+2,122,grid,grid,generic,abnormal {},abnormal grid,0.0,0.0,1.969,1.967,0.55,1.278125,2.528125,23,1.578,1.593,0.5693,0.7906250000000001,2.275,57,0.3906,safe
+3,123,grid,grid,generic,imperfect {},imperfect grid,0.2608695652173913,0.2608695652173913,0.797,0.67,0.8403,-0.55625,1.665625,23,-1.0,-0.7773,0.986,-1.903125,0.6593749999999996,57,1.797,dangerous_useful
+4,124,grid,grid,generic,blemished {},blemished grid,0.0,0.0,1.375,1.294,0.336,1.021875,1.6515625,23,0.5938,0.66,0.5557,-0.0374999999999999,1.35625,57,0.7812,safe
+5,125,grid,grid,generic,{} with flaw,grid with flaw,0.5652173913043478,0.5652173913043478,-0.03125,-0.03262,0.6616,-0.8937499999999999,0.8906250000000002,23,-1.0625,-1.037,0.562,-1.578125,-0.375,57,1.031,dangerous_useful
+6,126,grid,grid,generic,{} with defect,grid with defect,0.7391304347826086,0.782608695652174,-0.2656,-0.2092,0.4834,-0.66875,0.23125,23,-1.531,-1.413,0.6973,-2.1125,-0.375,57,1.266,dangerous_useful
+7,127,grid,grid,generic,{} with damage,grid with damage,0.3043478260869565,0.3478260869565217,0.2031,0.303,0.455,-0.20625,0.978125,23,-1.156,-1.108,0.753,-1.96875,-0.1375,57,1.359,dangerous_useful
+8,128,grid,grid,specific,{} with breakage,grid with breakage,1.0,1.0,-0.797,-0.833,0.3452,-1.25625,-0.4343749999999999,23,-1.016,-0.9854,0.5215,-1.609375,-0.4,57,0.2188,dangerous_useful
+9,129,grid,grid,specific,{} with thread residue,grid with thread residue,0.6956521739130435,0.6956521739130435,-0.125,-0.237,0.4612,-0.7625,0.36875,23,-0.6406,-0.7646,0.4949,-1.478125,-0.0937500000000001,57,0.5156,dangerous_useful
+10,130,grid,grid,specific,{} with thread,grid with thread,0.6521739130434783,0.7391304347826086,-0.2656,-0.2479,0.4956,-0.96875,0.4281250000000001,23,-1.297,-1.192,0.7344,-1.984375,-0.2781250000000002,57,1.031,dangerous_useful
+11,131,grid,grid,specific,{} with metal contamination,grid with metal contamination,1.0,1.0,-0.8125,-0.7637,0.3625,-1.159375,-0.1374999999999999,23,-1.219,-1.149,0.5957,-1.890625,-0.375,57,0.4062,dangerous_useful
+12,132,grid,grid,specific,{} with glue,grid with glue,1.0,1.0,-1.453,-1.706,0.8145,-2.7625,-0.7687499999999999,23,-2.938,-3.098,1.079,-4.665625,-1.7000000000000002,57,1.484,dangerous_useful
+13,133,grid,grid,specific,{} with a bent shape,grid with a bent shape,1.0,1.0,-4.484,-4.73,1.316,-6.625,-3.040625,23,-6.703,-6.73,1.07,-8.25,-5.196875,57,2.219,dangerous_useful
+0,134,hazelnut,hazelnut,generic,damaged {},damaged hazelnut,1.0,1.0,-4.547,-4.434,0.9,-5.6796875,-3.20625,42,-4.35,-4.42,0.911,-5.421875,-3.3578125,70,-0.1953,dangerous_useless
+1,135,hazelnut,hazelnut,generic,flawed {},flawed hazelnut,1.0,1.0,-2.281,-2.178,0.728,-2.9453125,-1.5015625,42,-2.75,-2.844,0.9004,-4.0859375,-1.746875,70,0.4688,dangerous_useful
+2,136,hazelnut,hazelnut,generic,abnormal {},abnormal hazelnut,0.0,0.0,1.609,1.552,0.884,0.390625,2.6296875,42,1.07,1.048,1.029,-0.2375,2.465625,70,0.539,safe
+3,137,hazelnut,hazelnut,generic,imperfect {},imperfect hazelnut,1.0,1.0,-2.867,-2.781,0.5083,-3.30625,-2.184375,42,-3.352,-3.23,0.627,-3.8640625,-2.359375,70,0.4844,dangerous_useful
+4,138,hazelnut,hazelnut,generic,blemished {},blemished hazelnut,0.9761904761904762,0.9761904761904762,-0.4688,-0.497,0.321,-0.921875,-0.0953125,42,-0.4922,-0.553,0.4673,-1.1734375,-0.125,70,0.02344,dangerous_useful
+5,139,hazelnut,hazelnut,generic,{} with flaw,hazelnut with flaw,0.1428571428571428,0.1666666666666666,0.828,0.7954,0.758,-0.046875,1.7015625,42,0.3203,0.3445,0.857,-0.83125,1.471875,70,0.508,safe
+6,140,hazelnut,hazelnut,generic,{} with defect,hazelnut with defect,1.0,1.0,-1.547,-1.57,0.7114,-2.4796875,-0.5328125,42,-0.9688,-0.965,0.919,-2.10625,0.2578125000000001,70,-0.578,dangerous_useless
+7,141,hazelnut,hazelnut,generic,{} with damage,hazelnut with damage,1.0,1.0,-2.188,-2.104,0.7285,-2.89375,-1.0421875000000005,42,-2.32,-2.332,0.8525,-3.4859375,-1.1296874999999995,70,0.1328,dangerous_useful
+8,142,hazelnut,hazelnut,specific,{} with crack,hazelnut with crack,0.0714285714285714,0.0714285714285714,0.625,0.694,0.479,0.1796875,1.2453124999999998,42,0.1562,0.1322,0.5693,-0.6734375,0.84375,70,0.4688,safe
+9,143,hazelnut,hazelnut,specific,{} with cut,hazelnut with cut,1.0,1.0,-1.914,-1.873,0.5854,-2.6578125,-1.0687500000000003,42,-1.875,-1.852,0.6426,-2.6765625,-1.0296875,70,-0.03906,dangerous_useless
+10,144,hazelnut,hazelnut,specific,{} with hole,hazelnut with hole,0.0,0.0,3.312,3.262,0.907,2.1046875000000003,4.2671875,42,1.359,1.309,1.275,-0.3187499999999999,2.925,70,1.953,safe
+11,145,hazelnut,hazelnut,specific,{} with print,hazelnut with print,0.0,0.0,3.188,3.207,0.8745,2.0171875,4.4265625,42,2.172,2.146,1.377,0.2765625,3.76484375,70,1.016,safe
+0,146,leather,leather,generic,damaged {},damaged leather,0.6176470588235294,0.6470588235294118,-0.2344,-0.2141,0.4907,-0.959375,0.3953124999999999,34,-2.266,-2.178,0.8623,-3.2,-1.0999999999999996,92,2.031,dangerous_useful
+1,147,leather,leather,generic,flawed {},flawed leather,0.1176470588235294,0.1176470588235294,0.6094,0.653,0.4802,0.0078125,1.3421875,34,-0.4297,-0.4192,0.3193,-0.78125,-0.078125,92,1.039,safe
+2,148,leather,leather,generic,abnormal {},abnormal leather,0.0,0.0,2.39,2.418,0.1897,2.234375,2.63046875,34,2.766,2.799,0.4214,2.3796875,3.3875,92,-0.375,safe
+3,149,leather,leather,generic,imperfect {},imperfect leather,0.6764705882352942,0.6764705882352942,-0.2969,-0.29,0.464,-0.8890625,0.2671874999999999,34,-1.328,-1.292,0.4443,-1.825,-0.671875,92,1.031,dangerous_useful
+4,150,leather,leather,generic,blemished {},blemished leather,0.5882352941176471,0.5882352941176471,-0.1406,-0.07306,0.4646,-0.7671875,0.5093749999999999,34,-1.07,-1.009,0.2856,-1.2640625,-0.6281249999999998,92,0.9297,dangerous_useful
+5,151,leather,leather,generic,{} with flaw,leather with flaw,0.0588235294117647,0.1176470588235294,0.6484,0.545,0.3376,0.0515625,0.8234375,34,-1.234,-1.148,0.6426,-1.828125,-0.3312499999999998,92,1.883,safe
+6,152,leather,leather,generic,{} with defect,leather with defect,0.6764705882352942,0.7647058823529411,-0.25,-0.2708,0.4338,-0.8421875,0.25625,34,-1.633,-1.632,0.5146,-2.2171875,-0.984375,92,1.383,dangerous_useful
+7,153,leather,leather,generic,{} with damage,leather with damage,0.0,0.0,0.547,0.56,0.1488,0.3203125,0.7453125,34,-0.3672,-0.514,0.639,-1.375,0.1546875000000001,92,0.914,safe
+8,154,leather,leather,specific,{} with color stain,leather with color stain,1.0,1.0,-4.023,-4.027,0.1842,-4.225,-3.790625,34,-2.664,-2.584,1.601,-4.484375,-0.515625,92,-1.359,dangerous_useless
+9,155,leather,leather,specific,{} with cut,leather with cut,1.0,1.0,-3.5,-3.49,0.1117,-3.625,-3.34375,34,-2.367,-2.607,0.869,-3.71875,-1.6265625,92,-1.133,dangerous_useless
+10,156,leather,leather,specific,{} with fold,leather with fold,1.0,1.0,-2.375,-2.36,0.1917,-2.5890625,-2.134375,34,-1.781,-1.874,0.527,-2.6390625,-1.2828125,92,-0.5938,dangerous_useless
+11,157,leather,leather,specific,{} with glue,leather with glue,1.0,1.0,-2.422,-2.441,0.11926,-2.615625,-2.3125,34,-2.734,-2.803,0.4312,-3.371875,-2.3140625,92,0.3125,dangerous_useful
+12,158,leather,leather,specific,{} with poke,leather with poke,0.088235294117647,0.088235294117647,0.633,0.6606,0.481,0.0828125,1.3312499999999998,34,-0.3281,-0.315,0.3699,-0.7953125,0.0140625,92,0.961,safe
+0,185,metal_nut,metal nut,generic,damaged {},damaged metal nut,1.0,1.0,-2.848,-3.127,0.6216,-4.06328125,-2.49453125,24,-3.203,-3.17,0.605,-3.9265625,-2.3671875,93,0.3555,dangerous_useful
+1,186,metal_nut,metal nut,generic,flawed {},flawed metal nut,1.0,1.0,-2.664,-2.695,0.3286,-3.02265625,-2.321875,24,-2.734,-2.72,0.5215,-3.396875,-2.0562500000000004,93,0.0703,dangerous_useful
+2,187,metal_nut,metal nut,generic,abnormal {},abnormal metal nut,1.0,1.0,-1.391,-1.501,0.51,-2.2828125,-0.88984375,24,-1.492,-1.516,0.499,-2.175,-0.8921875,93,0.10156,dangerous_useful
+3,188,metal_nut,metal nut,generic,imperfect {},imperfect metal nut,1.0,1.0,-2.695,-2.904,1.223,-4.69296875,-1.625,24,-3.305,-3.285,1.101,-4.725,-1.9546875000000004,93,0.6094,dangerous_useful
+4,189,metal_nut,metal nut,generic,blemished {},blemished metal nut,0.8333333333333334,0.875,-0.617,-0.889,0.8735,-2.26875,0.1085937499999999,24,-1.047,-1.073,0.6626,-2.05,-0.3625,93,0.4297,dangerous_useful
+5,190,metal_nut,metal nut,generic,{} with flaw,metal nut with flaw,1.0,1.0,-2.262,-2.223,0.3943,-2.7015625,-1.875,24,-2.688,-2.7,0.7866,-3.75625,-1.6953125,93,0.4258,dangerous_useful
+6,191,metal_nut,metal nut,generic,{} with defect,metal nut with defect,1.0,1.0,-3.926,-3.889,0.4866,-4.41875,-3.15,24,-3.758,-3.71,0.821,-4.81875,-2.796875,93,-0.168,dangerous_useless
+7,192,metal_nut,metal nut,generic,{} with damage,metal nut with damage,1.0,1.0,-2.457,-2.508,0.431,-3.09609375,-1.9296875,24,-2.656,-2.672,0.619,-3.4828125,-1.9859375,93,0.1992,dangerous_useful
+8,193,metal_nut,metal nut,specific,{} with a bent shape ,metal nut with a bent shape ,1.0,1.0,-4.926,-4.902,0.4592,-5.4109375,-4.17578125,24,-4.844,-4.8,0.549,-5.528125,-4.10625,93,-0.08203,dangerous_useless
+9,194,metal_nut,metal nut,specific,{} with color stain,metal nut with color stain,0.25,0.25,0.9805,0.7095,0.9253,-0.7570312499999999,1.625,24,0.7188,0.523,0.749,-0.5265624999999999,1.4203125,93,0.2617,dangerous_useful
+10,195,metal_nut,metal nut,specific,{} with a flipped orientation,metal nut with a flipped orientation,1.0,1.0,-2.75,-2.74,0.639,-3.48984375,-2.07734375,24,-2.484,-2.494,0.7046,-3.4140625,-1.596875,93,-0.2656,dangerous_useless
+11,196,metal_nut,metal nut,specific,{} with scratch,metal nut with scratch,1.0,1.0,-1.117,-1.108,0.289,-1.453125,-0.69921875,24,-1.156,-1.162,0.306,-1.54375,-0.8093750000000001,93,0.03906,dangerous_useful
+0,248,pill,pill,generic,damaged {},damaged pill,1.0,1.0,-5.812,-5.008,1.494,-6.4109375,-2.91171875,28,-5.89,-5.53,1.24,-6.6875,-4.0,141,0.0781,dangerous_useful
+1,249,pill,pill,generic,flawed {},flawed pill,0.3214285714285714,0.3571428571428571,0.461,0.334,0.566,-0.4343749999999999,0.95625,28,0.2969,0.3013,0.565,-0.390625,1.078125,141,0.1641,dangerous_useful
+2,250,pill,pill,generic,abnormal {},abnormal pill,0.8928571428571429,0.8928571428571429,-2.562,-2.074,1.462,-3.68125,0.0156250000000005,28,-2.375,-2.238,1.227,-3.515625,-0.5625,141,-0.1875,dangerous_useless
+3,251,pill,pill,generic,imperfect {},imperfect pill,1.0,1.0,-4.625,-4.4,0.9717,-5.4109375,-3.16875,28,-4.58,-4.387,1.105,-5.5,-3.078125,141,-0.04688,dangerous_useless
+4,252,pill,pill,generic,blemished {},blemished pill,0.9642857142857144,0.9642857142857144,-1.797,-1.493,0.71,-2.01015625,-0.5234374999999998,28,-1.781,-1.555,0.691,-2.109375,-0.625,141,-0.01563,dangerous_useless
+5,253,pill,pill,generic,{} with flaw,pill with flaw,0.9642857142857144,0.9642857142857144,-4.094,-3.615,1.305,-4.8171875,-1.825,28,-4.125,-3.777,1.3545,-4.828125,-2.171875,141,0.03125,dangerous_useful
+6,254,pill,pill,generic,{} with defect,pill with defect,1.0,1.0,-4.938,-4.42,1.26,-5.61875,-2.615625,28,-4.984,-4.785,1.103,-5.875,-3.4375,141,0.04688,dangerous_useful
+7,255,pill,pill,generic,{} with damage,pill with damage,0.9642857142857144,0.9642857142857144,-2.555,-2.178,1.056,-3.125,-0.6132812499999998,28,-2.938,-2.77,0.9707,-3.796875,-1.46875,141,0.3828,dangerous_useful
+8,256,pill,pill,specific,{} with color stain,pill with color stain,1.0,1.0,-2.586,-2.639,0.8525,-3.6375,-1.6984374999999998,28,-3.125,-3.152,0.9297,-4.40625,-2.0625,141,0.539,dangerous_useful
+9,257,pill,pill,specific,{} with contamination,pill with contamination,0.8214285714285714,0.8571428571428571,-1.648,-1.636,1.425,-3.2625,0.353125,28,-2.39,-2.3,1.257,-3.703125,-0.53125,141,0.742,dangerous_useful
+10,258,pill,pill,specific,{} with crack,pill with crack,1.0,1.0,-3.25,-3.12,0.758,-3.925,-2.20625,28,-3.5,-3.266,0.986,-4.125,-2.3125,141,0.25,dangerous_useful
+11,259,pill,pill,specific,{} with faulty imprint,pill with faulty imprint,1.0,1.0,-7.17,-6.816,1.602,-8.4109375,-4.59375,28,-7.22,-7.01,1.371,-8.40625,-5.671875,141,0.04688,dangerous_useful
+12,260,pill,pill,specific,{} with scratch,pill with scratch,1.0,1.0,-2.086,-1.924,0.572,-2.4421875,-1.209375,28,-2.031,-1.936,0.66,-2.625,-0.90625,141,-0.0547,dangerous_useless
+13,261,pill,pill,specific,{} with abnormal type,pill with abnormal type,1.0,1.0,-2.664,-2.285,1.256,-3.7078125,-0.6828125,28,-2.734,-2.635,1.082,-3.84375,-1.171875,141,0.0703,dangerous_useful
+0,276,screw,screw,generic,damaged {},damaged screw,1.0,1.0,-2.797,-2.748,0.704,-3.784375,-1.975,43,-2.875,-2.941,0.7,-3.86875,-2.0625,119,0.0781,dangerous_useful
+1,277,screw,screw,generic,flawed {},flawed screw,0.0,0.0,2.125,1.99,0.5034,1.2828125,2.4781250000000004,43,2.0,1.926,0.522,1.25,2.55,119,0.125,safe
+2,278,screw,screw,generic,abnormal {},abnormal screw,0.1860465116279069,0.1860465116279069,1.109,0.939,0.6826,-0.159375,1.6218750000000002,43,0.9375,1.031,0.762,0.215625,2.14375,119,0.1719,safe
+3,279,screw,screw,generic,imperfect {},imperfect screw,1.0,1.0,-3.531,-3.377,0.629,-4.109375,-2.575,43,-3.484,-3.443,0.6226,-4.284375,-2.571875,119,-0.04688,dangerous_useless
+4,280,screw,screw,generic,blemished {},blemished screw,0.7674418604651163,0.8604651162790697,-0.2656,-0.2517,0.2903,-0.6375,0.075,43,-0.0625,-0.081,0.344,-0.578125,0.33125,119,-0.2031,dangerous_useless
+5,281,screw,screw,generic,{} with flaw,screw with flaw,1.0,1.0,-1.875,-1.896,0.3708,-2.371875,-1.4,43,-1.891,-1.932,0.3262,-2.39375,-1.55625,119,0.01563,dangerous_useful
+6,282,screw,screw,generic,{} with defect,screw with defect,1.0,1.0,-3.156,-3.125,0.404,-3.69375,-2.58125,43,-3.422,-3.35,0.4353,-3.859375,-2.771875,119,0.2656,dangerous_useful
+7,283,screw,screw,generic,{} with damage,screw with damage,0.4651162790697674,0.5348837209302325,0.03125,-0.0814,0.3992,-0.615625,0.3531250000000001,43,-0.2188,-0.2717,0.4116,-0.846875,0.140625,119,0.25,dangerous_useful
+8,284,screw,screw,specific,{} with manipulated front,screw with manipulated front,1.0,1.0,-3.562,-3.666,0.6216,-4.621875,-2.928125,43,-3.64,-3.74,0.6904,-4.771875,-2.85625,119,0.0781,dangerous_useful
+9,285,screw,screw,specific,{} with scratch neck,screw with scratch neck,0.9767441860465116,0.9767441860465116,-1.422,-1.389,0.706,-2.371875,-0.4718749999999992,43,-1.578,-1.52,0.989,-2.859375,-0.2937499999999999,119,0.1562,dangerous_useful
+10,286,screw,screw,specific,{} with scratch head,screw with scratch head,1.0,1.0,-5.703,-5.832,0.61,-6.584375,-5.153124999999999,43,-5.812,-5.824,0.72,-6.625,-4.93125,119,0.1094,dangerous_useful
+0,287,tile,tile,generic,damaged {},damaged tile,0.9428571428571428,0.9428571428571428,-0.3906,-0.4138,0.2432,-0.728125,-0.1499999999999999,35,-1.609,-1.602,0.9546,-2.7015625,-0.4109374999999999,84,1.219,dangerous_useful
+1,288,tile,tile,generic,flawed {},flawed tile,1.0,1.0,-2.953,-2.773,0.694,-3.4375,-1.859375,35,-2.672,-2.479,1.148,-3.73125,-0.915625,84,-0.2812,dangerous_useless
+2,289,tile,tile,generic,abnormal {},abnormal tile,0.2857142857142857,0.3142857142857143,0.2812,0.3228,0.3843,-0.1656249999999999,0.828125,35,0.02344,-0.03348,0.757,-1.071875,1.0328125,84,0.2578,dangerous_useful
+3,290,tile,tile,generic,imperfect {},imperfect tile,0.0,0.0,1.4375,1.467,0.4702,0.90625,2.1437500000000003,35,1.242,1.179,0.964,-0.1312499999999999,2.421875,84,0.1953,safe
+4,291,tile,tile,generic,blemished {},blemished tile,0.0,0.0,1.625,1.761,0.42,1.41875,2.4125000000000005,35,0.922,1.123,0.91,0.08125,2.4171875,84,0.703,safe
+5,292,tile,tile,generic,{} with flaw,tile with flaw,1.0,1.0,-3.047,-2.883,0.594,-3.48125,-2.0093749999999995,35,-2.414,-2.29,0.8555,-3.2875,-1.1281249999999998,84,-0.633,dangerous_useless
+6,293,tile,tile,generic,{} with defect,tile with defect,1.0,1.0,-1.953,-1.788,0.6055,-2.39375,-0.959375,35,-2.516,-2.404,1.131,-3.8375,-0.7484374999999999,84,0.5625,dangerous_useful
+7,294,tile,tile,generic,{} with damage,tile with damage,1.0,1.0,-1.578,-1.424,0.5356,-2.009375,-0.725,35,-2.273,-2.34,0.8345,-3.4171875,-1.4359375,84,0.6953,dangerous_useful
+8,295,tile,tile,specific,{} with crack,tile with crack,1.0,1.0,-2.781,-2.549,0.6934,-3.203125,-1.5,35,-3.164,-3.377,0.9897,-4.5515625,-2.3875,84,0.3828,dangerous_useful
+9,296,tile,tile,specific,{} with glue strip,tile with glue strip,0.6571428571428571,0.6857142857142857,-0.1094,-0.1571,0.4324,-0.725,0.5125000000000001,35,-1.852,-1.921,1.643,-3.8171875,0.2828125000000001,84,1.742,dangerous_useful
+10,297,tile,tile,specific,{} with gray stroke,tile with gray stroke,1.0,1.0,-4.906,-4.895,0.4653,-5.40625,-4.21875,35,-5.484,-5.473,1.207,-6.98125,-3.984375,84,0.578,dangerous_useful
+11,298,tile,tile,specific,{} with oil,tile with oil,0.9428571428571428,0.9428571428571428,-1.906,-1.667,0.801,-2.4875,-0.4374999999999996,35,-1.781,-1.601,1.004,-2.6515625,-0.234375,84,-0.125,dangerous_useless
+12,299,tile,tile,specific,{} with rough surface,tile with rough surface,1.0,1.0,-6.688,-6.312,0.8726,-7.128125,-4.91875,35,-6.29,-6.184,1.313,-7.7765625,-4.5625,84,-0.3984,dangerous_useless
+0,300,toothbrush,toothbrush,generic,damaged {},damaged toothbrush,1.0,1.0,-1.047,-1.104,0.2983,-1.49921875,-0.7070312499999998,14,-1.066,-1.005,0.628,-1.7046875,-0.3406249999999999,30,0.01953,dangerous_useful
+1,301,toothbrush,toothbrush,generic,flawed {},flawed toothbrush,1.0,1.0,-3.648,-3.533,0.6807,-4.4109375,-2.5484375,14,-3.195,-2.93,1.055,-4.16875,-1.4617187499999995,30,-0.4531,dangerous_useless
+2,302,toothbrush,toothbrush,generic,abnormal {},abnormal toothbrush,0.0,0.0,1.461,1.408,0.3867,0.96328125,1.7296875,14,1.23,1.255,0.5674,0.60625,2.0226562500000003,30,0.2305,safe
+3,303,toothbrush,toothbrush,generic,imperfect {},imperfect toothbrush,1.0,1.0,-3.984,-4.01,0.4358,-4.5125,-3.4984375,14,-3.64,-3.787,0.636,-4.7109375,-2.9703125,30,-0.3438,dangerous_useless
+4,304,toothbrush,toothbrush,generic,blemished {},blemished toothbrush,0.0,0.1428571428571428,0.2734,0.2444,0.142,0.0609375,0.4250000000000001,14,0.0547,0.02031,0.336,-0.3921875,0.40859375,30,0.2188,safe
+5,305,toothbrush,toothbrush,generic,{} with flaw,toothbrush with flaw,1.0,1.0,-2.547,-2.607,0.314,-3.06015625,-2.1875,14,-2.45,-2.42,0.696,-3.425,-1.5351562499999998,30,-0.09766,dangerous_useless
+6,306,toothbrush,toothbrush,generic,{} with defect,toothbrush with defect,1.0,1.0,-2.61,-2.594,0.439,-3.16875,-2.015625,14,-1.965,-1.92,0.975,-2.93125,-0.8570312499999992,30,-0.6445,dangerous_useless
+7,307,toothbrush,toothbrush,generic,{} with damage,toothbrush with damage,0.8571428571428571,1.0,-0.3438,-0.3315,0.2191,-0.5734375,-0.0085937499999999,14,-0.254,-0.1484,0.7075,-0.928125,0.5117187500000002,30,-0.08984,dangerous_useless
+8,308,toothbrush,toothbrush,specific,{} with defect,toothbrush with defect,1.0,1.0,-2.61,-2.594,0.439,-3.16875,-2.015625,14,-1.965,-1.92,0.975,-2.93125,-0.8570312499999992,30,-0.6445,dangerous_useless
+9,309,toothbrush,toothbrush,specific,{} with anomaly,toothbrush with anomaly,0.7857142857142857,0.7857142857142857,-0.2266,-0.3293,0.446,-0.99453125,0.1500000000000001,14,-0.535,-0.5166,0.4822,-1.1046875,0.1085937500000001,30,0.3086,dangerous_useful
+0,310,transistor,transistor,generic,damaged {},damaged transistor,1.0,1.0,-4.65,-4.625,1.043,-5.77890625,-3.1234375,62,-5.062,-5.07,1.321,-7.165625,-3.440625,40,0.414,dangerous_useful
+1,311,transistor,transistor,generic,flawed {},flawed transistor,1.0,1.0,-3.598,-3.334,1.071,-4.37890625,-1.8085937500000004,62,-3.395,-3.191,1.071,-4.47265625,-1.6875,40,-0.2031,dangerous_useless
+2,312,transistor,transistor,generic,abnormal {},abnormal transistor,1.0,1.0,-1.547,-1.623,0.4963,-2.2015625,-1.0171875,62,-1.57,-1.31,0.9497,-2.1640625,-0.1687499999999994,40,0.02344,dangerous_useful
+3,313,transistor,transistor,generic,imperfect {},imperfect transistor,1.0,1.0,-2.809,-2.758,0.5464,-3.365625,-2.175,62,-2.7,-2.586,0.8955,-3.43828125,-1.7999999999999998,40,-0.1094,dangerous_useless
+4,314,transistor,transistor,generic,blemished {},blemished transistor,1.0,1.0,-1.363,-1.242,0.4102,-1.7328125,-0.74375,62,-1.16,-1.145,0.4417,-1.68046875,-0.5296875,40,-0.2031,dangerous_useless
+5,315,transistor,transistor,generic,{} with flaw,transistor with flaw,1.0,1.0,-3.902,-3.723,0.926,-5.0203125,-2.4914062500000003,62,-3.945,-3.707,1.033,-4.878125,-2.30625,40,0.04297,dangerous_useful
+6,316,transistor,transistor,generic,{} with defect,transistor with defect,1.0,1.0,-7.83,-7.707,1.165,-9.0296875,-5.8140625,62,-8.0,-7.555,1.57,-9.27890625,-4.88046875,40,0.1719,dangerous_useful
+7,317,transistor,transistor,generic,{} with damage,transistor with damage,1.0,1.0,-6.227,-6.01,1.046,-7.184375,-4.5640625,62,-6.133,-6.043,1.368,-7.517187499999999,-4.182031249999999,40,-0.09375,dangerous_useless
+8,318,transistor,transistor,specific,{} with bent lead,transistor with bent lead,1.0,1.0,-6.86,-6.465,1.289,-7.75703125,-4.4921875,62,-6.875,-6.695,1.678,-8.74453125,-4.409375,40,0.01563,dangerous_useful
+9,319,transistor,transistor,specific,{} with cut lead,transistor with cut lead,1.0,1.0,-6.47,-6.125,1.146,-7.24140625,-4.268750000000001,62,-6.773,-6.406,1.746,-8.3953125,-4.4359375,40,0.3047,dangerous_useful
+10,320,transistor,transistor,specific,{} with damage,transistor with damage,1.0,1.0,-6.227,-6.01,1.046,-7.184375,-4.5640625,62,-6.133,-6.043,1.368,-7.517187499999999,-4.182031249999999,40,-0.09375,dangerous_useless
+11,321,transistor,transistor,specific,{} with misplaced transistor,transistor with misplaced transistor,1.0,1.0,-8.11,-7.887,0.966,-8.88515625,-6.71171875,62,-8.0,-7.98,1.359,-9.52734375,-5.9640625,40,-0.1094,dangerous_useless
+0,322,wood,wood,generic,damaged {},damaged wood,0.8571428571428571,0.8571428571428571,-1.172,-1.136,0.8564,-2.1640625,0.109375,21,-2.23,-2.262,1.285,-4.20390625,-0.54375,60,1.059,dangerous_useful
+1,323,wood,wood,generic,flawed {},flawed wood,1.0,1.0,-1.047,-1.007,0.2031,-1.1796875,-0.65625,21,-0.5156,-0.6206,0.51,-1.2984375,-0.0734374999999999,60,-0.5312,dangerous_useless
+2,324,wood,wood,generic,abnormal {},abnormal wood,1.0,1.0,-1.344,-1.366,0.6885,-2.0625,-0.5625,21,-0.633,-0.8745,0.9893,-2.2359375,0.3046875000000001,60,-0.711,dangerous_useless
+3,325,wood,wood,generic,imperfect {},imperfect wood,1.0,1.0,-1.836,-1.808,0.2546,-2.125,-1.421875,21,-2.11,-2.186,0.6494,-3.0265625,-1.546875,60,0.2734,dangerous_useful
+4,326,wood,wood,generic,blemished {},blemished wood,0.2857142857142857,0.3333333333333333,0.0703,0.05582,0.12,-0.109375,0.171875,21,0.03906,0.01458,0.3882,-0.4375,0.484375,60,0.03125,dangerous_useful
+5,327,wood,wood,generic,{} with flaw,wood with flaw,0.3809523809523809,0.5714285714285714,0.03906,0.01637,0.344,-0.4375,0.421875,21,-0.457,-0.3975,0.522,-1.059375,0.26953125,60,0.496,dangerous_useful
+6,328,wood,wood,generic,{} with defect,wood with defect,1.0,1.0,-1.828,-1.826,0.4058,-2.4765625,-1.3671875,21,-1.695,-1.674,0.6987,-2.8265625,-0.9640625,60,-0.1328,dangerous_useless
+7,329,wood,wood,generic,{} with damage,wood with damage,0.0952380952380952,0.0952380952380952,0.828,0.722,0.3816,0.140625,1.03125,21,-0.1797,-0.1914,0.581,-0.959375,0.50078125,60,1.008,safe
+8,330,wood,wood,specific,{} with color stain,wood with color stain,1.0,1.0,-9.266,-9.2,0.645,-9.7734375,-8.265625,21,-7.39,-7.566,1.539,-9.509375,-5.2578125,60,-1.875,dangerous_useless
+9,331,wood,wood,specific,{} with hole,wood with hole,1.0,1.0,-2.484,-2.475,0.239,-2.7890625,-2.2265625,21,-2.719,-2.934,1.03,-4.36875,-1.828125,60,0.2344,dangerous_useful
+10,332,wood,wood,specific,{} with scratch,wood with scratch,1.0,1.0,-2.062,-2.059,0.217,-2.2890625,-1.8125,21,-1.992,-1.985,0.5347,-2.6421875,-1.41875,60,-0.0703,dangerous_useless
+11,333,wood,wood,specific,{} with liquid,wood with liquid,1.0,1.0,-1.945,-2.004,0.4712,-2.4453125,-1.609375,21,-1.875,-1.981,0.5884,-2.803125,-1.30859375,60,-0.0703,dangerous_useless
+0,334,zipper,zipper,generic,damaged {},damaged zipper,1.0,1.0,-2.207,-2.236,0.3362,-2.6640625,-1.82734375,34,-2.477,-2.53,0.4937,-3.290625,-1.9734375,119,0.2695,dangerous_useful
+1,335,zipper,zipper,generic,flawed {},flawed zipper,1.0,1.0,-0.5547,-0.758,0.536,-1.6242187499999998,-0.23828125,34,-0.6406,-0.7905,0.4763,-1.534375,-0.3234374999999999,119,0.08594,dangerous_useful
+2,336,zipper,zipper,generic,abnormal {},abnormal zipper,0.1764705882352941,0.1764705882352941,0.9688,0.853,0.786,-0.5375,1.71875,34,1.0625,0.8677,0.8813,-0.40625,1.775,119,-0.09375,safe
+3,337,zipper,zipper,generic,imperfect {},imperfect zipper,1.0,1.0,-3.078,-3.008,0.7676,-4.1171875,-1.94140625,34,-2.992,-2.951,0.944,-4.203125,-1.75625,119,-0.08594,dangerous_useless
+4,338,zipper,zipper,generic,blemished {},blemished zipper,0.0,0.0,1.227,1.234,0.1354,1.0578125,1.38828125,34,1.016,1.028,0.18,0.8359375,1.2296875,119,0.2109,safe
+5,339,zipper,zipper,generic,{} with flaw,zipper with flaw,0.0,0.0,2.05,2.041,0.2642,1.665625,2.303125,34,1.883,1.823,0.4424,1.303125,2.3109375,119,0.168,safe
+6,340,zipper,zipper,generic,{} with defect,zipper with defect,1.0,1.0,-2.273,-2.229,0.7563,-3.23828125,-1.1632812500000005,34,-2.227,-2.312,1.016,-3.64375,-1.1906249999999998,119,-0.04688,dangerous_useless
+7,341,zipper,zipper,generic,{} with damage,zipper with damage,0.0,0.0,2.773,2.543,0.876,1.25234375,3.540625,34,2.586,2.105,1.192,0.3828125,3.2671875,119,0.1875,safe
+8,342,zipper,zipper,specific,{} with broken teeth,zipper with broken teeth,0.0,0.0,2.031,1.946,0.555,1.23359375,2.59375,34,1.711,1.583,0.667,0.846875,2.378125,119,0.3203,safe
+9,343,zipper,zipper,specific,{} with fabric border,zipper with fabric border,1.0,1.0,-5.86,-5.695,0.5474,-6.25546875,-5.0046875,34,-5.523,-5.418,0.676,-6.2359375,-4.56875,119,-0.336,dangerous_useless
+10,344,zipper,zipper,specific,{} with defect fabric,zipper with defect fabric,1.0,1.0,-5.03,-5.05,0.628,-5.83203125,-4.11015625,34,-5.227,-5.234,0.838,-6.2484375,-4.1984375,119,0.1953,dangerous_useful
+11,345,zipper,zipper,specific,{} with broken fabric,zipper with broken fabric,1.0,1.0,-4.887,-4.785,0.9165,-6.0140625,-3.459375,34,-5.125,-5.21,1.144,-6.7125,-3.7359375,119,0.2383,dangerous_useful
+12,346,zipper,zipper,specific,{} with split teeth,zipper with split teeth,1.0,1.0,-4.06,-3.998,0.799,-5.06015625,-2.9234375,34,-4.08,-4.06,0.91,-5.271875,-2.878125,119,0.01953,dangerous_useful
+13,347,zipper,zipper,specific,{} with squeezed teeth,zipper with squeezed teeth,0.0,0.0,1.8125,1.757,0.554,1.021875,2.51328125,34,1.273,1.279,0.5874,0.434375,2.03125,119,0.539,safe

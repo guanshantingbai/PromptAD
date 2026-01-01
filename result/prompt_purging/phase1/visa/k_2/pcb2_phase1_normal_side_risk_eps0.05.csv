@@ -1,0 +1,13 @@
+prompt_index,prompt_id,class,display_name,type,template,full_text,R_j_0,R_j_eps,median_margin,q10_margin,mean_margin,std_margin,num_samples,risk_level
+9,218,pcb2,printed circuit board,specific,{} with scratch,printed circuit board with scratch,0.7387836490528414,0.7826520438683948,-0.34375,-1.171875,-0.3991774675972084,0.583765342825621,1003,high
+11,220,pcb2,printed circuit board,specific,{} with melt,printed circuit board with melt,0.423728813559322,0.47557328015952144,0.09375,-0.715625,0.0572968594217348,0.5828030835657237,1003,high
+3,212,pcb2,printed circuit board,generic,imperfect {},imperfect printed circuit board,0.3728813559322034,0.423728813559322,0.15625,-0.671875,0.13680832502492524,0.6032378460111365,1003,high
+4,213,pcb2,printed circuit board,generic,blemished {},blemished printed circuit board,0.27018943170488535,0.29910269192422734,0.40625,-0.484375,0.3296205134596211,0.6192667645864716,1003,medium
+8,217,pcb2,printed circuit board,specific,{} with bent,printed circuit board with bent,0.10269192422731804,0.11864406779661017,0.734375,-0.015625,0.6801159022931207,0.5028253136162881,1003,medium
+10,219,pcb2,printed circuit board,specific,{} with missing,printed circuit board with missing,0.06779661016949153,0.09172482552342971,0.828125,0.09375,0.8108175473579262,0.5397338936534296,1003,medium
+1,210,pcb2,printed circuit board,generic,flawed {},flawed printed circuit board,0.00897308075772682,0.00897308075772682,1.546875,0.796875,1.5114032901296113,0.5336769061764658,1003,low
+0,209,pcb2,printed circuit board,generic,damaged {},damaged printed circuit board,0.0,0.0,4.15625,3.421875,4.114640453639082,0.519571168697927,1003,low
+2,211,pcb2,printed circuit board,generic,abnormal {},abnormal printed circuit board,0.0,0.0,3.28125,2.58125,3.2620108424725824,0.5145573350774112,1003,low
+5,214,pcb2,printed circuit board,generic,{} with flaw,printed circuit board with flaw,0.0,0.0,1.6875,0.9375,1.6612194666001994,0.5131659237064841,1003,low
+6,215,pcb2,printed circuit board,generic,{} with defect,printed circuit board with defect,0.0,0.0,2.59375,1.703125,2.562827143569292,0.6725665292790535,1003,low
+7,216,pcb2,printed circuit board,generic,{} with damage,printed circuit board with damage,0.0,0.0,3.6875,2.984375,3.669133225324028,0.5090187105322728,1003,low

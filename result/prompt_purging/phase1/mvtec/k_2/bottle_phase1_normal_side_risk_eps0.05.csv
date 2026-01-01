@@ -1,0 +1,12 @@
+prompt_index,prompt_id,class,display_name,type,template,full_text,R_j_0,R_j_eps,median_margin,q10_margin,mean_margin,std_margin,num_samples,risk_level
+3,4,bottle,bottle,generic,imperfect {},imperfect bottle,1.0,1.0,-2.6640625,-3.09453125,-2.633522727272727,0.3392731224458444,22,high
+0,1,bottle,bottle,generic,damaged {},damaged bottle,0.7727272727272727,0.8636363636363636,-0.1796875,-0.33984375,-0.1573153409090909,0.15206204750576371,22,high
+7,8,bottle,bottle,generic,{} with damage,bottle with damage,0.6363636363636364,0.7272727272727273,-0.05078125,-0.36796875,-0.033735795454545456,0.2705036022670014,22,high
+9,10,bottle,bottle,specific,{} with small breakage,bottle with small breakage,0.4090909090909091,0.5,0.04296875,-0.11640625,0.05788352272727273,0.18219682973095563,22,medium
+4,5,bottle,bottle,generic,blemished {},blemished bottle,0.09090909090909091,0.18181818181818182,0.1875,0.025,0.19105113636363635,0.15864162665875547,22,medium
+1,2,bottle,bottle,generic,flawed {},flawed bottle,0.09090909090909091,0.09090909090909091,0.3125,0.15234375,0.3270596590909091,0.2883542407148472,22,medium
+2,3,bottle,bottle,generic,abnormal {},abnormal bottle,0.0,0.0,1.88671875,1.33671875,1.8650568181818181,0.4488136254864177,22,low
+5,6,bottle,bottle,generic,{} with flaw,bottle with flaw,0.0,0.0,1.00390625,0.83515625,0.9861505681818182,0.19969419950624137,22,low
+6,7,bottle,bottle,generic,{} with defect,bottle with defect,0.0,0.0,0.96875,0.46796875,0.9080255681818182,0.2978726118976219,22,low
+8,9,bottle,bottle,specific,{} with large breakage,bottle with large breakage,0.0,0.0,0.50390625,0.278125,0.5088778409090909,0.18916893742957921,22,low
+10,11,bottle,bottle,specific,{} with contamination,bottle with contamination,0.0,0.0,1.9375,1.20625,1.8544034090909092,0.5201865711407747,22,low

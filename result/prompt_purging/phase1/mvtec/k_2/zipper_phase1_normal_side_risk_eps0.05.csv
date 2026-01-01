@@ -1,0 +1,15 @@
+prompt_index,prompt_id,class,display_name,type,template,full_text,R_j_0,R_j_eps,median_margin,q10_margin,mean_margin,std_margin,num_samples,risk_level
+9,343,zipper,zipper,specific,{} with fabric border,zipper with fabric border,1.0,1.0,-2.0390625,-3.1046875,-2.0845588235294117,0.85970178986418,34,high
+11,345,zipper,zipper,specific,{} with broken fabric,zipper with broken fabric,0.9411764705882353,1.0,-1.0234375,-1.85625,-1.0795036764705883,0.6912951695733554,34,high
+12,346,zipper,zipper,specific,{} with split teeth,zipper with split teeth,1.0,1.0,-1.8046875,-2.9296875,-1.8474264705882353,0.6668982362107975,34,high
+13,347,zipper,zipper,specific,{} with squeezed teeth,zipper with squeezed teeth,1.0,1.0,-1.0546875,-2.1046875,-1.1810661764705883,0.5643367383578537,34,high
+8,342,zipper,zipper,specific,{} with broken teeth,zipper with broken teeth,0.9117647058823529,0.9705882352941176,-0.5546875,-1.171875,-0.6139705882352942,0.49725708769941235,34,medium
+10,344,zipper,zipper,specific,{} with defect fabric,zipper with defect fabric,0.3235294117647059,0.38235294117647056,0.375,-0.3546875,0.33731617647058826,0.6740929069713837,34,medium
+2,336,zipper,zipper,generic,abnormal {},abnormal zipper,0.0,0.029411764705882353,0.62109375,0.26875000000000004,0.7474724264705882,0.4265162074081078,34,medium
+3,337,zipper,zipper,generic,imperfect {},imperfect zipper,0.029411764705882353,0.029411764705882353,1.0,0.61875,1.0121783088235294,0.40135175922772703,34,medium
+0,334,zipper,zipper,generic,damaged {},damaged zipper,0.0,0.0,2.0,1.40625,1.9857536764705883,0.4402669469665682,34,low
+1,335,zipper,zipper,generic,flawed {},flawed zipper,0.0,0.0,0.671875,0.34218750000000003,0.7141544117647058,0.36198856646413147,34,low
+4,338,zipper,zipper,generic,blemished {},blemished zipper,0.0,0.0,1.95703125,1.46953125,1.982077205882353,0.44170823306442775,34,low
+5,339,zipper,zipper,generic,{} with flaw,zipper with flaw,0.0,0.0,1.21484375,0.84765625,1.2842371323529411,0.37349390565256546,34,low
+6,340,zipper,zipper,generic,{} with defect,zipper with defect,0.0,0.0,2.2578125,1.625,2.26953125,0.5496687110644499,34,low
+7,341,zipper,zipper,generic,{} with damage,zipper with damage,0.0,0.0,2.56640625,2.1203125,2.595358455882353,0.35122420105852126,34,low

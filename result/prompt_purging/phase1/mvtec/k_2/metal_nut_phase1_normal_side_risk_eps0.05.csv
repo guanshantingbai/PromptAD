@@ -1,0 +1,13 @@
+prompt_index,prompt_id,class,display_name,type,template,full_text,R_j_0,R_j_eps,median_margin,q10_margin,mean_margin,std_margin,num_samples,risk_level
+8,193,metal_nut,metal nut,specific,{} with a bent shape ,metal nut with a bent shape ,0.9583333333333334,0.9583333333333334,-1.8046875,-3.259375,-1.8307291666666667,1.1897650638332156,24,high
+1,186,metal_nut,metal nut,generic,flawed {},flawed metal nut,0.3333333333333333,0.375,0.2265625,-1.2734375,0.3157552083333333,1.1179155113279649,24,high
+3,188,metal_nut,metal nut,generic,imperfect {},imperfect metal nut,0.25,0.25,1.0,-0.5843749999999999,1.0579427083333333,1.2000050791880172,24,high
+10,195,metal_nut,metal nut,specific,{} with a flipped orientation,metal nut with a flipped orientation,0.16666666666666666,0.16666666666666666,1.3671875,-0.057812499999999996,1.3352864583333333,1.109906518491797,24,medium
+0,185,metal_nut,metal nut,generic,damaged {},damaged metal nut,0.08333333333333333,0.125,1.28125,0.06093750000000001,1.314453125,0.9612477533109988,24,medium
+7,192,metal_nut,metal nut,generic,{} with damage,metal nut with damage,0.08333333333333333,0.125,1.703125,0.10781250000000006,1.4700520833333333,1.1103732732199008,24,medium
+2,187,metal_nut,metal nut,generic,abnormal {},abnormal metal nut,0.08333333333333333,0.08333333333333333,2.1328125,0.6359375,1.7317708333333333,0.9853734464623326,24,low
+5,190,metal_nut,metal nut,generic,{} with flaw,metal nut with flaw,0.08333333333333333,0.08333333333333333,1.6328125,0.37500000000000006,1.57421875,1.0957315569320667,24,low
+6,191,metal_nut,metal nut,generic,{} with defect,metal nut with defect,0.08333333333333333,0.08333333333333333,1.7890625,0.44218750000000007,1.716796875,1.0662112773916383,24,low
+9,194,metal_nut,metal nut,specific,{} with color stain,metal nut with color stain,0.08333333333333333,0.08333333333333333,1.84375,0.16718750000000004,1.7174479166666667,1.225283939731689,24,low
+4,189,metal_nut,metal nut,generic,blemished {},blemished metal nut,0.0,0.0,3.109375,1.5890625,2.849609375,0.9303854665096171,24,low
+11,196,metal_nut,metal nut,specific,{} with scratch,metal nut with scratch,0.0,0.0,2.75,1.446875,2.451171875,1.0061083834174838,24,low

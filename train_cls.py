@@ -372,3 +372,5 @@ if __name__ == '__main__':
     os.environ['CURL_CA_BUNDLE'] = ''
     os.environ['CUDA_VISIBLE_DEVICES'] = f"{args.gpu_id}"
     main(args)
+
+  

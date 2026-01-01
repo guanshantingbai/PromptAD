@@ -1,0 +1,16 @@
+prompt_index,prompt_id,class,display_name,type,template,full_text,R_j_0,R_j_eps,median_margin,q10_margin,mean_margin,std_margin,num_samples,risk_level
+3,236,pcb4,printed circuit board,generic,imperfect {},imperfect printed circuit board,0.8123138033763655,0.8341608738828202,-0.625,-1.34375,-0.5862400695134061,0.6304206829231132,1007,high
+14,247,pcb4,printed circuit board,specific,{} with dirt,printed circuit board with dirt,0.7130089374379345,0.7447864945382324,-0.40625,-1.2874999999999999,-0.39706429990069514,0.7026653875793353,1007,high
+8,241,pcb4,printed circuit board,specific,{} with scratch,printed circuit board with scratch,0.6911618669314796,0.7328699106256207,-0.3125,-1.0374999999999999,-0.30180921052631576,0.5857470993499831,1007,high
+13,246,pcb4,printed circuit board,specific,{} with burnt,printed circuit board with burnt,0.43197616683217477,0.46772591857000995,0.125,-0.734375,0.139461271102284,0.6873877463802414,1007,medium
+4,237,pcb4,printed circuit board,generic,blemished {},blemished printed circuit board,0.18470705064548162,0.21648460774577954,0.515625,-0.203125,0.5502110228401191,0.6201054108636049,1007,medium
+9,242,pcb4,printed circuit board,specific,{} with extra,printed circuit board with extra,0.07348560079443893,0.09632571996027806,0.828125,0.0625,0.8551390268123138,0.6469494423356645,1007,medium
+10,243,pcb4,printed circuit board,specific,{} with missing,printed circuit board with missing,0.0506454816285998,0.06554121151936444,0.953125,0.1875,0.9726135799404171,0.6314405289710808,1007,medium
+2,235,pcb4,printed circuit board,generic,abnormal {},abnormal printed circuit board,0.030784508440913606,0.039721946375372394,1.15625,0.328125,1.1760489076464746,0.6811151830815249,1007,medium
+0,233,pcb4,printed circuit board,generic,damaged {},damaged printed circuit board,0.0,0.0,4.890625,4.078125,4.923209409136048,0.6685353056660652,1007,low
+1,234,pcb4,printed circuit board,generic,flawed {},flawed printed circuit board,0.0,0.0,6.0,5.0625,6.021009185700099,0.746566158130525,1007,low
+5,238,pcb4,printed circuit board,generic,{} with flaw,printed circuit board with flaw,0.0,0.0,3.0625,2.296875,3.0719960278053624,0.5887374777944687,1007,low
+6,239,pcb4,printed circuit board,generic,{} with defect,printed circuit board with defect,0.0,0.0,3.609375,2.828125,3.618545183714002,0.5996253536508895,1007,low
+7,240,pcb4,printed circuit board,generic,{} with damage,printed circuit board with damage,0.0,0.0,3.25,2.46875,3.250527557100298,0.6296578953568706,1007,low
+11,244,pcb4,printed circuit board,specific,{} with wrong place,printed circuit board with wrong place,0.0,0.0,1.953125,1.2281250000000001,1.9822182224428997,0.6223534717218732,1007,low
+12,245,pcb4,printed circuit board,specific,{} with damage,printed circuit board with damage,0.0,0.0,3.25,2.46875,3.250527557100298,0.6296578953568706,1007,low
