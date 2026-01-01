@@ -13,7 +13,7 @@ if __name__ == '__main__':
 
     datasets = ['mvtec', 'visa']
     shots = [1, 2, 4]
-    output_dir = './result/baseline'  # 指定输出目录
+    output_dir = './result/promptpurging'  # 指定输出目录
     gpu_id = 0
     
     # 创建日志目录

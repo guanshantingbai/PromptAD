@@ -4,6 +4,7 @@ import torch.nn as nn
 from . import CLIPAD
 from torch.nn import functional as F
 from .ad_prompts import *
+from .ad_prompts_expanded import get_all_prompts_for_class  # New: expanded prompts
 from PIL import Image
 from scipy.ndimage import gaussian_filter
 
@@ -26,7 +27,7 @@ def _convert_to_rgb(image):
 
 
 class PromptLearner(nn.Module):
-    def __init__(self, n_ctx, n_pro, n_ctx_ab, n_pro_ab, classname, clip_model, pre, use_lap=True):
+    def __init__(self, n_ctx, n_pro, n_ctx_ab, n_pro_ab, classname, clip_model, pre, use_lap=True, use_expanded_prompts=False):
         super().__init__()
 
         if pre == 'fp16':
@@ -34,15 +35,23 @@ class PromptLearner(nn.Module):
         else:
             dtype = torch.float32
 
-        # Filter out LAP if use_lap=False (MAP-only mode)
-        if use_lap:
-            state_anomaly1 = state_anomaly + class_state_abnormal[classname]
+        # Choose prompt source: expanded (static) or template (dynamic)
+        if use_expanded_prompts:
+            # New: Use expanded static prompts (multi-prototype ready)
+            static_prompts = get_all_prompts_for_class(classname, use_lap=use_lap)
+            state_anomaly1 = static_prompts
+            print(f"[Expanded Prompts Mode] Using {len(static_prompts)} static prompts")
         else:
-            # MAP-only: use only class_state_abnormal (most anomalous)
-            state_anomaly1 = class_state_abnormal[classname]
-            print(f"[MAP-only Mode] Using {len(state_anomaly1)} MAP prompts, excluding {len(state_anomaly)} LAP prompts")
+            # Original: Use template-based prompts (backward compatible)
+            if use_lap:
+                state_anomaly1 = state_anomaly + class_state_abnormal[classname]
+            else:
+                # MAP-only: use only class_state_abnormal (most anomalous)
+                state_anomaly1 = class_state_abnormal[classname]
+                print(f"[MAP-only Mode] Using {len(state_anomaly1)} MAP prompts, excluding {len(state_anomaly)} LAP prompts")
 
         if classname in class_mapping:
+            classname = class_mapping[classname]
             classname = class_mapping[classname]
 
         ctx_dim = clip_model.ln_final.weight.shape[0]
@@ -67,15 +76,26 @@ class PromptLearner(nn.Module):
         self.n_ab_handle = len(state_anomaly1)
         print(f"\n{'='*60}")
         print(f"[Prompt Configuration] Class: {classname}")
-        print(f"  - Mode: {'MAP+LAP (Baseline)' if use_lap else 'MAP-only (Experimental)'}")
-        print(f"  - MAP prompts: {self.n_ab_handle}")
-        if not use_lap:
-            print(f"  - LAP prompts: 0 (excluded, normally 8)")
+        if use_expanded_prompts:
+            print(f"  - Mode: Expanded Static Prompts (Multi-Prototype)")
+            print(f"  - Total prompts: {self.n_ab_handle}")
         else:
-            print(f"  - LAP prompts: 8 (generic anomaly templates)")
+            print(f"  - Mode: {'MAP+LAP (Baseline)' if use_lap else 'MAP-only (Experimental)'}")
+            print(f"  - MAP prompts: {self.n_ab_handle}")
+            if not use_lap:
+                print(f"  - LAP prompts: 0 (excluded, normally 2)")
+            else:
+                print(f"  - LAP prompts: 2 (generic anomaly templates)")
         print(f"{'='*60}\n")
         
-        abnormal_prompts_handle = [normal_prompt_prefix + " " + state.format(classname) + "." for state in state_anomaly1 for _ in range(n_pro)]
+        # Build abnormal prompt strings
+        if use_expanded_prompts:
+            # Static prompts: already fully formatted, no .format() needed
+            abnormal_prompts_handle = [normal_prompt_prefix + " " + prompt + "." for prompt in state_anomaly1 for _ in range(n_pro)]
+        else:
+            # Template prompts: need .format(classname)
+            abnormal_prompts_handle = [normal_prompt_prefix + " " + state.format(classname) + "." for state in state_anomaly1 for _ in range(n_pro)]
+        
         abnormal_prompts_learned = [normal_prompt_prefix + " " + abnormal_prompt_prefix + " " + classname + "." for _ in range(n_pro_ab) for _ in range(n_pro)]
 
         # abnormal_prompts = abnormal_prompts_learned + abnormal_prompts_handle
@@ -185,6 +205,7 @@ class PromptAD(torch.nn.Module):
 
         self.shot = kwargs['k_shot']
         self.use_lap = kwargs.get('use_lap', True)  # Extract use_lap parameter
+        self.use_expanded_prompts = kwargs.get('use_expanded_prompts', False)  # New: expanded prompts mode
 
         self.out_size_h = out_size_h
         self.out_size_w = out_size_w
@@ -195,7 +216,7 @@ class PromptAD(torch.nn.Module):
         self.phrase_form = '{}'
         self.device = device
         
-        print(f"\n[PromptAD] Initializing with use_lap={self.use_lap}")
+        print(f"\n[PromptAD] Initializing with use_lap={self.use_lap}, use_expanded_prompts={self.use_expanded_prompts}")
 
         # version v1: no norm for each of linguistic embedding
         # version v1:    norm for each of linguistic embedding
@@ -227,7 +248,7 @@ class PromptAD(torch.nn.Module):
         tokenizer = CLIPAD.get_tokenizer(backbone)
         model.eval()
 
-        self.prompt_learner = PromptLearner(n_ctx, n_pro, n_ctx_ab, n_pro_ab, class_name, model, self.precision, use_lap=self.use_lap)
+        self.prompt_learner = PromptLearner(n_ctx, n_pro, n_ctx_ab, n_pro_ab, class_name, model, self.precision, use_lap=self.use_lap, use_expanded_prompts=self.use_expanded_prompts)
         self.model = model.to(self.device)
 
         self.tokenizer = tokenizer
