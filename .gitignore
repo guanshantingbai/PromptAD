@@ -20,7 +20,12 @@ venv/
 # 权重&日志
 *.pt
 *.log
-*.lock
+*.out
 *.md 
 *.jpg
 *.png
+*.csv
+
+
+# 脚本
+*.sh

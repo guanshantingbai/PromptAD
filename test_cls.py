@@ -179,27 +179,31 @@ def main(args):
     semantic_alpha = kwargs.get('semantic_alpha', 1.0)
     output_dir = kwargs.get('output_dir', None)
     
-    # Always load checkpoint from baseline
-    baseline_root = "./result/baseline"
+    # Load checkpoint from promptpurging (contains Purge3 trained weights)
+    baseline_root = "./result/promptpurging"
     check_path = f"{baseline_root}/{dataset}/k_{k_shot}/checkpoint/CLS-Seed_{seed}-{class_name}-check_point.pt"
     
-    if semantic_alpha != 1.0:
-        # Alpha scaling mode: save results to specified or default directory
-        if output_dir:
-            alpha_root = f"{output_dir}/{dataset}/k_{k_shot}"
-        else:
-            alpha_root = f"./result/alpha_scale/{dataset}/k_{k_shot}"
-        
+    # Determine output directory
+    if output_dir:
+        # User specified output directory
+        custom_root = f"{output_dir}/{dataset}/k_{k_shot}"
+        os.makedirs(f"{custom_root}/csv", exist_ok=True)
+        os.makedirs(f"{custom_root}/images", exist_ok=True)
+        img_dir = f"{custom_root}/images"
+        csv_path = f"{custom_root}/csv/Seed_{seed}-results.csv"
+        print(f"[INFO] Using custom output directory: {custom_root}")
+        print(f"[INFO] Checkpoint loaded from: {check_path}")
+    elif semantic_alpha != 1.0:
+        # Alpha scaling mode
+        alpha_root = f"./result/alpha_scale/{dataset}/k_{k_shot}"
         os.makedirs(f"{alpha_root}/csv", exist_ok=True)
         os.makedirs(f"{alpha_root}/images", exist_ok=True)
-        
         img_dir = f"{alpha_root}/images"
         csv_path = f"{alpha_root}/csv/{dataset}.csv"
-        
         print(f"[INFO] Alpha scaling mode: Results will be saved to {alpha_root}")
         print(f"[INFO] Checkpoint loaded from: {check_path}")
     else:
-        # Baseline mode: use standard paths from get_dir_from_args
+        # Default mode: use standard paths
         img_dir, csv_path, _ = get_dir_from_args(TASK, **kwargs)
     
     # Override checkpoint path if explicitly specified via checkpoint_dir argument

@@ -3,8 +3,7 @@ import random
 import torch.nn as nn
 from . import CLIPAD
 from torch.nn import functional as F
-from .ad_prompts import *
-from .ad_prompts_expanded import get_all_prompts_for_class  # New: expanded prompts
+from .ad_prompts import state_anomaly, class_state_abnormal, class_mapping
 from PIL import Image
 from scipy.ndimage import gaussian_filter
 
@@ -27,7 +26,7 @@ def _convert_to_rgb(image):
 
 
 class PromptLearner(nn.Module):
-    def __init__(self, n_ctx, n_pro, n_ctx_ab, n_pro_ab, classname, clip_model, pre, use_lap=True, use_expanded_prompts=False):
+    def __init__(self, n_ctx, n_pro, n_ctx_ab, n_pro_ab, classname, clip_model, pre):
         super().__init__()
 
         if pre == 'fp16':
@@ -35,24 +34,15 @@ class PromptLearner(nn.Module):
         else:
             dtype = torch.float32
 
-        # Choose prompt source: expanded (static) or template (dynamic)
-        if use_expanded_prompts:
-            # New: Use expanded static prompts (multi-prototype ready)
-            static_prompts = get_all_prompts_for_class(classname, use_lap=use_lap)
-            state_anomaly1 = static_prompts
-            print(f"[Expanded Prompts Mode] Using {len(static_prompts)} static prompts")
-        else:
-            # Original: Use template-based prompts (backward compatible)
-            if use_lap:
-                state_anomaly1 = state_anomaly + class_state_abnormal[classname]
-            else:
-                # MAP-only: use only class_state_abnormal (most anomalous)
-                state_anomaly1 = class_state_abnormal[classname]
-                print(f"[MAP-only Mode] Using {len(state_anomaly1)} MAP prompts, excluding {len(state_anomaly)} LAP prompts")
-
-        if classname in class_mapping:
-            classname = class_mapping[classname]
-            classname = class_mapping[classname]
+        # Use template prompts (same as training)
+        template_prompts = state_anomaly + class_state_abnormal[classname]
+        
+        # Apply class mapping for display names
+        display_name = class_mapping.get(classname, classname)
+        
+        print(f"\n[Expanded Prompts] Class: {classname}")
+        print(f"  Total prompts: {len(template_prompts)}")
+        print(f"  Sample prompts: {[p.format(classname) for p in template_prompts[:3]]}")
 
         ctx_dim = clip_model.ln_final.weight.shape[0]
 
@@ -69,34 +59,21 @@ class PromptLearner(nn.Module):
         self.normal_ctx = nn.Parameter(normal_ctx_vectors)  # to be optimized
         self.abnormal_ctx = nn.Parameter(abnormal_ctx_vectors)  # to be optimized
 
-        # normal prompt
-        normal_prompts = [normal_prompt_prefix + " " + classname + "." for _ in range(n_pro)]
+        # normal prompt (use display name for readability)
+        normal_prompts = [normal_prompt_prefix + " " + display_name + "." for _ in range(n_pro)]
 
-        # abnormal prompt
-        self.n_ab_handle = len(state_anomaly1)
+        # abnormal prompt - format templates with original classname (file name)
+        self.n_ab_handle = len(template_prompts)
         print(f"\n{'='*60}")
-        print(f"[Prompt Configuration] Class: {classname}")
-        if use_expanded_prompts:
-            print(f"  - Mode: Expanded Static Prompts (Multi-Prototype)")
-            print(f"  - Total prompts: {self.n_ab_handle}")
-        else:
-            print(f"  - Mode: {'MAP+LAP (Baseline)' if use_lap else 'MAP-only (Experimental)'}")
-            print(f"  - MAP prompts: {self.n_ab_handle}")
-            if not use_lap:
-                print(f"  - LAP prompts: 0 (excluded, normally 2)")
-            else:
-                print(f"  - LAP prompts: 2 (generic anomaly templates)")
+        print(f"[Prompt Configuration] Class: {display_name}")
+        print(f"  - Mode: Template Prompts (LAP + MAP, Purge3)")
+        print(f"  - Total prompts: {self.n_ab_handle}")
         print(f"{'='*60}\n")
         
-        # Build abnormal prompt strings
-        if use_expanded_prompts:
-            # Static prompts: already fully formatted, no .format() needed
-            abnormal_prompts_handle = [normal_prompt_prefix + " " + prompt + "." for prompt in state_anomaly1 for _ in range(n_pro)]
-        else:
-            # Template prompts: need .format(classname)
-            abnormal_prompts_handle = [normal_prompt_prefix + " " + state.format(classname) + "." for state in state_anomaly1 for _ in range(n_pro)]
-        
-        abnormal_prompts_learned = [normal_prompt_prefix + " " + abnormal_prompt_prefix + " " + classname + "." for _ in range(n_pro_ab) for _ in range(n_pro)]
+        # Build abnormal prompt strings - format templates with display_name (mapped classname)
+        abnormal_prompts_handle = [normal_prompt_prefix + " " + tmpl.format(display_name) + "." for tmpl in template_prompts for _ in range(n_pro)]
+        abnormal_prompts_learned = [normal_prompt_prefix + " " + abnormal_prompt_prefix + " " + display_name + "." for _ in range(n_pro_ab) for _ in range(n_pro)]
+
 
         # abnormal_prompts = abnormal_prompts_learned + abnormal_prompts_handle
 
@@ -204,8 +181,6 @@ class PromptAD(torch.nn.Module):
         super(PromptAD, self).__init__()
 
         self.shot = kwargs['k_shot']
-        self.use_lap = kwargs.get('use_lap', True)  # Extract use_lap parameter
-        self.use_expanded_prompts = kwargs.get('use_expanded_prompts', False)  # New: expanded prompts mode
 
         self.out_size_h = out_size_h
         self.out_size_w = out_size_w
@@ -216,7 +191,7 @@ class PromptAD(torch.nn.Module):
         self.phrase_form = '{}'
         self.device = device
         
-        print(f"\n[PromptAD] Initializing with use_lap={self.use_lap}, use_expanded_prompts={self.use_expanded_prompts}")
+        print(f"\n[PromptAD] Initializing with expanded table prompts")
 
         # version v1: no norm for each of linguistic embedding
         # version v1:    norm for each of linguistic embedding
@@ -248,7 +223,7 @@ class PromptAD(torch.nn.Module):
         tokenizer = CLIPAD.get_tokenizer(backbone)
         model.eval()
 
-        self.prompt_learner = PromptLearner(n_ctx, n_pro, n_ctx_ab, n_pro_ab, class_name, model, self.precision, use_lap=self.use_lap, use_expanded_prompts=self.use_expanded_prompts)
+        self.prompt_learner = PromptLearner(n_ctx, n_pro, n_ctx_ab, n_pro_ab, class_name, model, self.precision)
         self.model = model.to(self.device)
 
         self.tokenizer = tokenizer
@@ -265,11 +240,21 @@ class PromptAD(torch.nn.Module):
 
         text_features = torch.zeros((2, self.model.visual.output_dim))
         self.register_buffer("text_features", text_features)
+        
+        # 🆕 保存所有文本特征向量（用于maxpooling等聚合方式）
+        # 初始化为空，将在build_text_feature_gallery中填充
+        normal_features_all = torch.zeros((n_pro, self.model.visual.output_dim))
+        abnormal_features_all = torch.zeros((n_pro_ab * n_pro + self.prompt_learner.n_ab_handle * n_pro, 
+                                            self.model.visual.output_dim))
+        self.register_buffer("normal_text_features_all", normal_features_all)
+        self.register_buffer("abnormal_text_features_all", abnormal_features_all)
 
         if self.precision == 'fp16':
             self.feature_gallery1  = self.feature_gallery1.half()
             self.feature_gallery2  = self.feature_gallery2.half()
             self.text_features  = text_features.half()
+            self.normal_text_features_all = self.normal_text_features_all.half()
+            self.abnormal_text_features_all = self.abnormal_text_features_all.half()
 
         # # for testing
         # p1, p2 = self.prompt_learner()
@@ -330,6 +315,24 @@ class PromptAD(torch.nn.Module):
         avr_abnormal_text_features = avr_abnormal_text_features
         text_features = torch.cat([avr_normal_text_features, avr_abnormal_text_features], dim=0)
         self.text_features.copy_(text_features / text_features.norm(dim=-1, keepdim=True))
+        
+        # 🆕 保存所有文本特征向量（归一化后）
+        normal_text_features_normed = normal_text_features / normal_text_features.norm(dim=-1, keepdim=True)
+        abnormal_text_features_normed = abnormal_text_features / abnormal_text_features.norm(dim=-1, keepdim=True)
+        
+        # 动态调整buffer大小（如果形状不匹配）
+        if self.normal_text_features_all.shape[0] != normal_text_features_normed.shape[0]:
+            self.normal_text_features_all = torch.zeros_like(normal_text_features_normed)
+            if self.precision == 'fp16':
+                self.normal_text_features_all = self.normal_text_features_all.half()
+        
+        if self.abnormal_text_features_all.shape[0] != abnormal_text_features_normed.shape[0]:
+            self.abnormal_text_features_all = torch.zeros_like(abnormal_text_features_normed)
+            if self.precision == 'fp16':
+                self.abnormal_text_features_all = self.abnormal_text_features_all.half()
+        
+        self.normal_text_features_all.copy_(normal_text_features_normed)
+        self.abnormal_text_features_all.copy_(abnormal_text_features_normed)
 
     def build_image_feature_gallery(self, features1, features2):
         b1, n1, d1 = features1.shape
@@ -354,7 +357,18 @@ class PromptAD(torch.nn.Module):
         
         self.feature_gallery2.copy_(features2_flat)
 
-    def calculate_textual_anomaly_score(self, visual_features, task, return_logits=False):
+    def calculate_textual_anomaly_score(self, visual_features, task, return_logits=False, aggregation='average'):
+        """
+        \u8ba1\u7b97\u5f02\u5e38\u5206\u6570
+        
+        Args:
+            visual_features: \u89c6\u89c9\u7279\u5f81
+            task: 'cls' \u6216 'seg'
+            return_logits: \u662f\u5426\u8fd4\u56delogits
+            aggregation: \u805a\u5408\u65b9\u5f0f
+                - 'average': \u4f7f\u7528\u5e73\u5747\u9501\u70b9 (self.text_features) [\u9ed8\u8ba4]
+                - 'maxpooling': \u4f7f\u7528MaxPooling\u805a\u5408\u6240\u6709\u5411\u91cf
+        """
         # t = 100
         t = self.model.logit_scale
         # t = self.t
@@ -364,9 +378,21 @@ class PromptAD(torch.nn.Module):
             # ############################################## local tokens scores ############################
             # token_features = self.cross_attention(visual_features[1])
             token_features = visual_features[1]
-            local_logits = t * token_features @ self.text_features.T
+            
+            if aggregation == 'maxpooling':
+                # \ud83c\udd95 MaxPooling\u805a\u5408\uff1a\u4e0e\u6240\u6709\u5411\u91cf\u7684\u6700\u5927\u76f8\u4f3c\u5ea6
+                sim_normal = token_features @ self.normal_text_features_all.T  # [N, num_tokens, n_pro]
+                sim_abnormal = token_features @ self.abnormal_text_features_all.T  # [N, num_tokens, n_ab]
+                
+                score_normal = sim_normal.max(dim=-1)[0]  # [N, num_tokens]
+                score_abnormal = sim_abnormal.max(dim=-1)[0]  # [N, num_tokens]
+                
+                local_logits = torch.stack([score_normal, score_abnormal], dim=-1) * t  # [N, num_tokens, 2]
+            else:
+                # \u539f\u59cb\u5e73\u5747\u9501\u70b9\u65b9\u6cd5
+                local_logits = t * token_features @ self.text_features.T
+            
             local_normality_and_abnormality_score = local_logits.softmax(dim=-1)
-
             local_abnormality_score = local_normality_and_abnormality_score[:, :, 1]
 
             # Dynamically get grid size from actual feature shape  
@@ -383,10 +409,22 @@ class PromptAD(torch.nn.Module):
         elif task == 'cls':
             # ################################################ global cls token scores ##########################
             # global_feature = self.cross_attention(visual_features[0].unsqueeze(dim=1)).squeeze(dim=1)
-            global_feature = visual_features[0]
-            global_logits = t * global_feature @ self.text_features.T  # [N, 2]: [s_normal, s_abnormal]
+            global_feature = visual_features[0]  # [N, dim]
+            
+            if aggregation == 'maxpooling':
+                # \ud83c\udd95 MaxPooling\u805a\u5408\uff1a\u4e0e\u6240\u6709\u5411\u91cf\u7684\u6700\u5927\u76f8\u4f3c\u5ea6
+                sim_normal = global_feature @ self.normal_text_features_all.T  # [N, n_pro]
+                sim_abnormal = global_feature @ self.abnormal_text_features_all.T  # [N, n_ab]
+                
+                score_normal = sim_normal.max(dim=-1)[0]  # [N,]
+                score_abnormal = sim_abnormal.max(dim=-1)[0]  # [N,]
+                
+                global_logits = torch.stack([score_normal, score_abnormal], dim=-1) * t  # [N, 2]
+            else:
+                # \u539f\u59cb\u5e73\u5747\u9501\u70b9\u65b9\u6cd5
+                global_logits = t * global_feature @ self.text_features.T  # [N, 2]: [s_normal, s_abnormal]
+            
             global_normality_and_abnormality_score = global_logits.softmax(dim=-1)
-
             global_abnormality_score = global_normality_and_abnormality_score[:, 1]
             global_abnormality_score = global_abnormality_score.cpu()
 

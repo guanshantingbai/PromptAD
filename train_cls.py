@@ -21,6 +21,8 @@ def save_check_point(model, path):
         'feature_gallery1',
         'feature_gallery2',
         'text_features',
+        'normal_text_features_all',  # 新增：保存所有normal向量
+        'abnormal_text_features_all',  # 新增：保存所有abnormal向量
     ]
     state_dict = model.state_dict()
     selected_state_dict = {k: v for k, v in state_dict.items() if k in selected_keys}
