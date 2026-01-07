@@ -48,3 +48,4 @@ echo "=========================================="
 echo "✅ All tests completed!"
 echo "Results: $OUTPUT_DIR/mvtec/k_$K_SHOT/csv/Seed_111-results.csv"
 echo "=========================================="
+

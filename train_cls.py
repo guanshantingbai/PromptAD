@@ -23,6 +23,7 @@ def save_check_point(model, path):
         'text_features',
         'normal_text_features_all',  # 新增：保存所有normal向量
         'abnormal_text_features_all',  # 新增：保存所有abnormal向量
+        'training_cls_tokens',  # 🆕 保存训练图像的 CLS tokens
     ]
     state_dict = model.state_dict()
     selected_state_dict = {k: v for k, v in state_dict.items() if k in selected_keys}
@@ -39,6 +40,24 @@ def fit(model,
 
     # change the model into eval mode
     model.eval_mode()
+
+    # 🆕 Visual Prototypes Mode: 使用训练图像的 CLS tokens 作为 Normal Prototypes
+    if hasattr(model, 'use_visual_prototypes') and model.use_visual_prototypes:
+        print("\n" + "="*70)
+        print("[Visual Prototypes Mode] Setting normal prototypes from training images...")
+        print("="*70)
+        
+        # 收集所有训练图像
+        train_images_list = []
+        for (data, mask, label, name, img_type) in train_data:
+            # data 已经经过 transform
+            train_images_list.append(data)
+        train_images_tensor = torch.cat(train_images_list, dim=0).to(device)  # [k_shot, 3, H, W]
+        
+        # 设置视觉原型
+        model.set_visual_prototypes(train_images_tensor)
+        print(f"\u2705 Visual prototypes set from {train_images_tensor.shape[0]} training images")
+        print("="*70 + "\n")
 
     features1 = []
     features2 = []
@@ -71,11 +90,22 @@ def fit(model,
 
             optimizer.zero_grad()
 
-            normal_text_features = model.encode_text_embedding(normal_text_prompt, model.tokenized_normal_prompts)
+            # 🆕 Visual Prototypes Mode: 跳过 normal text features 计算
+            if hasattr(model, 'use_visual_prototypes') and model.use_visual_prototypes:
+                # 仅计算 abnormal text features
+                abnormal_text_features_handle = model.encode_text_embedding(abnormal_text_prompt_handle, model.tokenized_abnormal_prompts_handle)
+                abnormal_text_features_learned = model.encode_text_embedding(abnormal_text_prompt_learned, model.tokenized_abnormal_prompts_learned)
+                abnormal_text_features = torch.cat([abnormal_text_features_handle, abnormal_text_features_learned], dim=0)
+                
+                # normal 特征已经在 set_visual_prototypes 中设置，直接使用
+                normal_text_features = model.text_features[0:1]  # [1, dim] - 已经是视觉特征
+            else:
+                # 📖 原始逻辑：计算 normal 和 abnormal text features
+                normal_text_features = model.encode_text_embedding(normal_text_prompt, model.tokenized_normal_prompts)
 
-            abnormal_text_features_handle = model.encode_text_embedding(abnormal_text_prompt_handle, model.tokenized_abnormal_prompts_handle)
-            abnormal_text_features_learned = model.encode_text_embedding(abnormal_text_prompt_learned, model.tokenized_abnormal_prompts_learned)
-            abnormal_text_features = torch.cat([abnormal_text_features_handle, abnormal_text_features_learned], dim=0)
+                abnormal_text_features_handle = model.encode_text_embedding(abnormal_text_prompt_handle, model.tokenized_abnormal_prompts_handle)
+                abnormal_text_features_learned = model.encode_text_embedding(abnormal_text_prompt_learned, model.tokenized_abnormal_prompts_learned)
+                abnormal_text_features = torch.cat([abnormal_text_features_handle, abnormal_text_features_learned], dim=0)
 
             # compute mean
             mean_ad_handle = torch.mean(F.normalize(abnormal_text_features_handle, dim=-1), dim=0)
@@ -294,6 +324,10 @@ def get_args():
     # MAP/LAP control
     parser.add_argument("--use-lap", type=str2bool, default=True,
                         help="Use LAP (Least Anomalous Patches). Set False for MAP-only mode.")
+    
+    # Visual Prototypes mode
+    parser.add_argument("--use-visual-prototypes", type=str2bool, default=False,
+                        help="Use training image CLS tokens as Normal Prototypes (skip prompt learning for normal)")
 
     # optimizer
     parser.add_argument("--lr", type=float, default=0.002)

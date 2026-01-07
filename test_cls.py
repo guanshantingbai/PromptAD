@@ -28,7 +28,34 @@ def test(model,
     # change the model into eval mode
     model.eval_mode()
 
-    model.load_state_dict(torch.load(check_path), strict=False)
+    # Load checkpoint with special handling for variable-size buffers
+    state_dict = torch.load(check_path)
+    
+    # Extract variable-size buffers that may not match model's init size
+    training_cls_tokens = state_dict.pop('training_cls_tokens', None)
+    normal_text_features_all = state_dict.pop('normal_text_features_all', None)
+    feature_gallery1 = state_dict.pop('feature_gallery1', None)
+    feature_gallery2 = state_dict.pop('feature_gallery2', None)
+    
+    # Load fixed-size parameters
+    model.load_state_dict(state_dict, strict=False)
+    
+    # Manually set variable-size buffers
+    if training_cls_tokens is not None:
+        model.training_cls_tokens = training_cls_tokens.to(model.device)
+        print(f"[INFO] Loaded training_cls_tokens: {training_cls_tokens.shape}")
+    
+    if normal_text_features_all is not None:
+        model.normal_text_features_all = normal_text_features_all.to(model.device)
+        print(f"[INFO] Loaded normal_text_features_all: {normal_text_features_all.shape}")
+    
+    if feature_gallery1 is not None:
+        model.feature_gallery1 = feature_gallery1.to(model.device)
+        print(f"[INFO] Loaded feature_gallery1: {feature_gallery1.shape}")
+    
+    if feature_gallery2 is not None:
+        model.feature_gallery2 = feature_gallery2.to(model.device)
+        print(f"[INFO] Loaded feature_gallery2: {feature_gallery2.shape}")
 
     scores_semantic = []
     scores_memory = []
@@ -39,12 +66,26 @@ def test(model,
     gt_mask_list = []
     names = []
     
-    # Get semantic alpha (scaling factor for semantic scores)
+    # 🔥 MVP: Get semantic_weight parameter (defaults to 0.0 = baseline)
+    semantic_weight = getattr(args, 'semantic_weight', 0.0)
+    use_semantic_fusion = (semantic_weight > 0)
+    return_scale_stats = getattr(args, 'return_scale_stats', False)
+    
+    # Collect E_geom and E_sem for scale analysis
+    E_geom_list = []
+    E_sem_list = []
+    
+    # Legacy: semantic_alpha for old alpha scaling experiments
     semantic_alpha = getattr(args, 'semantic_alpha', 1.0)
     use_alpha_scale = (semantic_alpha != 1.0)
     
-    if use_alpha_scale:
-        print(f"[INFO] Semantic alpha scaling enabled: alpha={semantic_alpha}")
+    if use_semantic_fusion:
+        print(f"\n{'='*60}")
+        print(f"[MVP] Semantic fusion enabled:")
+        print(f"  semantic_weight (alpha) = {semantic_weight}")
+        print(f"  Formula: final_score = E_geom + alpha * E_sem")
+        print(f"  E_sem source: MAP only (no LAP, no normal anchor)")
+        print(f"{'='*60}\n")
     
     # ===== MAIN INFERENCE LOOP =====
     for (data, mask, label, name, img_type) in dataloader:
@@ -67,8 +108,23 @@ def test(model,
         # Get visual features
         visual_features = model.encode_image(data)
         
-        # Calculate semantic scores
-        semantic_scores = model.calculate_textual_anomaly_score(visual_features, 'cls')
+        # 🔥 MVP: Calculate semantic scores with semantic_weight
+        if return_scale_stats and use_semantic_fusion:
+            # Request detailed statistics
+            semantic_scores, logits_detail = model.calculate_textual_anomaly_score(
+                visual_features, 'cls', semantic_weight=semantic_weight, return_logits=True
+            )
+            # Extract E_sem and E_geom from logits_detail
+            # logits_detail shape: [N, 4] = [s_n, s_a, E_sem, E_geom]
+            if logits_detail.shape[1] >= 4:
+                E_sem_batch = logits_detail[:, 2]  # E_sem
+                E_geom_batch = logits_detail[:, 3]  # E_geom
+                E_sem_list.extend(E_sem_batch.tolist())
+                E_geom_list.extend(E_geom_batch.tolist())
+        else:
+            semantic_scores = model.calculate_textual_anomaly_score(
+                visual_features, 'cls', semantic_weight=semantic_weight
+            )
         
         # Calculate memory scores
         memory_scores = model.calculate_memory_image_score(visual_features)
@@ -150,6 +206,63 @@ def test(model,
         print(f"  Weighted Fusion AUROC: {result_fusion['i_roc']:.4f}")
         print(f"  Δ AUROC (weighted - baseline): {delta_roc:+.4f}")
     
+    # Print scale statistics if requested
+    if return_scale_stats and use_semantic_fusion and len(E_geom_list) > 0:
+        E_geom_arr = np.array(E_geom_list)
+        E_sem_arr = np.array(E_sem_list)
+        gt_arr = np.array(gt_list)
+        
+        # Split by normal/abnormal
+        normal_mask = (gt_arr == 0)
+        abnormal_mask = (gt_arr == 1)
+        
+        print(f"\n{'='*70}")
+        print(f"[Scale Statistics] Class: {args.class_name}")
+        print(f"{'='*70}")
+        
+        print(f"\n📊 E_geom (Geometric Score):")
+        print(f"  Normal   (n={normal_mask.sum()}):")
+        print(f"    Mean: {E_geom_arr[normal_mask].mean():.4f}")
+        print(f"    Std:  {E_geom_arr[normal_mask].std():.4f}")
+        print(f"    Range: [{E_geom_arr[normal_mask].min():.4f}, {E_geom_arr[normal_mask].max():.4f}]")
+        
+        print(f"  Abnormal (n={abnormal_mask.sum()}):")
+        print(f"    Mean: {E_geom_arr[abnormal_mask].mean():.4f}")
+        print(f"    Std:  {E_geom_arr[abnormal_mask].std():.4f}")
+        print(f"    Range: [{E_geom_arr[abnormal_mask].min():.4f}, {E_geom_arr[abnormal_mask].max():.4f}]")
+        
+        print(f"\n📊 E_sem (Semantic Deviation):")
+        print(f"  Normal   (n={normal_mask.sum()}):")
+        print(f"    Mean: {E_sem_arr[normal_mask].mean():.4f}")
+        print(f"    Std:  {E_sem_arr[normal_mask].std():.4f}")
+        print(f"    Range: [{E_sem_arr[normal_mask].min():.4f}, {E_sem_arr[normal_mask].max():.4f}]")
+        
+        print(f"  Abnormal (n={abnormal_mask.sum()}):")
+        print(f"    Mean: {E_sem_arr[abnormal_mask].mean():.4f}")
+        print(f"    Std:  {E_sem_arr[abnormal_mask].std():.4f}")
+        print(f"    Range: [{E_sem_arr[abnormal_mask].min():.4f}, {E_sem_arr[abnormal_mask].max():.4f}]")
+        
+        # Calculate scale ratio
+        geom_range = E_geom_arr.max() - E_geom_arr.min()
+        sem_range = E_sem_arr.max() - E_sem_arr.min()
+        scale_ratio = sem_range / (geom_range + 1e-10)
+        
+        print(f"\n⚖️  Scale Comparison:")
+        print(f"  E_geom range: {geom_range:.4f}")
+        print(f"  E_sem range:  {sem_range:.4f}")
+        print(f"  Ratio (sem/geom): {scale_ratio:.4f}")
+        
+        if scale_ratio > 10:
+            print(f"  ⚠️  WARNING: E_sem scale is {scale_ratio:.1f}x larger than E_geom!")
+            print(f"  ⚠️  Recommended: Normalize or scale down E_sem")
+        elif scale_ratio < 0.1:
+            print(f"  ⚠️  WARNING: E_sem scale is {1/scale_ratio:.1f}x smaller than E_geom!")
+            print(f"  ⚠️  Recommended: Scale up E_sem or reduce alpha")
+        else:
+            print(f"  ✅ Scales are relatively balanced")
+        
+        print(f"{'='*70}\n")
+    
     # Visualization (optional - can be implemented if needed)
     # if args.vis:
     #     pass
@@ -177,39 +290,27 @@ def main(args):
     seed = kwargs['seed']
     class_name = kwargs['class_name']
     semantic_alpha = kwargs.get('semantic_alpha', 1.0)
-    output_dir = kwargs.get('output_dir', None)
+    output_dir = kwargs.get('output_dir', './result/nq_mvp')  # Default output directory
+    checkpoint_dir = kwargs.get('checkpoint_dir', None)
     
-    # Load checkpoint from promptpurging (contains Purge3 trained weights)
-    baseline_root = "./result/promptpurging"
-    check_path = f"{baseline_root}/{dataset}/k_{k_shot}/checkpoint/CLS-Seed_{seed}-{class_name}-check_point.pt"
+    # Determine checkpoint path
+    if checkpoint_dir is not None:
+        # User specified checkpoint directory (already includes dataset/k_shot path)
+        check_path = f"{checkpoint_dir}/checkpoint/CLS-Seed_{seed}-{class_name}-check_point.pt"
+        print(f"[INFO] Using checkpoint from: {check_path}")
+    else:
+        # Default: Use output_dir as checkpoint location
+        check_path = f"{output_dir}/{dataset}/k_{k_shot}/checkpoint/CLS-Seed_{seed}-{class_name}-check_point.pt"
+        print(f"[INFO] Using checkpoint from: {check_path}")
     
     # Determine output directory
-    if output_dir:
-        # User specified output directory
-        custom_root = f"{output_dir}/{dataset}/k_{k_shot}"
-        os.makedirs(f"{custom_root}/csv", exist_ok=True)
-        os.makedirs(f"{custom_root}/images", exist_ok=True)
-        img_dir = f"{custom_root}/images"
-        csv_path = f"{custom_root}/csv/Seed_{seed}-results.csv"
-        print(f"[INFO] Using custom output directory: {custom_root}")
-        print(f"[INFO] Checkpoint loaded from: {check_path}")
-    elif semantic_alpha != 1.0:
-        # Alpha scaling mode
-        alpha_root = f"./result/alpha_scale/{dataset}/k_{k_shot}"
-        os.makedirs(f"{alpha_root}/csv", exist_ok=True)
-        os.makedirs(f"{alpha_root}/images", exist_ok=True)
-        img_dir = f"{alpha_root}/images"
-        csv_path = f"{alpha_root}/csv/{dataset}.csv"
-        print(f"[INFO] Alpha scaling mode: Results will be saved to {alpha_root}")
-        print(f"[INFO] Checkpoint loaded from: {check_path}")
-    else:
-        # Default mode: use standard paths
-        img_dir, csv_path, _ = get_dir_from_args(TASK, **kwargs)
-    
-    # Override checkpoint path if explicitly specified via checkpoint_dir argument
-    if kwargs['checkpoint_dir'] is not None:
-        check_path = f"{kwargs['checkpoint_dir']}/checkpoint/CLS-Seed_{kwargs['seed']}-{kwargs['class_name']}-check_point.pt"
-        print(f"[INFO] Using checkpoint from: {check_path}")
+    custom_root = f"{output_dir}/{dataset}/k_{k_shot}"
+    os.makedirs(f"{custom_root}/csv", exist_ok=True)
+    os.makedirs(f"{custom_root}/images", exist_ok=True)
+    os.makedirs(f"{custom_root}/checkpoint", exist_ok=True)  # 🆕 Create checkpoint dir
+    img_dir = f"{custom_root}/images"
+    csv_path = f"{custom_root}/csv/Seed_{seed}-results.csv"
+    print(f"[INFO] Output directory: {custom_root}")
 
     # get the test dataloader (force num_workers=0 for compatibility)
     kwargs_loader = kwargs.copy()
@@ -241,8 +342,10 @@ def main(args):
     else:
         print(f'Object:{object} =========================== Fusion-AUROC:{fusion_roc}, Semantic:{semantic_roc}, Memory:{memory_roc}\n')
 
+    # Pass semantic_weight for alpha sweep
+    semantic_weight = kwargs.get('semantic_weight', 0.0)
     save_metric(metrics, dataset_classes[kwargs['dataset']], kwargs['class_name'],
-                kwargs['dataset'], csv_path)
+                kwargs['dataset'], csv_path, semantic_weight=semantic_weight)
 
 
 def str2bool(v):
@@ -284,13 +387,24 @@ def get_args():
     parser.add_argument("--n_pro", type=int, default=1)
     parser.add_argument("--n_pro_ab", type=int, default=4)
 
-    # semantic alpha scaling parameter
-    parser.add_argument("--semantic-alpha", type=float, default=1.0,
-                        help="Semantic score scaling factor (default: 1.0 = no scaling)")
-    parser.add_argument("--output-dir", type=str, default=None,
-                        help="Override output directory for alpha scaling results (e.g., ./result/test_alpha)")
+    # 🔥 MVP: Semantic fusion parameters
+    parser.add_argument("--semantic-weight", type=float, default=0.0,
+                        help="MVP semantic fusion weight (alpha). Formula: final = E_geom + alpha * E_sem. "
+                             "Default 0.0 = baseline (no MAP fusion)")
+    
+    # Visual prototypes mode (required for MVP)
+    parser.add_argument("--use-visual-prototypes", type=str2bool, default=False,
+                        help="Use visual prototypes mode (required for MVP semantic fusion)")
+    
+    # Scale statistics for debugging
+    parser.add_argument("--return-scale-stats", type=str2bool, default=False,
+                        help="Print E_geom and E_sem scale statistics for debugging")
+    
+    # 🆕 n(q) MVP: Output and checkpoint directories
+    parser.add_argument("--output-dir", type=str, default="./result/nq_mvp",
+                        help="Output directory for results. Default: ./result/nq_mvp")
     parser.add_argument("--checkpoint-dir", type=str, default=None,
-                        help="Override checkpoint directory (default: uses baseline checkpoint)")
+                        help="Directory containing checkpoint. If None, uses default location")
 
     args = parser.parse_args()
 
