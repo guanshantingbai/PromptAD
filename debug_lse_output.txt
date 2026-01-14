@@ -1,0 +1,154 @@
+
+================================================================================
+LSE 数值自检 - 运行单次 forward
+================================================================================
+
+使用设备: cuda
+
+使用随机输入进行数值自检...
+Batch size: 8
+Image shape: torch.Size([8, 3, 240, 240])
+
+创建模型...
+
+[Expanded Prompts] Class: metal_nut
+  Total prompts: 4
+  Sample prompts: ['damaged metal_nut', 'metal_nut with damage', 'metal_nut with color stain']
+
+============================================================
+[Prompt Configuration] Class: metal nut
+  - Mode: Template Prompts (LAP + MAP, Purge3)
+  - Total prompts: 4
+============================================================
+
+
+[PromptAD] Initializing with expanded table prompts
+
+加载 checkpoint: ./result/fusion_normal/mvtec/k_2/checkpoint/CLS-Seed_111-metal_nut-check_point.pt
+✓ checkpoint加载成功，已重建text feature gallery
+
+================================================================================
+开始 Forward Pass (CLS task, aggregation=lse)
+================================================================================
+
+================================================================================
+测试 τ = 5
+================================================================================
+
+======================================================================
+[数值自检] Task: cls, Aggregation: lse, τ=5
+======================================================================
+(1) logit_scale 数值:
+    t (raw) = Parameter containing:
+tensor(4.6052, device='cuda:0', requires_grad=True)
+    t.exp() = 100.0
+    实际使用: t (scalar value: 4.605170249938965)
+
+(2) 原始 cosine 相似度 (CLS task, N=8):
+    sim_normal (cosine):       min=0.0695, max=0.0784, mean=0.0757, std=0.0033
+    sim_abnormal_all (cosine): min=0.0653, max=0.1376, mean=0.0923, std=0.0228
+    sim_map (cosine):          min=0.0690, max=0.1376, mean=0.0983, std=0.0217
+    sim_lap (cosine):          min=0.0653, max=0.0731, mean=0.0684, std=0.0028
+
+    放大后 (× logit_scale=4.605170249938965):
+    sim_normal_scaled:     min=0.3201, max=0.3613, mean=0.3486, std=0.0152
+    sim_abnormal_scaled:   min=0.3008, max=0.6338, mean=0.4253, std=0.1053
+    sim_map_scaled:        min=0.3176, max=0.6338, mean=0.4529, std=0.0999
+    sim_lap_scaled:        min=0.3008, max=0.3367, mean=0.3149, std=0.0128
+
+(3) LSE 输出范围 (τ=5):
+    Stage 1:
+      score_map (LSE):  min=7.3516, max=7.4023, mean=7.3867, std=0.0160
+      score_lap (LSE):  min=0.3008, max=0.3367, mean=0.3149, std=0.0128
+    Stage 2:
+      score_abnormal (LSE): min=8.4453, max=8.4844, mean=8.4766, std=0.0149
+    score_normal (mean):    min=0.3201, max=0.3613, mean=0.3486, std=0.0152
+
+(4) 送入 softmax 的 global_logits:
+    global_logits[:,0] (normal):   min=0.3201, max=0.3613, mean=0.3486, std=0.0152
+    global_logits[:,1] (abnormal): min=8.4453, max=8.4844, mean=8.4766, std=0.0149
+    delta (abnormal - normal):     min=8.1250, max=8.1328, mean=8.1250, std=0.0036
+    Stack后是否再乘t? 否 (已在scaled阶段乘过)
+
+(5) Softmax 输出饱和检查:
+    p_abnormal: min=0.999512, max=0.999512, mean=0.999512, std=0.000000
+    p_abnormal > 0.99: 8/8 (100.00%)
+    p_abnormal < 0.01: 0/8 (0.00%)
+
+======================================================================
+[结论]
+A) logit_scale (t) 使用次数: 1次 (仅在scaled阶段)
+B) LSE的τ在当前尺度下是否有效:
+   score_abnormal std=0.0149
+   ⚠️  τ对score_abnormal分布影响较小
+C) 是否因饱和导致τ的影响被抹平:
+   ✗✗ 严重饱和 (100.0%样本p>0.99), τ影响被抹平
+======================================================================
+
+
+τ=5: anomaly_score range=[0.999512, 0.999512], mean=0.999512
+
+================================================================================
+测试 τ = 10
+================================================================================
+
+======================================================================
+[数值自检] Task: cls, Aggregation: lse, τ=10
+======================================================================
+(1) logit_scale 数值:
+    t (raw) = Parameter containing:
+tensor(4.6052, device='cuda:0', requires_grad=True)
+    t.exp() = 100.0
+    实际使用: t (scalar value: 4.605170249938965)
+
+(2) 原始 cosine 相似度 (CLS task, N=8):
+    sim_normal (cosine):       min=0.0695, max=0.0784, mean=0.0757, std=0.0033
+    sim_abnormal_all (cosine): min=0.0653, max=0.1376, mean=0.0923, std=0.0228
+    sim_map (cosine):          min=0.0690, max=0.1376, mean=0.0983, std=0.0217
+    sim_lap (cosine):          min=0.0653, max=0.0731, mean=0.0684, std=0.0028
+
+    放大后 (× logit_scale=4.605170249938965):
+    sim_normal_scaled:     min=0.3201, max=0.3613, mean=0.3486, std=0.0152
+    sim_abnormal_scaled:   min=0.3008, max=0.6338, mean=0.4253, std=0.1053
+    sim_map_scaled:        min=0.3176, max=0.6338, mean=0.4529, std=0.0999
+    sim_lap_scaled:        min=0.3008, max=0.3367, mean=0.3149, std=0.0128
+
+(3) LSE 输出范围 (τ=10):
+    Stage 1:
+      score_map (LSE):  min=14.2812, max=14.3359, mean=14.3125, std=0.0174
+      score_lap (LSE):  min=0.3008, max=0.3367, mean=0.3149, std=0.0128
+    Stage 2:
+      score_abnormal (LSE): min=16.4844, max=16.5312, mean=16.5156, std=0.0187
+    score_normal (mean):    min=0.3201, max=0.3613, mean=0.3486, std=0.0152
+
+(4) 送入 softmax 的 global_logits:
+    global_logits[:,0] (normal):   min=0.3201, max=0.3613, mean=0.3486, std=0.0152
+    global_logits[:,1] (abnormal): min=16.4844, max=16.5312, mean=16.5156, std=0.0187
+    delta (abnormal - normal):     min=16.1562, max=16.1719, mean=16.1719, std=0.0072
+    Stack后是否再乘t? 否 (已在scaled阶段乘过)
+
+(5) Softmax 输出饱和检查:
+    p_abnormal: min=1.000000, max=1.000000, mean=1.000000, std=0.000000
+    p_abnormal > 0.99: 8/8 (100.00%)
+    p_abnormal < 0.01: 0/8 (0.00%)
+
+======================================================================
+[结论]
+A) logit_scale (t) 使用次数: 1次 (仅在scaled阶段)
+B) LSE的τ在当前尺度下是否有效:
+   score_abnormal std=0.0187
+   ⚠️  τ对score_abnormal分布影响较小
+C) 是否因饱和导致τ的影响被抹平:
+   ✗✗ 严重饱和 (100.0%样本p>0.99), τ影响被抹平
+======================================================================
+
+
+================================================================================
+测试 τ = 20
+================================================================================
+
+τ=20: anomaly_score range=[1.000000, 1.000000], mean=1.000000
+
+================================================================================
+数值自检完成
+================================================================================

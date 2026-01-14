@@ -59,6 +59,10 @@ def fit(model,
     criterion_tip = TripletLoss(margin=0.0)
 
     best_result_dict = None
+    # Early Stopping
+    patience = 20
+    patience_counter = 0
+    best_epoch = 0
     # 方向 5: 缓存测试集预处理结果
     cached_test_data = None
     
@@ -107,16 +111,35 @@ def fit(model,
 
             loss_v2t = criterion(logits_v2t, target_v2t)
 
+            # Original triplet loss
             trip_loss = criterion_tip(cls_feature, normal_text_features_ahchor, abnormal_text_features_ahchor)
-            loss = loss_v2t + trip_loss + loss_match_abnormal * args.lambda1
+            
+            # Fusion-Aware Training: train with batch mean fusion
+            cls_feature_normalized = F.normalize(cls_feature, dim=-1)  # [B, D]
+            cls_feature_mean = cls_feature_normalized.mean(dim=0, keepdim=True)  # [1, D]
+            
+            # Fused normal prototype: p_fused = (1-λ)*p_learned + λ*mean(v_train)
+            normal_fused = (1 - args.fusion_lambda) * normal_text_features_ahchor + \
+                           args.fusion_lambda * cls_feature_mean
+            normal_fused = F.normalize(normal_fused, dim=-1)  # [1, D]
+            
+            # Triplet loss with fused prototype
+            trip_loss_fused = criterion_tip(
+                cls_feature,
+                normal_fused,
+                abnormal_text_features_ahchor
+            )
+            
+            # Combined loss (removed loss_match_abnormal)
+            loss = loss_v2t + trip_loss + trip_loss_fused * args.fusion_loss_weight
 
             loss.backward()
             optimizer.step()
         scheduler.step()
         model.build_text_feature_gallery()
 
-        # 方向 1: 降低评估频率（每 3 个 epoch 或最后一个 epoch）
-        if (epoch + 1) % 3 == 0 or epoch == args.Epoch - 1:
+        # Evaluate every epoch for faster feedback
+        if (epoch + 1) % 1 == 0 or epoch == args.Epoch - 1:
             scores_semantic = []
             scores_memory = []
             scores_fusion = []
@@ -176,20 +199,23 @@ def fit(model,
                 gt_list = cached_test_data['gt_list']
                 gt_mask_list = cached_test_data['gt_mask_list']
 
-            # Perform harmonic mean fusion (following original PromptAD paper)
+            # Calculate metrics for each branch
             semantic_img_scores = np.array(scores_semantic)
             memory_img_scores = np.array(scores_memory)
-            fusion_img_scores = 1.0 / (1.0 / semantic_img_scores + 1.0 / memory_img_scores)
             
-            # Calculate metrics for each branch
+            # Perform harmonic mean fusion (following original PromptAD paper)
+            # Add epsilon to avoid division by zero
+            eps = 1e-10
+            fusion_img_scores = 1.0 / (1.0 / (semantic_img_scores + eps) + 1.0 / (memory_img_scores + eps))
+            
             from utils.metrics import metric_cal_img_only
             result_semantic = metric_cal_img_only(semantic_img_scores, gt_list)
             result_memory = metric_cal_img_only(memory_img_scores, gt_list)
             result_fusion = metric_cal_img_only(fusion_img_scores, gt_list)
             
-            # Classification task: only image-level metrics (no pixel-level p_roc)
+            # Main metric: Fusion AUROC (combines Semantic + Memory)
             result_dict = {
-                'i_roc': result_fusion['i_roc'],  # Main metric: fusion AUROC
+                'i_roc': result_fusion['i_roc'],  # Main metric: Fusion
                 'semantic_i_roc': result_semantic['i_roc'],
                 'memory_i_roc': result_memory['i_roc']
             }
@@ -197,14 +223,23 @@ def fit(model,
             if best_result_dict is None:
                 save_check_point(model, check_path)
                 best_result_dict = result_dict
+                best_epoch = epoch + 1
+                patience_counter = 0
                 print(f'  Epoch {epoch+1}: Semantic={result_semantic["i_roc"]:.2f}, Memory={result_memory["i_roc"]:.2f}, Fusion={result_fusion["i_roc"]:.2f}')
 
             elif best_result_dict['i_roc'] < result_dict['i_roc']:
                 save_check_point(model, check_path)
                 best_result_dict = result_dict
+                best_epoch = epoch + 1
+                patience_counter = 0
                 print(f'  Epoch {epoch+1}: Semantic={result_semantic["i_roc"]:.2f}, Memory={result_memory["i_roc"]:.2f}, Fusion={result_fusion["i_roc"]:.2f} *** Best ***')
             else:
-                print(f'  Epoch {epoch+1}: Semantic={result_semantic["i_roc"]:.2f}, Memory={result_memory["i_roc"]:.2f}, Fusion={result_fusion["i_roc"]:.2f}')
+                patience_counter += 1
+                print(f'  Epoch {epoch+1}: Semantic={result_semantic["i_roc"]:.2f}, Memory={result_memory["i_roc"]:.2f}, Fusion={result_fusion["i_roc"]:.2f} (Patience: {patience_counter}/{patience})')
+                
+                if patience_counter >= patience:
+                    print(f'\n[Early Stopping] No improvement for {patience} epochs. Best: Epoch {best_epoch} with Fusion={best_result_dict["i_roc"]:.2f}%')
+                    break
 
     return best_result_dict
 
@@ -289,7 +324,7 @@ def get_args():
     parser.add_argument("--n_ctx_ab", type=int, default=1)
     parser.add_argument("--n_pro", type=int, default=3)
     parser.add_argument("--n_pro_ab", type=int, default=4)
-    parser.add_argument("--Epoch", type=int, default=100)
+    parser.add_argument("--Epoch", type=int, default=200)  # Increased to 200, early stopping (patience=20) handles convergence
     
     # MAP/LAP control
     parser.add_argument("--use-lap", type=str2bool, default=True,
@@ -302,6 +337,10 @@ def get_args():
 
     # loss hyper parameter
     parser.add_argument("--lambda1", type=float, default=0.001)
+    parser.add_argument("--fusion-lambda", type=float, default=0.2,
+                        help="Fusion weight for fusion-aware training: p_fused = (1-λ)*p_learned + λ*p_img")
+    parser.add_argument("--fusion-loss-weight", type=float, default=0.5,
+                        help="Weight for fusion-aware triplet loss")
 
     # dataloader configuration
     parser.add_argument("--num-workers", type=int, default=0,

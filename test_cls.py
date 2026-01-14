@@ -23,13 +23,113 @@ def test(model,
         device: str,
         img_dir: str,
         check_path: str,
+        train_dataloader: DataLoader = None,
         ):
 
     # change the model into eval mode
     model.eval_mode()
 
-    model.load_state_dict(torch.load(check_path), strict=False)
+    # Load checkpoint, filtering out incompatible keys
+    checkpoint = torch.load(check_path)
+    # Remove _all suffix keys - they will be recomputed from individual prompts
+    # (Training and testing may have different numbers of prompts, causing shape mismatch)
+    checkpoint = {k: v for k, v in checkpoint.items() if not k.endswith('_all')}
+    model.load_state_dict(checkpoint, strict=False)
 
+    # ===== PROTOTYPE FUSION: Mix learned prototype with training image features =====
+    prototype_lambda = getattr(args, 'prototype_lambda', 0.0)
+    
+    # Initialize fusion metrics (will be populated if fusion is used)
+    fusion_metrics = {
+        'lambda': prototype_lambda,
+        'sim_before': None,  # similarity(p_learned, p_img_mean) 
+        'sim_after': None,   # similarity(p_fused, p_img_mean)
+        'sim_to_learned': None,  # similarity(p_fused, p_learned)
+        'sim_individual_mean': None,  # mean similarity to each training image
+        'sim_individual_std': None,   # std similarity to each training image
+    }
+    
+    # Compute training image features if train_dataloader is provided
+    if train_dataloader is not None:
+        with torch.no_grad():
+            train_cls_tokens = []
+            for data, _, _, _, _ in train_dataloader:
+                data = [model.transform(Image.fromarray(f.numpy())) for f in data]
+                data = torch.stack(data, dim=0).to(device)
+                cls_features, _, _, _ = model.encode_image(data)
+                train_cls_tokens.append(cls_features)
+            train_cls_tokens = torch.cat(train_cls_tokens, dim=0)  # [K, 640]
+    
+    use_prototype_fusion = (prototype_lambda > 0.0 and train_dataloader is not None)
+    
+    if use_prototype_fusion:
+        print(f"\n{'='*80}")
+        print(f"[Prototype Fusion] Enabled with λ={prototype_lambda}")
+        print(f"{'='*80}")
+        
+        # Get original learned prototype
+        p_learned = model.text_features[0].clone()  # [640]
+        print(f"📊 Original learned prototype: {p_learned.shape}, norm={p_learned.norm():.4f}")
+        
+        # Calculate p_img from collected training tokens
+        p_img = train_cls_tokens.mean(dim=0)  # [640]
+        print(f"📊 Training image prototype (mean): {p_img.shape}, norm={p_img.norm():.4f}")
+        
+        # Calculate similarity before fusion (p_learned vs p_img)
+        sim_before = F.cosine_similarity(p_learned.unsqueeze(0), p_img.unsqueeze(0)).item()
+        print(f"📊 Similarity(p_learned, p_img_mean) = {sim_before:.4f}")
+        fusion_metrics['sim_before'] = sim_before
+        
+        # Fuse prototypes: p_final = normalize((1-λ) * p_learned + λ * p_img)
+        p_fused = (1 - prototype_lambda) * p_learned + prototype_lambda * p_img
+        p_fused = F.normalize(p_fused, dim=0)
+        print(f"📊 Fused prototype: {p_fused.shape}, norm={p_fused.norm():.4f}")
+        
+        # Calculate similarity after fusion (p_fused vs p_img and p_learned)
+        sim_after = F.cosine_similarity(p_fused.unsqueeze(0), p_img.unsqueeze(0)).item()
+        sim_to_learned = F.cosine_similarity(p_fused.unsqueeze(0), p_learned.unsqueeze(0)).item()
+        print(f"📊 Similarity(p_fused, p_img_mean) = {sim_after:.4f}")
+        print(f"📊 Similarity(p_fused, p_learned) = {sim_to_learned:.4f}")
+        fusion_metrics['sim_after'] = sim_after
+        fusion_metrics['sim_to_learned'] = sim_to_learned
+        
+        # Calculate similarity to individual training images
+        sims_individual = F.cosine_similarity(
+            p_fused.unsqueeze(0).expand(train_cls_tokens.shape[0], -1),
+            train_cls_tokens,
+            dim=1
+        )  # [K]
+        sim_individual_mean = sims_individual.mean().item()
+        sim_individual_std = sims_individual.std().item()
+        print(f"📊 Similarity to individual images: mean={sim_individual_mean:.4f}, std={sim_individual_std:.4f}")
+        fusion_metrics['sim_individual_mean'] = sim_individual_mean
+        fusion_metrics['sim_individual_std'] = sim_individual_std
+        
+        # Update model's normal prototype
+        model.text_features[0] = p_fused
+        print(f"✅ Normal prototype updated!\n")
+    elif train_dataloader is not None and prototype_lambda == 0.0:
+        # λ=0: No fusion, but still compute baseline similarity
+        p_learned = model.text_features[0].clone()  # [640]
+        p_img = train_cls_tokens.mean(dim=0)  # [640]
+        
+        sim_baseline = F.cosine_similarity(p_learned.unsqueeze(0), p_img.unsqueeze(0)).item()
+        fusion_metrics['sim_before'] = sim_baseline
+        fusion_metrics['sim_after'] = sim_baseline  # No change when λ=0
+        fusion_metrics['sim_to_learned'] = 1.0  # p_fused = p_learned
+        
+        # Individual similarities
+        sims_individual = F.cosine_similarity(
+            p_learned.unsqueeze(0).expand(train_cls_tokens.shape[0], -1),
+            train_cls_tokens,
+            dim=1
+        )
+        fusion_metrics['sim_individual_mean'] = sims_individual.mean().item()
+        fusion_metrics['sim_individual_std'] = sims_individual.std().item()
+    else:
+        if prototype_lambda > 0:
+            print(f"⚠️  Prototype fusion disabled: train_dataloader not provided")
+    
     scores_semantic = []
     scores_memory = []
     scores_fusion = []
@@ -68,13 +168,17 @@ def test(model,
         visual_features = model.encode_image(data)
         
         # Calculate semantic scores
-        semantic_scores = model.calculate_textual_anomaly_score(visual_features, 'cls')
+        semantic_scores = model.calculate_textual_anomaly_score(
+            visual_features, 'cls'
+        )
         
         # Calculate memory scores
         memory_scores = model.calculate_memory_image_score(visual_features)
         
         # Calculate score maps (for pixel-level evaluation)
-        textual_anomaly_map = model.calculate_textual_anomaly_score(visual_features, 'seg')
+        textual_anomaly_map = model.calculate_textual_anomaly_score(
+            visual_features, 'seg'
+        )
         visual_anomaly_map = model.calculate_visual_anomaly_score(visual_features)
         anomaly_map = torch.maximum(textual_anomaly_map, visual_anomaly_map)
         anomaly_map = torch.nn.functional.interpolate(
@@ -134,7 +238,14 @@ def test(model,
         'i_roc': result_fusion['i_roc'],
         'semantic_i_roc': result_semantic['i_roc'],
         'memory_i_roc': result_memory['i_roc'],
-        'fusion_i_roc': result_fusion['i_roc']
+        'fusion_i_roc': result_fusion['i_roc'],
+        # Add fusion metrics
+        'prototype_lambda': fusion_metrics['lambda'],
+        'sim_before': fusion_metrics['sim_before'],
+        'sim_after': fusion_metrics['sim_after'],
+        'sim_to_learned': fusion_metrics['sim_to_learned'],
+        'sim_individual_mean': fusion_metrics['sim_individual_mean'],
+        'sim_individual_std': fusion_metrics['sim_individual_std'],
     }
     
     # If alpha weighting enabled, also compute baseline metrics for comparison
@@ -206,8 +317,13 @@ def main(args):
         # Default mode: use standard paths
         img_dir, csv_path, _ = get_dir_from_args(TASK, **kwargs)
     
-    # Override checkpoint path if explicitly specified via checkpoint_dir argument
-    if kwargs['checkpoint_dir'] is not None:
+    # Override checkpoint path if explicitly specified
+    if kwargs.get('checkpoint') is not None:
+        # Direct checkpoint file path provided
+        check_path = kwargs['checkpoint']
+        print(f"[INFO] Using checkpoint from: {check_path}")
+    elif kwargs.get('checkpoint_dir') is not None:
+        # Checkpoint directory provided
         check_path = f"{kwargs['checkpoint_dir']}/checkpoint/CLS-Seed_{kwargs['seed']}-{kwargs['class_name']}-check_point.pt"
         print(f"[INFO] Using checkpoint from: {check_path}")
 
@@ -215,6 +331,17 @@ def main(args):
     kwargs_loader = kwargs.copy()
     kwargs_loader['num_workers'] = 0
     test_dataloader, test_dataset_inst = get_dataloader_from_args(phase='test', perturbed=False, **kwargs_loader)
+    
+    # Get training dataloader if:
+    # 1. Prototype fusion is enabled (lambda > 0), OR
+    # 2. Custom output directory specified (for λ sweep experiments, need baseline similarity)
+    train_dataloader = None
+    prototype_lambda = kwargs.get('prototype_lambda', 0.0)
+    need_train_data = (prototype_lambda >= 0.0 and output_dir is not None) or prototype_lambda > 0.0
+    
+    if need_train_data:
+        train_dataloader, _ = get_dataloader_from_args(phase='train', perturbed=False, **kwargs_loader)
+        print(f"[INFO] Training dataloader loaded (λ={prototype_lambda})")
 
     kwargs['out_size_h'] = kwargs['resolution']
     kwargs['out_size_w'] = kwargs['resolution']
@@ -224,7 +351,8 @@ def main(args):
     model = model.to(device)
 
     # as the pro metric calculation is costly, we only calculate it in the last evaluation
-    metrics = test(model, args, test_dataloader, device, img_dir=img_dir, check_path=check_path)
+    metrics = test(model, args, test_dataloader, device, img_dir=img_dir, check_path=check_path, 
+                   train_dataloader=train_dataloader)
 
     fusion_roc = round(metrics['fusion_i_roc'], 2)
     semantic_roc = round(metrics['semantic_i_roc'], 2)
@@ -291,6 +419,14 @@ def get_args():
                         help="Override output directory for alpha scaling results (e.g., ./result/test_alpha)")
     parser.add_argument("--checkpoint-dir", type=str, default=None,
                         help="Override checkpoint directory (default: uses baseline checkpoint)")
+    parser.add_argument("--checkpoint", type=str, default=None,
+                        help="Direct path to checkpoint file (overrides --checkpoint-dir)")
+    
+    # prototype fusion parameter
+    parser.add_argument("--prototype-lambda", type=float, default=0.0,
+                        help="Prototype fusion weight: p_final = (1-λ)*p_learned + λ*p_img (default: 0.0 = no fusion)")
+    
+
 
     args = parser.parse_args()
 

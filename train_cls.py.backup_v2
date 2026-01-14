@@ -10,27 +10,29 @@ from utils.training_utils import *
 from PromptAD import *
 from utils.eval_utils import *
 from torchvision import transforms
+import random
 from tqdm import tqdm
 
-TASK = 'SEG'
+TASK = 'CLS'
+
 
 def save_check_point(model, path):
     selected_keys = [
         'feature_gallery1',
         'feature_gallery2',
         'text_features',
+        'normal_text_features_all',  # 新增：保存所有normal向量
+        'abnormal_text_features_all',  # 新增：保存所有abnormal向量
     ]
     state_dict = model.state_dict()
     selected_state_dict = {k: v for k, v in state_dict.items() if k in selected_keys}
 
     torch.save(selected_state_dict, path)
 
-
 def fit(model,
         args,
         dataloader: DataLoader,
         device: str,
-        img_dir: str,
         check_path: str,
         train_data: DataLoader,
         ):
@@ -57,10 +59,6 @@ def fit(model,
     criterion_tip = TripletLoss(margin=0.0)
 
     best_result_dict = None
-    # Early Stopping with larger patience for segmentation (needs more epochs to converge)
-    patience = 50
-    patience_counter = 0
-    best_epoch = 0
     # 方向 5: 缓存测试集预处理结果
     cached_test_data = None
     
@@ -85,8 +83,7 @@ def fit(model,
 
             loss_match_abnormal = (mean_ad_handle - mean_ad_learned).norm(dim=0) ** 2.0
 
-            # Segmentation task with fusion-aware training
-            _, feature_map, _, _ = model.encode_image(data)
+            cls_feature, _, _, _ = model.encode_image(data)
 
             # compute v2t loss and triplet loss
             normal_text_features_ahchor = normal_text_features.mean(dim=0).unsqueeze(0)
@@ -96,8 +93,8 @@ def fit(model,
             abnormal_text_features_ahchor = abnormal_text_features_ahchor / abnormal_text_features_ahchor.norm(dim=-1, keepdim=True)
             abnormal_text_features = abnormal_text_features / abnormal_text_features.norm(dim=-1, keepdim=True)
 
-            l_pos = torch.einsum('nic,cj->nij', feature_map, normal_text_features_ahchor.transpose(0, 1))
-            l_neg_v2t = torch.einsum('nic,cj->nij', feature_map, abnormal_text_features.transpose(0, 1))
+            l_pos = torch.einsum('nc,cm->nm', cls_feature, normal_text_features_ahchor.transpose(0, 1))
+            l_neg_v2t = torch.einsum('nc,cm->nm', cls_feature, abnormal_text_features.transpose(0, 1))
 
             if model.precision == 'fp16':
                 logit_scale = model.model.logit_scale.half()
@@ -106,44 +103,52 @@ def fit(model,
 
             logits_v2t = torch.cat([l_pos, l_neg_v2t], dim=-1) * logit_scale
 
-            target_v2t = torch.zeros([logits_v2t.shape[0], logits_v2t.shape[1]], dtype=torch.long).to(device)
+            target_v2t = torch.zeros([logits_v2t.shape[0]], dtype=torch.long).to(device)
 
-            loss_v2t = criterion(logits_v2t.transpose(1, 2), target_v2t)
+            loss_v2t = criterion(logits_v2t, target_v2t)
 
-            # Original triplet loss
-            trip_loss = criterion_tip(feature_map, normal_text_features_ahchor, abnormal_text_features_ahchor)
+            # Original triplet loss (maintain baseline behavior)
+            trip_loss = criterion_tip(cls_feature, normal_text_features_ahchor, abnormal_text_features_ahchor)
             
-            # Fusion-Aware Training: pixel-level fusion with spatial mean
-            # feature_map: [B, H*W, D]
-            feature_map_normalized = F.normalize(feature_map, dim=-1)  # [B, H*W, D]
-            feature_map_mean = feature_map_normalized.mean(dim=(0, 1), keepdim=True)  # [1, 1, D]
+            # ===== Fusion-Aware Training - CORRECTED (方案A) =====
+            # Train with BATCH MEAN fusion (consistent with test-time fusion)
+            # This avoids data leakage where v_i compares against prototype containing v_i itself
+            cls_feature_normalized = F.normalize(cls_feature, dim=-1)  # [B, D]
             
-            # Fused normal prototype: p_fused = (1-λ)*p_learned + λ*mean(v_train_pixels)
-            normal_fused = (1 - args.fusion_lambda) * normal_text_features_ahchor.unsqueeze(1) + \
-                           args.fusion_lambda * feature_map_mean
-            normal_fused = F.normalize(normal_fused, dim=-1)  # [1, 1, D]
+            # Compute batch mean of training samples (simulating test-time behavior)
+            cls_feature_mean = cls_feature_normalized.mean(dim=0, keepdim=True)  # [1, D]
             
-            # Triplet loss with fused prototype
+            # Fused normal prototype: p_fused = (1-λ)*p_learned + λ*mean(v_train)
+            # This matches test-time fusion where we use mean of all k training images
+            normal_fused = (1 - args.fusion_lambda) * normal_text_features_ahchor + \
+                           args.fusion_lambda * cls_feature_mean
+            normal_fused = F.normalize(normal_fused, dim=-1)  # [1, D]
+            
+            # Triplet loss with fused normal prototype
+            # Goal: ensure fused prototype still maintains discriminative margin
+            # Note: normal_fused is [1, D] and will broadcast to [B, D] in triplet loss
             trip_loss_fused = criterion_tip(
-                feature_map,
-                normal_fused.squeeze(1),  # [1, D]
-                abnormal_text_features_ahchor
+                cls_feature,  # [B, D]
+                normal_fused,  # [1, D] - same fused prototype for all samples
+                abnormal_text_features_ahchor  # [1, D]
             )
             
-            # Combined loss
-            loss = loss_v2t + trip_loss + trip_loss_fused * args.fusion_loss_weight
+            # Combined loss: balance original and fusion-aware objectives
+            loss = loss_v2t + trip_loss + trip_loss_fused * args.fusion_loss_weight + loss_match_abnormal * args.lambda1
 
             loss.backward()
             optimizer.step()
-
         scheduler.step()
         model.build_text_feature_gallery()
 
-        # 方向 1: 降低评估频率（每 5 个 epoch 或最后一个 epoch）
         # Evaluate every epoch for faster feedback
         if (epoch + 1) % 1 == 0 or epoch == args.Epoch - 1:
+            scores_semantic = []
+            scores_memory = []
+            scores_fusion = []
             score_maps = []
             test_imgs = [] if args.vis else None  # 方向 2 + 3.3: 仅在可视化时收集
+            gt_list = []
             gt_mask_list = []
             names = []
 
@@ -156,17 +161,21 @@ def fit(model,
                         if args.vis:
                             test_imgs.append(denormalization(d.cpu().numpy()))
                         # Convert to numpy if it's a tensor, otherwise keep as is
+                        l = l.cpu().numpy() if torch.is_tensor(l) else l
                         m = m.cpu().numpy() if torch.is_tensor(m) else m
                         m[m > 0] = 1
 
                         names.append(n)
+                        gt_list.append(l)
                         gt_mask_list.append(m)
 
                     data = data.to(device)
-                    score_map = model(data, 'seg')
+                    semantic_scores, memory_scores, score_map = model(data, 'cls')
                     score_maps += score_map
+                    scores_semantic += semantic_scores
+                    scores_memory += memory_scores
 
-                # 方向 3.1 + 3.2: 只 resize gt_mask，降低到 256
+                # 方向 3.1 + 3.2: 只 resize gt_mask（score_maps 已是正确尺寸），降低到 256
                 import cv2
                 gt_mask_list = [cv2.resize(mask, (args.resolution, args.resolution), 
                                           interpolation=cv2.INTER_NEAREST) for mask in gt_mask_list]
@@ -177,46 +186,51 @@ def fit(model,
                 # 方向 5: 缓存预处理结果
                 cached_test_data = {
                     'test_imgs': test_imgs,
-                    'gt_mask_list': gt_mask_list,
-                    'names': names
+                    'gt_list': gt_list,
+                    'gt_mask_list': gt_mask_list
                 }
             else:
                 # 使用缓存数据，只重新计算 scores
                 for (data, mask, label, name, img_type) in dataloader:
                     data = data.to(device)
-                    score_map = model(data, 'seg')
+                    semantic_scores, memory_scores, score_map = model(data, 'cls')
                     score_maps += score_map
+                    scores_semantic += semantic_scores
+                    scores_memory += memory_scores
                 
                 test_imgs = cached_test_data['test_imgs']
+                gt_list = cached_test_data['gt_list']
                 gt_mask_list = cached_test_data['gt_mask_list']
-                names = cached_test_data['names']
 
-            result_dict = metric_cal_pix(np.array(score_maps), gt_mask_list)
+            # Perform harmonic mean fusion (following original PromptAD paper)
+            semantic_img_scores = np.array(scores_semantic)
+            memory_img_scores = np.array(scores_memory)
+            fusion_img_scores = 1.0 / (1.0 / semantic_img_scores + 1.0 / memory_img_scores)
+            
+            # Calculate metrics for each branch
+            from utils.metrics import metric_cal_img_only
+            result_semantic = metric_cal_img_only(semantic_img_scores, gt_list)
+            result_memory = metric_cal_img_only(memory_img_scores, gt_list)
+            result_fusion = metric_cal_img_only(fusion_img_scores, gt_list)
+            
+            # Classification task: only image-level metrics (no pixel-level p_roc)
+            result_dict = {
+                'i_roc': result_fusion['i_roc'],  # Main metric: fusion AUROC
+                'semantic_i_roc': result_semantic['i_roc'],
+                'memory_i_roc': result_memory['i_roc']
+            }
 
             if best_result_dict is None:
                 save_check_point(model, check_path)
                 best_result_dict = result_dict
-                best_epoch = epoch + 1
-                patience_counter = 0
-                print(f'  Epoch {epoch+1}: Pixel-AUROC={result_dict["p_roc"]:.2f}')
-                if args.vis:
-                    plot_sample_cv2(names, test_imgs, {'PromptAD': score_maps}, gt_mask_list, save_folder=img_dir)
+                print(f'  Epoch {epoch+1}: Semantic={result_semantic["i_roc"]:.2f}, Memory={result_memory["i_roc"]:.2f}, Fusion={result_fusion["i_roc"]:.2f}')
 
-            elif best_result_dict['p_roc'] < result_dict['p_roc']:
+            elif best_result_dict['i_roc'] < result_dict['i_roc']:
                 save_check_point(model, check_path)
                 best_result_dict = result_dict
-                best_epoch = epoch + 1
-                patience_counter = 0
-                print(f'  Epoch {epoch+1}: Pixel-AUROC={result_dict["p_roc"]:.2f} *** Best ***')
-                if args.vis:
-                    plot_sample_cv2(names, test_imgs, {'PromptAD': score_maps}, gt_mask_list, save_folder=img_dir)
+                print(f'  Epoch {epoch+1}: Semantic={result_semantic["i_roc"]:.2f}, Memory={result_memory["i_roc"]:.2f}, Fusion={result_fusion["i_roc"]:.2f} *** Best ***')
             else:
-                patience_counter += 1
-                print(f'  Epoch {epoch+1}: Pixel-AUROC={result_dict["p_roc"]:.2f} (Patience: {patience_counter}/{patience})')
-                
-                if patience_counter >= patience:
-                    print(f'\n[Early Stopping] No improvement for {patience} epochs. Best: Epoch {best_epoch} with Pixel-AUROC={best_result_dict["p_roc"]:.2f}%')
-                    break
+                print(f'  Epoch {epoch+1}: Semantic={result_semantic["i_roc"]:.2f}, Memory={result_memory["i_roc"]:.2f}, Fusion={result_fusion["i_roc"]:.2f}')
 
     return best_result_dict
 
@@ -236,7 +250,7 @@ def main(args):
     kwargs['device'] = device
 
     # prepare the experiment dir
-    img_dir, csv_path, check_path = get_dir_from_args(TASK, **kwargs)
+    _, csv_path, check_path = get_dir_from_args(TASK, **kwargs)
 
     # get the model first (need model.transform for dataset)
     kwargs['out_size_h'] = kwargs['resolution']
@@ -252,11 +266,13 @@ def main(args):
     test_dataloader, test_dataset_inst = get_dataloader_from_args(phase='test', perturbed=False, transform=model.transform, **kwargs)
 
     # as the pro metric calculation is costly, we only calculate it in the last evaluation
-    metrics = fit(model, args, test_dataloader, device, img_dir=img_dir, check_path=check_path, train_data=train_dataloader)
+    metrics = fit(model, args, test_dataloader, device, check_path=check_path, train_data=train_dataloader)
 
-    p_roc = round(metrics['p_roc'], 2)
+    fusion_roc = round(metrics['i_roc'], 2)
+    semantic_roc = round(metrics['semantic_i_roc'], 2)
+    memory_roc = round(metrics['memory_i_roc'], 2)
     object = kwargs['class_name']
-    print(f'Object:{object} =========================== Pixel-AUROC:{p_roc}\n')
+    print(f'Object:{object} =========================== Fusion-AUROC:{fusion_roc}, Semantic:{semantic_roc}, Memory:{memory_roc}\n')
 
     save_metric(metrics, dataset_classes[kwargs['dataset']], kwargs['class_name'],
                 kwargs['dataset'], csv_path)
@@ -276,7 +292,7 @@ def get_args():
     parser.add_argument('--resolution', type=int, default=256)  # 优化: 从 400 降到 256
 
     parser.add_argument('--batch-size', type=int, default=400)
-    parser.add_argument('--vis', type=str2bool, choices=[True, False], default=True)
+    parser.add_argument('--vis', type=str2bool, choices=[True, False], default=False)
     parser.add_argument("--root-dir", type=str, default="./result")
     parser.add_argument("--load-memory", type=str2bool, default=True)
     parser.add_argument("--cal-pro", type=str2bool, default=False)
@@ -291,16 +307,19 @@ def get_args():
     parser.add_argument("--backbone", type=str, default="ViT-B-16-plus-240",
                         choices=['ViT-B-16-plus-240', 'ViT-B-16'])
     parser.add_argument("--pretrained_dataset", type=str, default="laion400m_e32")
-    parser.add_argument("--version", type=str, default='')
 
     parser.add_argument("--use-cpu", type=int, default=0)
 
     # prompt tuning hyper-parameter
     parser.add_argument("--n_ctx", type=int, default=4)
     parser.add_argument("--n_ctx_ab", type=int, default=1)
-    parser.add_argument("--n_pro", type=int, default=1)
+    parser.add_argument("--n_pro", type=int, default=3)
     parser.add_argument("--n_pro_ab", type=int, default=4)
-    parser.add_argument("--Epoch", type=int, default=200)  # Increased to 200, early stopping (patience=20) handles convergence
+    parser.add_argument("--Epoch", type=int, default=100)
+    
+    # MAP/LAP control
+    parser.add_argument("--use-lap", type=str2bool, default=True,
+                        help="Use LAP (Least Anomalous Patches). Set False for MAP-only mode.")
 
     # optimizer
     parser.add_argument("--lr", type=float, default=0.002)

@@ -15,15 +15,18 @@ def write_results(results:dict, cur_class, total_classes, csv_path):
         # Both image and pixel-level metrics
         keys = ['i_roc', 'p_roc', 'semantic_i_roc', 'memory_i_roc']
     else:
-        # Classification task: only image-level metrics
+        # Classification task: image-level metrics + any additional metrics
         keys = ['i_roc', 'semantic_i_roc', 'memory_i_roc']
+        # Add any additional keys present in results (e.g., fusion metrics)
+        additional_keys = [k for k in keys_ if k not in keys]
+        keys.extend(additional_keys)
 
     if not os.path.exists(csv_path):
         df_all = None
         for class_name in total_classes:
             r = dict()
             for k in keys:
-                r[k] = 0.00
+                r[k] = 0.00 if 'sim' not in k and k != 'prototype_lambda' else None
             df_temp = pd.DataFrame(r, index=[class_name])
 
             if df_all is None:
@@ -38,7 +41,7 @@ def write_results(results:dict, cur_class, total_classes, csv_path):
     for k in keys_:
         df.loc[cur_class, k] = results[k]
 
-    df.to_csv(csv_path, header=True, float_format='%.2f')
+    df.to_csv(csv_path, header=True, float_format='%.4f')
 
 
 def save_metric(metrics, total_classes, class_name, dataset, csv_path):

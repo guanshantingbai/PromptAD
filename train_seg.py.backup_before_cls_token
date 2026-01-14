@@ -57,8 +57,8 @@ def fit(model,
     criterion_tip = TripletLoss(margin=0.0)
 
     best_result_dict = None
-    # Early Stopping with larger patience for segmentation (needs more epochs to converge)
-    patience = 50
+    # Early Stopping
+    patience = 20
     patience_counter = 0
     best_epoch = 0
     # 方向 5: 缓存测试集预处理结果
@@ -85,7 +85,6 @@ def fit(model,
 
             loss_match_abnormal = (mean_ad_handle - mean_ad_learned).norm(dim=0) ** 2.0
 
-            # Segmentation task with fusion-aware training
             _, feature_map, _, _ = model.encode_image(data)
 
             # compute v2t loss and triplet loss
@@ -113,24 +112,23 @@ def fit(model,
             # Original triplet loss
             trip_loss = criterion_tip(feature_map, normal_text_features_ahchor, abnormal_text_features_ahchor)
             
-            # Fusion-Aware Training: pixel-level fusion with spatial mean
-            # feature_map: [B, H*W, D]
+            # Fusion-Aware Training: train with batch mean fusion
             feature_map_normalized = F.normalize(feature_map, dim=-1)  # [B, H*W, D]
             feature_map_mean = feature_map_normalized.mean(dim=(0, 1), keepdim=True)  # [1, 1, D]
             
-            # Fused normal prototype: p_fused = (1-λ)*p_learned + λ*mean(v_train_pixels)
-            normal_fused = (1 - args.fusion_lambda) * normal_text_features_ahchor.unsqueeze(1) + \
+            # Fused normal prototype: p_fused = (1-λ)*p_learned + λ*mean(v_train)
+            normal_fused = (1 - args.fusion_lambda) * normal_text_features_ahchor + \
                            args.fusion_lambda * feature_map_mean
-            normal_fused = F.normalize(normal_fused, dim=-1)  # [1, 1, D]
+            normal_fused = F.normalize(normal_fused, dim=-1)  # [1, D]
             
             # Triplet loss with fused prototype
             trip_loss_fused = criterion_tip(
                 feature_map,
-                normal_fused.squeeze(1),  # [1, D]
+                normal_fused,
                 abnormal_text_features_ahchor
             )
             
-            # Combined loss
+            # Combined loss (removed loss_match_abnormal)
             loss = loss_v2t + trip_loss + trip_loss_fused * args.fusion_loss_weight
 
             loss.backward()

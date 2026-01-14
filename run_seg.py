@@ -12,8 +12,8 @@ if __name__ == '__main__':
     pool = Pool(processes=2)
 
     datasets = ['mvtec', 'visa']
-    shots = [1, 2, 4]
-    output_dir = './result/promptpurging2'  # 指定输出目录
+    shots = [2, 4]
+    output_dir = './result/fusion_normal'  # 指定输出目录
     gpu_id = 0
     
     # 创建日志目录
@@ -31,6 +31,7 @@ if __name__ == '__main__':
                             f'--k-shot {shot} ' \
                             f'--class_name {cls} ' \
                             f'--root-dir {output_dir} ' \
+                            f'--fusion-lambda 0.1 ' \
                             f'> {log_file} 2>&1'
 
                 print(sh_method)
@@ -38,7 +39,6 @@ if __name__ == '__main__':
 
     pool.close()
     pool.join()
-
 
 
 

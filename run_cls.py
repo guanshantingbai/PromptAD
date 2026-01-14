@@ -9,13 +9,11 @@ os.environ['OPENBLAS_NUM_THREADS'] = '2'
 
 if __name__ == '__main__':
 
-    pool = Pool(processes=2)
+    pool = Pool(processes=2)  # Reduced from 2 to avoid GPU memory conflicts
 
     datasets = ['mvtec', 'visa']
-#    datasets = ['visa']
-    shots = [2, 1, 4]
-#    shots = [1]
-    output_dir = './result/promptpurging2'  # 指定输出目录
+    shots = [1, 2, 4]
+    output_dir = './result/fusion_normal'  # Fusion-Aware Training (全类别评估)
     gpu_id = 0
 
     # 创建日志目录
@@ -32,7 +30,9 @@ if __name__ == '__main__':
                             f'--gpu-id {gpu_id} ' \
                             f'--k-shot {shot} ' \
                             f'--class_name {cls} ' \
-                            f'--root-dir {output_dir}' \
+                            f'--root-dir {output_dir} ' \
+                            f'--fusion-lambda 0.1 ' \
+                            f'> {log_file} 2>&1'  # Redirect output to log file
 
                 print(sh_method)
                 pool.apply_async(os.system, (sh_method,))

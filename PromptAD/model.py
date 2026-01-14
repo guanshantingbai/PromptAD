@@ -209,6 +209,10 @@ class PromptAD(torch.nn.Module):
             transforms.Resize((kwargs['img_resize'], kwargs['img_resize']), Image.NEAREST),
             transforms.CenterCrop(kwargs['img_cropsize']),
             transforms.ToTensor()])
+        
+        # LSE aggregation settings
+        self.aggregation = kwargs.get('aggregation', 'average')  # 'average', 'maxpooling', 'lse'
+        self.lse_tau = kwargs.get('lse_tau', 1.0)
 
     def get_model(self, n_ctx, n_pro, n_ctx_ab, n_pro_ab, class_name, backbone, pretrained_dataset):
 
@@ -289,6 +293,10 @@ class PromptAD(torch.nn.Module):
         if self.version == "V1":
             normal_text_features = self.encode_text_embedding(normal_text_embeddings, self.tokenized_normal_prompts)
             abnormal_text_features = self.encode_text_embedding(abnormal_text_embeddings, self.tokenized_abnormal_prompts)
+            
+            # Store individual prompts for aggregation in inference
+            self.normal_text_features_all = normal_text_features
+            self.abnormal_text_features_all = abnormal_text_features
         elif self.version == "V2":
             normal_text_features = []
             for phrase_id in range(normal_text_embeddings.size()[0]):
@@ -302,6 +310,10 @@ class PromptAD(torch.nn.Module):
                 abnormal_text_feature = abnormal_text_feature/abnormal_text_feature.norm(dim=-1, keepdim=True)
                 abnormal_text_features.append(abnormal_text_feature)
             abnormal_text_features = torch.cat(abnormal_text_features, 0).half()
+            
+            # Store individual prompts for aggregation
+            self.normal_text_features_all = normal_text_features
+            self.abnormal_text_features_all = abnormal_text_features
         else:
             raise NotImplementedError
 
@@ -357,40 +369,45 @@ class PromptAD(torch.nn.Module):
         
         self.feature_gallery2.copy_(features2_flat)
 
-    def calculate_textual_anomaly_score(self, visual_features, task, return_logits=False, aggregation='average'):
+    def lse_aggregation(self, scores, tau=10.0):
         """
-        \u8ba1\u7b97\u5f02\u5e38\u5206\u6570
+        真正的 Log-Sum-Exp 聚合（数学定义版本）
         
         Args:
-            visual_features: \u89c6\u89c9\u7279\u5f81
-            task: 'cls' \u6216 'seg'
-            return_logits: \u662f\u5426\u8fd4\u56delogits
-            aggregation: \u805a\u5408\u65b9\u5f0f
-                - 'average': \u4f7f\u7528\u5e73\u5747\u9501\u70b9 (self.text_features) [\u9ed8\u8ba4]
-                - 'maxpooling': \u4f7f\u7528MaxPooling\u805a\u5408\u6240\u6709\u5411\u91cf
+            scores: tensor of shape [..., K], similarity scores (already scaled by logit_scale)
+            tau: temperature parameter
+                 - tau → 0: 接近 max (激进聚合)
+                 - tau → ∞: 接近 mean (平滑聚合)
+                 - 推荐范围: [5, 10, 20]
+        
+        Returns:
+            aggregated: tensor of shape [...], LSE(scores)
+        
+        Mathematical Definition:
+            LSE_τ(scores) = τ * log(sum_i exp(s_i / τ))
+        
+        Properties:
+            - max(scores) ≤ LSE(scores) ≤ max(scores) + τ*log(K)
+            - 对于均匀分布: LSE ≈ mean + τ*log(K)
+            - τ 控制聚合的激进程度，与 logit_scale 无关
         """
-        # t = 100
+        return tau * torch.logsumexp(scores / tau, dim=-1)
+
+    def calculate_textual_anomaly_score(self, visual_features, task, return_logits=False):
+        """
+        计算异常分数
+        
+        Args:
+            visual_features: 视觉特征
+            task: 'cls' 或 'seg'
+            return_logits: 是否返回logits
+        """
         t = self.model.logit_scale
-        # t = self.t
         N = visual_features[1].shape[0]
 
         if task == 'seg':
-            # ############################################## local tokens scores ############################
-            # token_features = self.cross_attention(visual_features[1])
             token_features = visual_features[1]
-            
-            if aggregation == 'maxpooling':
-                # \ud83c\udd95 MaxPooling\u805a\u5408\uff1a\u4e0e\u6240\u6709\u5411\u91cf\u7684\u6700\u5927\u76f8\u4f3c\u5ea6
-                sim_normal = token_features @ self.normal_text_features_all.T  # [N, num_tokens, n_pro]
-                sim_abnormal = token_features @ self.abnormal_text_features_all.T  # [N, num_tokens, n_ab]
-                
-                score_normal = sim_normal.max(dim=-1)[0]  # [N, num_tokens]
-                score_abnormal = sim_abnormal.max(dim=-1)[0]  # [N, num_tokens]
-                
-                local_logits = torch.stack([score_normal, score_abnormal], dim=-1) * t  # [N, num_tokens, 2]
-            else:
-                # \u539f\u59cb\u5e73\u5747\u9501\u70b9\u65b9\u6cd5
-                local_logits = t * token_features @ self.text_features.T
+            local_logits = t * token_features @ self.text_features.T
             
             local_normality_and_abnormality_score = local_logits.softmax(dim=-1)
             local_abnormality_score = local_normality_and_abnormality_score[:, :, 1]
@@ -407,25 +424,10 @@ class PromptAD(torch.nn.Module):
             return local_abnormality_score.detach()
 
         elif task == 'cls':
-            # ################################################ global cls token scores ##########################
-            # global_feature = self.cross_attention(visual_features[0].unsqueeze(dim=1)).squeeze(dim=1)
             global_feature = visual_features[0]  # [N, dim]
-            
-            if aggregation == 'maxpooling':
-                # \ud83c\udd95 MaxPooling\u805a\u5408\uff1a\u4e0e\u6240\u6709\u5411\u91cf\u7684\u6700\u5927\u76f8\u4f3c\u5ea6
-                sim_normal = global_feature @ self.normal_text_features_all.T  # [N, n_pro]
-                sim_abnormal = global_feature @ self.abnormal_text_features_all.T  # [N, n_ab]
-                
-                score_normal = sim_normal.max(dim=-1)[0]  # [N,]
-                score_abnormal = sim_abnormal.max(dim=-1)[0]  # [N,]
-                
-                global_logits = torch.stack([score_normal, score_abnormal], dim=-1) * t  # [N, 2]
-            else:
-                # \u539f\u59cb\u5e73\u5747\u9501\u70b9\u65b9\u6cd5
-                global_logits = t * global_feature @ self.text_features.T  # [N, 2]: [s_normal, s_abnormal]
-            
-            global_normality_and_abnormality_score = global_logits.softmax(dim=-1)
-            global_abnormality_score = global_normality_and_abnormality_score[:, 1]
+            global_logits = t * global_feature @ self.text_features.T  # [N, 2]
+            global_normality_and_abnormality_score = global_logits.softmax(dim=-1)  # [N, 2]
+            global_abnormality_score = global_normality_and_abnormality_score[:, 1]  # [N]
             global_abnormality_score = global_abnormality_score.cpu()
 
             if return_logits:
@@ -550,11 +552,15 @@ class PromptAD(torch.nn.Module):
         
         return fusion_scores
 
-    def forward(self, images, task):
+    def forward(self, images, task, aggregation='average', lse_tau=1.0):
 
         visual_features = self.encode_image(images)
         if task == 'seg':
-            textual_anomaly_map = self.calculate_textual_anomaly_score(visual_features, 'seg')
+            textual_anomaly_map = self.calculate_textual_anomaly_score(
+                visual_features, 'seg', 
+                aggregation=self.aggregation,
+                lse_tau=self.lse_tau
+            )
 
             visual_anomaly_map = self.calculate_visual_anomaly_score(visual_features)
             #
@@ -578,7 +584,11 @@ class PromptAD(torch.nn.Module):
         elif task == 'cls':
             # Calculate semantic branch score (textual)
             import numpy as np
-            textual_anomaly = self.calculate_textual_anomaly_score(visual_features, 'cls')
+            textual_anomaly = self.calculate_textual_anomaly_score(
+                visual_features, 'cls',
+                aggregation=self.aggregation,
+                lse_tau=self.lse_tau
+            )
             semantic_img_scores = textual_anomaly  # Already image-level
 
             # Calculate memory branch score (visual)
