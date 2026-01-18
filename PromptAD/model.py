@@ -1,6 +1,7 @@
 import torch
 import random
 import torch.nn as nn
+import numpy as np
 from . import CLIPAD
 from torch.nn import functional as F
 from .ad_prompts import state_anomaly, class_state_abnormal, class_mapping
@@ -210,9 +211,15 @@ class PromptAD(torch.nn.Module):
             transforms.CenterCrop(kwargs['img_cropsize']),
             transforms.ToTensor()])
         
-        # LSE aggregation settings
+        # LSE aggregation settings (deprecated, kept for compatibility)
         self.aggregation = kwargs.get('aggregation', 'average')  # 'average', 'maxpooling', 'lse'
         self.lse_tau = kwargs.get('lse_tau', 1.0)
+        
+        # Multi-Abnormal Prototypes inference settings
+        self.topk_abnormal = kwargs.get('topk_abnormal', None)  # None=mean, k=1→max, k>1→top-k mean
+        
+        # Normal-aware correction for abnormal aggregation
+        self.alpha_normal_aware = kwargs.get('alpha_normal_aware', 1.0)  # Correction strength
 
     def get_model(self, n_ctx, n_pro, n_ctx_ab, n_pro_ab, class_name, backbone, pretrained_dataset):
 
@@ -369,31 +376,8 @@ class PromptAD(torch.nn.Module):
         
         self.feature_gallery2.copy_(features2_flat)
 
-    def lse_aggregation(self, scores, tau=10.0):
-        """
-        真正的 Log-Sum-Exp 聚合（数学定义版本）
-        
-        Args:
-            scores: tensor of shape [..., K], similarity scores (already scaled by logit_scale)
-            tau: temperature parameter
-                 - tau → 0: 接近 max (激进聚合)
-                 - tau → ∞: 接近 mean (平滑聚合)
-                 - 推荐范围: [5, 10, 20]
-        
-        Returns:
-            aggregated: tensor of shape [...], LSE(scores)
-        
-        Mathematical Definition:
-            LSE_τ(scores) = τ * log(sum_i exp(s_i / τ))
-        
-        Properties:
-            - max(scores) ≤ LSE(scores) ≤ max(scores) + τ*log(K)
-            - 对于均匀分布: LSE ≈ mean + τ*log(K)
-            - τ 控制聚合的激进程度，与 logit_scale 无关
-        """
-        return tau * torch.logsumexp(scores / tau, dim=-1)
 
-    def calculate_textual_anomaly_score(self, visual_features, task, return_logits=False):
+    def calculate_textual_anomaly_score(self, visual_features, task, return_logits=False, topk_abnormal=None):
         """
         计算异常分数
         
@@ -401,13 +385,39 @@ class PromptAD(torch.nn.Module):
             visual_features: 视觉特征
             task: 'cls' 或 'seg'
             return_logits: 是否返回logits
+            topk_abnormal: Top-k聚合异常原型（默认None=使用mean，k=1对应max）
         """
         t = self.model.logit_scale
         N = visual_features[1].shape[0]
 
         if task == 'seg':
-            token_features = visual_features[1]
-            local_logits = t * token_features @ self.text_features.T
+            token_features = visual_features[1]  # [N, H*W, D]
+            
+            # Multi-Abnormal Prototypes Inference with Top-k aggregation
+            if topk_abnormal is not None and hasattr(self, 'abnormal_text_features_all'):
+                # Use multi-abnormal prototypes with top-k aggregation
+                # Compute similarities for each pixel
+                sim_normal = token_features @ self.text_features[0].unsqueeze(0).T  # [N, H*W, 1]
+                sim_abnormals = token_features @ self.abnormal_text_features_all.T  # [N, H*W, K]
+                
+                # 🆕 Normal-aware correction for patch-level
+                sim_abnormals_corrected = sim_abnormals - self.alpha_normal_aware * sim_normal  # [N, H*W, K]
+                
+                # Top-k aggregation for abnormal similarities (on corrected values)
+                if topk_abnormal == 1:
+                    # k=1: max pooling
+                    aggregated_abnormal = sim_abnormals_corrected.max(dim=-1)[0]  # [N, H*W]
+                else:
+                    # k>1: top-k mean
+                    topk_sims, _ = torch.topk(sim_abnormals_corrected, k=min(topk_abnormal, sim_abnormals_corrected.shape[-1]), dim=-1)  # [N, H*W, k]
+                    aggregated_abnormal = topk_sims.mean(dim=-1)  # [N, H*W]
+                
+                # Build logits
+                sim_normal_scalar = sim_normal.squeeze(-1)  # [N, H*W]
+                local_logits = torch.stack([sim_normal_scalar, aggregated_abnormal], dim=-1) * t  # [N, H*W, 2]
+            else:
+                # Fallback: use mean anchors (original baseline)
+                local_logits = t * token_features @ self.text_features.T  # [N, H*W, 2]
             
             local_normality_and_abnormality_score = local_logits.softmax(dim=-1)
             local_abnormality_score = local_normality_and_abnormality_score[:, :, 1]
@@ -424,8 +434,34 @@ class PromptAD(torch.nn.Module):
             return local_abnormality_score.detach()
 
         elif task == 'cls':
-            global_feature = visual_features[0]  # [N, dim]
-            global_logits = t * global_feature @ self.text_features.T  # [N, 2]
+            global_feature = visual_features[0]  # [N, D]
+            
+            # Multi-Abnormal Prototypes Inference with Top-k aggregation
+            if topk_abnormal is not None and hasattr(self, 'abnormal_text_features_all'):
+                # Use multi-abnormal prototypes with top-k aggregation
+                # Compute similarities
+                sim_normal = global_feature @ self.text_features[0].unsqueeze(0).T  # [N, 1]
+                sim_abnormals = global_feature @ self.abnormal_text_features_all.T  # [N, K]
+                
+                # 🆕 Normal-aware correction: penalize abnormal prototypes that are too similar to normal
+                sim_abnormals_corrected = sim_abnormals - self.alpha_normal_aware * sim_normal  # [N, K]
+                
+                # Top-k aggregation for abnormal similarities (on corrected values)
+                if topk_abnormal == 1:
+                    # k=1: max pooling
+                    aggregated_abnormal = sim_abnormals_corrected.max(dim=-1)[0]  # [N]
+                else:
+                    # k>1: top-k mean
+                    topk_sims, _ = torch.topk(sim_abnormals_corrected, k=min(topk_abnormal, sim_abnormals_corrected.shape[-1]), dim=-1)  # [N, k]
+                    aggregated_abnormal = topk_sims.mean(dim=-1)  # [N]
+                
+                # Build logits
+                sim_normal_scalar = sim_normal.squeeze(-1)  # [N]
+                global_logits = torch.stack([sim_normal_scalar, aggregated_abnormal], dim=-1) * t  # [N, 2]
+            else:
+                # Fallback: use mean anchors (original baseline)
+                global_logits = t * global_feature @ self.text_features.T  # [N, 2]
+            
             global_normality_and_abnormality_score = global_logits.softmax(dim=-1)  # [N, 2]
             global_abnormality_score = global_normality_and_abnormality_score[:, 1]  # [N]
             global_abnormality_score = global_abnormality_score.cpu()
@@ -493,7 +529,7 @@ class PromptAD(torch.nn.Module):
             alpha: np.array [N], semantic gating strength (0 = suppress, large = enhance)
             margins: np.array [N], logit margins for analysis
         """
-        import numpy as np
+
         
         # Compute logit margin: m(x) = s_normal - s_abnormal
         margins, logits = self.calculate_margin_and_logits(visual_features)
@@ -536,7 +572,6 @@ class PromptAD(torch.nn.Module):
         Returns:
             fusion_scores: np.array [N], adaptively fused scores
         """
-        import numpy as np
         
         # Clamp scores to avoid numerical issues
         semantic_scores = np.clip(semantic_scores, epsilon, 1.0)
@@ -556,10 +591,11 @@ class PromptAD(torch.nn.Module):
 
         visual_features = self.encode_image(images)
         if task == 'seg':
+            # Use topk_abnormal if available (for multi-abnormal prototypes)
+            topk_abnormal = getattr(self, 'topk_abnormal', None)
             textual_anomaly_map = self.calculate_textual_anomaly_score(
                 visual_features, 'seg', 
-                aggregation=self.aggregation,
-                lse_tau=self.lse_tau
+                topk_abnormal=topk_abnormal
             )
 
             visual_anomaly_map = self.calculate_visual_anomaly_score(visual_features)
@@ -584,10 +620,11 @@ class PromptAD(torch.nn.Module):
         elif task == 'cls':
             # Calculate semantic branch score (textual)
             import numpy as np
+            # Use topk_abnormal if available (for multi-abnormal prototypes)
+            topk_abnormal = getattr(self, 'topk_abnormal', None)
             textual_anomaly = self.calculate_textual_anomaly_score(
                 visual_features, 'cls',
-                aggregation=self.aggregation,
-                lse_tau=self.lse_tau
+                topk_abnormal=topk_abnormal
             )
             semantic_img_scores = textual_anomaly  # Already image-level
 

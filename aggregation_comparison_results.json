@@ -1,0 +1,182 @@
+{
+  "grid": {
+    "mean": {
+      "normal_p95": 0.9306640625,
+      "normal_p99": 0.9345703125,
+      "abnormal_median": 0.92431640625,
+      "abnormal_p95": 0.93154296875
+    },
+    "top2": {
+      "normal_p95": 1.03125,
+      "normal_p99": 1.034375,
+      "abnormal_median": 1.013671875,
+      "abnormal_p95": 1.03046875
+    },
+    "max": {
+      "normal_p95": 1.044921875,
+      "normal_p99": 1.047265625,
+      "abnormal_median": 1.01953125,
+      "abnormal_p95": 1.039453125
+    }
+  },
+  "bottle": {
+    "mean": {
+      "normal_p95": 0.9483154296875,
+      "normal_p99": 0.9494287109375,
+      "abnormal_median": 0.95166015625,
+      "abnormal_p95": 0.9599609375
+    },
+    "top2": {
+      "normal_p95": 0.987353515625,
+      "normal_p99": 0.988095703125,
+      "abnormal_median": 0.98583984375,
+      "abnormal_p95": 1.02041015625
+    },
+    "max": {
+      "normal_p95": 0.993701171875,
+      "normal_p99": 0.994443359375,
+      "abnormal_median": 0.9892578125,
+      "abnormal_p95": 1.02158203125
+    }
+  },
+  "cable": {
+    "mean": {
+      "normal_p95": 0.955078125,
+      "normal_p99": 0.9575244140625,
+      "abnormal_median": 0.95068359375,
+      "abnormal_p95": 0.9611083984375
+    },
+    "top2": {
+      "normal_p95": 0.99736328125,
+      "normal_p99": 1.00390625,
+      "abnormal_median": 0.99169921875,
+      "abnormal_p95": 1.016064453125
+    },
+    "max": {
+      "normal_p95": 0.9990966796875,
+      "normal_p99": 1.005166015625,
+      "abnormal_median": 0.99365234375,
+      "abnormal_p95": 1.01748046875
+    }
+  },
+  "metal_nut": {
+    "mean": {
+      "normal_p95": 0.901318359375,
+      "normal_p99": 0.90599609375,
+      "abnormal_median": 0.9033203125,
+      "abnormal_p95": 0.91474609375
+    },
+    "top2": {
+      "normal_p95": 0.9734375,
+      "normal_p99": 0.9740185546875,
+      "abnormal_median": 0.974609375,
+      "abnormal_p95": 0.99013671875
+    },
+    "max": {
+      "normal_p95": 0.97880859375,
+      "normal_p99": 0.9793896484375,
+      "abnormal_median": 0.978515625,
+      "abnormal_p95": 0.9935546875
+    }
+  },
+  "pill": {
+    "mean": {
+      "normal_p95": 0.919677734375,
+      "normal_p99": 0.920654296875,
+      "abnormal_median": 0.91455078125,
+      "abnormal_p95": 0.92138671875
+    },
+    "top2": {
+      "normal_p95": 1.054443359375,
+      "normal_p99": 1.05615234375,
+      "abnormal_median": 1.048828125,
+      "abnormal_p95": 1.060546875
+    },
+    "max": {
+      "normal_p95": 1.06787109375,
+      "normal_p99": 1.072021484375,
+      "abnormal_median": 1.05859375,
+      "abnormal_p95": 1.0712890625
+    }
+  },
+  "screw": {
+    "mean": {
+      "normal_p95": 0.9169921875,
+      "normal_p99": 0.9177734375,
+      "abnormal_median": 0.91064453125,
+      "abnormal_p95": 0.91748046875
+    },
+    "top2": {
+      "normal_p95": 1.033203125,
+      "normal_p99": 1.040625,
+      "abnormal_median": 1.0283203125,
+      "abnormal_p95": 1.03916015625
+    },
+    "max": {
+      "normal_p95": 1.0380859375,
+      "normal_p99": 1.04609375,
+      "abnormal_median": 1.0302734375,
+      "abnormal_p95": 1.04296875
+    }
+  },
+  "toothbrush": {
+    "mean": {
+      "normal_p95": 0.9380615234375,
+      "normal_p99": 0.9395654296875,
+      "abnormal_median": 0.939208984375,
+      "abnormal_p95": 0.9462890625
+    },
+    "top2": {
+      "normal_p95": 0.97216796875,
+      "normal_p99": 0.97216796875,
+      "abnormal_median": 0.972412109375,
+      "abnormal_p95": 0.9841552734375
+    },
+    "max": {
+      "normal_p95": 0.9747314453125,
+      "normal_p99": 0.9758056640625,
+      "abnormal_median": 0.97509765625,
+      "abnormal_p95": 0.9866455078125
+    }
+  },
+  "transistor": {
+    "mean": {
+      "normal_p95": 0.9224609375,
+      "normal_p99": 0.9254052734375,
+      "abnormal_median": 0.91943359375,
+      "abnormal_p95": 0.940478515625
+    },
+    "top2": {
+      "normal_p95": 1.005859375,
+      "normal_p99": 1.00861328125,
+      "abnormal_median": 0.994384765625,
+      "abnormal_p95": 1.018603515625
+    },
+    "max": {
+      "normal_p95": 1.007861328125,
+      "normal_p99": 1.0107421875,
+      "abnormal_median": 0.99755859375,
+      "abnormal_p95": 1.020556640625
+    }
+  },
+  "zipper": {
+    "mean": {
+      "normal_p95": 0.9303955078125,
+      "normal_p99": 0.9310009765625,
+      "abnormal_median": 0.9296875,
+      "abnormal_p95": 0.9404296875
+    },
+    "top2": {
+      "normal_p95": 1.065869140625,
+      "normal_p99": 1.07044921875,
+      "abnormal_median": 1.0634765625,
+      "abnormal_p95": 1.076171875
+    },
+    "max": {
+      "normal_p95": 1.088232421875,
+      "normal_p99": 1.093212890625,
+      "abnormal_median": 1.078125,
+      "abnormal_p95": 1.095703125
+    }
+  }
+}

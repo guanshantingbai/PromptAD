@@ -1,2 +1,0 @@
-dataset,k_shot,baseline_i_roc_avg,reduced_i_roc_avg,delta_i_roc_avg,baseline_semantic_i_roc_avg,reduced_semantic_i_roc_avg,delta_semantic_i_roc_avg
-mvtec,2,94.51,35.27,-59.25,90.09,33.04,-57.05

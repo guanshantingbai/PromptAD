@@ -16,48 +16,6 @@ from tqdm import tqdm
 TASK = 'CLS'
 
 
-def compute_repulsive_loss(abnormal_text_features_learned, tau=0.0):
-    """
-    Compute repulsive loss between learned abnormal prototypes.
-    Prevents multiple abnormal prototypes from collapsing in semantic space.
-    
-    Args:
-        abnormal_text_features_learned: [K, D] tensor, already L2-normalized
-        tau: threshold for cosine similarity (default: 0.0)
-    
-    Returns:
-        scalar loss value
-    
-    Formula:
-        L_rep = mean_{i≠j} ReLU(cos(a_i, a_j) - tau)
-    
-    If K <= 1, returns 0.0 (no repulsion needed)
-    """
-    K = abnormal_text_features_learned.shape[0]
-    
-    # No repulsion needed if only 0 or 1 prototype
-    if K <= 1:
-        return torch.tensor(0.0, device=abnormal_text_features_learned.device)
-    
-    # Compute pairwise cosine similarities
-    # abnormal_text_features_learned is already L2-normalized
-    # similarity matrix: [K, K]
-    similarity_matrix = torch.mm(abnormal_text_features_learned, 
-                                  abnormal_text_features_learned.t())
-    
-    # Extract upper triangular part (i < j) to avoid duplicate pairs and diagonal
-    # Create mask for upper triangular (excluding diagonal)
-    mask = torch.triu(torch.ones_like(similarity_matrix), diagonal=1).bool()
-    
-    # Extract similarities for i ≠ j
-    pairwise_similarities = similarity_matrix[mask]
-    
-    # Apply ReLU(cos - tau)
-    repulsive_loss = torch.relu(pairwise_similarities - tau).mean()
-    
-    return repulsive_loss
-
-
 def save_check_point(model, path):
     selected_keys = [
         'feature_gallery1',
@@ -98,18 +56,15 @@ def fit(model,
     optimizer = torch.optim.SGD(model.prompt_learner.parameters(), lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.Epoch, eta_min=1e-5)
     criterion = nn.CrossEntropyLoss().to(device)
-    criterion_tip = TripletLoss(margin=args.margin)  # 可配置margin
+    criterion_tip = TripletLoss(margin=0.0)
 
     best_result_dict = None
     # Early Stopping
-    patience = 100
+    patience = 20
     patience_counter = 0
     best_epoch = 0
     # 方向 5: 缓存测试集预处理结果
     cached_test_data = None
-    
-    # Iteration counter for loss monitoring
-    global_iter = 0
     
     for epoch in range(args.Epoch):
         for (data, mask, label, name, img_type) in train_data:
@@ -126,10 +81,11 @@ def fit(model,
             abnormal_text_features_learned = model.encode_text_embedding(abnormal_text_prompt_learned, model.tokenized_abnormal_prompts_learned)
             abnormal_text_features = torch.cat([abnormal_text_features_handle, abnormal_text_features_learned], dim=0)
 
-            # Compute repulsive loss on learned abnormal prototypes
-            # abnormal_text_features_learned: [K, D], already normalized by model
-            abnormal_text_features_learned_normalized = F.normalize(abnormal_text_features_learned, dim=-1)
-            loss_repulsive = compute_repulsive_loss(abnormal_text_features_learned_normalized, tau=0.0)
+            # compute mean
+            mean_ad_handle = torch.mean(F.normalize(abnormal_text_features_handle, dim=-1), dim=0)
+            mean_ad_learned = torch.mean(F.normalize(abnormal_text_features_learned, dim=-1), dim=0)
+
+            loss_match_abnormal = (mean_ad_handle - mean_ad_learned).norm(dim=0) ** 2.0
 
             cls_feature, _, _, _ = model.encode_image(data)
 
@@ -153,10 +109,10 @@ def fit(model,
 
             target_v2t = torch.zeros([logits_v2t.shape[0]], dtype=torch.long).to(device)
 
-            loss_clip = criterion(logits_v2t, target_v2t)
+            loss_v2t = criterion(logits_v2t, target_v2t)
 
-            # Triplet loss (使用abnormal anchor)
-            loss_margin = criterion_tip(cls_feature, normal_text_features_ahchor, abnormal_text_features_ahchor)
+            # Original triplet loss
+            trip_loss = criterion_tip(cls_feature, normal_text_features_ahchor, abnormal_text_features_ahchor)
             
             # Fusion-Aware Training: train with batch mean fusion
             cls_feature_normalized = F.normalize(cls_feature, dim=-1)  # [B, D]
@@ -168,24 +124,14 @@ def fit(model,
             normal_fused = F.normalize(normal_fused, dim=-1)  # [1, D]
             
             # Triplet loss with fused prototype
-            loss_fusion_aware = criterion_tip(
+            trip_loss_fused = criterion_tip(
                 cls_feature,
                 normal_fused,
                 abnormal_text_features_ahchor
             )
             
-            # Combined loss: CLIP + margin triplet + fusion-aware + repulsive
-            loss_rep_weighted = args.lambda_rep * loss_repulsive
-            loss = loss_clip + loss_margin + loss_fusion_aware * args.fusion_loss_weight + loss_rep_weighted
-            
-            # Loss monitoring: print every iteration
-            global_iter += 1
-            print(f"[Iter {global_iter:04d}] clip={loss_clip.item():.4f}, "
-                  f"margin={loss_margin.item():.4f}, "
-                  f"fusion={loss_fusion_aware.item():.4f}, "
-                  f"rep={loss_repulsive.item():.6f}, "
-                  f"lambda*rep={loss_rep_weighted.item():.6f}, "
-                  f"total={loss.item():.4f}")
+            # Combined loss (removed loss_match_abnormal)
+            loss = loss_v2t + trip_loss + trip_loss_fused * args.fusion_loss_weight
 
             loss.backward()
             optimizer.step()
@@ -390,10 +336,7 @@ def get_args():
     parser.add_argument("--weight_decay", type=float, default=0.0005)
 
     # loss hyper parameter
-    parser.add_argument("--margin", type=float, default=0.8,
-                        help="Margin for triplet loss")
-    parser.add_argument("--lambda-rep", type=float, default=0.0,
-                        help="Weight for repulsive loss between learned abnormal prototypes")
+    parser.add_argument("--lambda1", type=float, default=0.001)
     parser.add_argument("--fusion-lambda", type=float, default=0.2,
                         help="Fusion weight for fusion-aware training: p_fused = (1-λ)*p_learned + λ*p_img")
     parser.add_argument("--fusion-loss-weight", type=float, default=0.5,

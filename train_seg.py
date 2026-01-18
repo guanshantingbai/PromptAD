@@ -54,7 +54,7 @@ def fit(model,
     optimizer = torch.optim.SGD(model.prompt_learner.parameters(), lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.Epoch, eta_min=1e-5)
     criterion = nn.CrossEntropyLoss().to(device)
-    criterion_tip = TripletLoss(margin=0.0)
+    criterion_tip = TripletLoss(margin=getattr(args, 'margin_value', 0.0))
 
     best_result_dict = None
     # Early Stopping with larger patience for segmentation (needs more epochs to converge)
@@ -88,30 +88,90 @@ def fit(model,
             # Segmentation task with fusion-aware training
             _, feature_map, _, _ = model.encode_image(data)
 
-            # compute v2t loss and triplet loss
+            # compute v2t loss with multi-negative prototypes
             normal_text_features_ahchor = normal_text_features.mean(dim=0).unsqueeze(0)
             normal_text_features_ahchor = normal_text_features_ahchor / normal_text_features_ahchor.norm(dim=-1, keepdim=True)
 
             abnormal_text_features_ahchor = abnormal_text_features.mean(dim=0).unsqueeze(0)
             abnormal_text_features_ahchor = abnormal_text_features_ahchor / abnormal_text_features_ahchor.norm(dim=-1, keepdim=True)
-            abnormal_text_features = abnormal_text_features / abnormal_text_features.norm(dim=-1, keepdim=True)
-
-            l_pos = torch.einsum('nic,cj->nij', feature_map, normal_text_features_ahchor.transpose(0, 1))
-            l_neg_v2t = torch.einsum('nic,cj->nij', feature_map, abnormal_text_features.transpose(0, 1))
+            
+            # Normalize learned and manual abnormal prototypes separately
+            abnormal_learned = F.normalize(abnormal_text_features_learned, dim=-1)  # [K_learned, D]
+            # Squeeze potential extra batch dimension
+            if abnormal_text_features_handle.dim() == 3:
+                abnormal_text_features_handle = abnormal_text_features_handle.squeeze(0)
+            abnormal_manual = F.normalize(abnormal_text_features_handle, dim=-1)  # [K_manual, D]
+            
+            # Debug: print shapes
+            if iter == 0:
+                print(f"[DEBUG] abnormal_learned shape: {abnormal_learned.shape}")
+                print(f"[DEBUG] abnormal_manual shape: {abnormal_manual.shape}")
+            
+            # Multi-negative CE loss: normal=class0, each abnormal=class_i
+            # feature_map: [B, H*W, D]
+            B, HW, D = feature_map.shape
+            feature_map_norm = F.normalize(feature_map, dim=-1)  # [B, H*W, D]
+            
+            # Compute logits: [B, H*W, 1+K_learned+K_manual]
+            l_pos = torch.einsum('nic,cj->nij', feature_map_norm, normal_text_features_ahchor.transpose(0, 1))  # [B, H*W, 1]
+            l_neg_learned = torch.einsum('nic,kc->nik', feature_map_norm, abnormal_learned)  # [B, H*W, K_learned]
+            l_neg_manual = torch.einsum('nic,kc->nik', feature_map_norm, abnormal_manual)  # [B, H*W, K_manual]
 
             if model.precision == 'fp16':
                 logit_scale = model.model.logit_scale.half()
             else:
-                logit_scale = model.model.logit_scalef
+                logit_scale = model.model.logit_scale
 
-            logits_v2t = torch.cat([l_pos, l_neg_v2t], dim=-1) * logit_scale
+            logits_v2t = torch.cat([l_pos, l_neg_learned, l_neg_manual], dim=-1) * logit_scale  # [B, H*W, 1+K]
 
-            target_v2t = torch.zeros([logits_v2t.shape[0], logits_v2t.shape[1]], dtype=torch.long).to(device)
+            target_v2t = torch.zeros([B, HW], dtype=torch.long).to(device)  # All pixels belong to class 0 (normal)
 
             loss_v2t = criterion(logits_v2t.transpose(1, 2), target_v2t)
 
-            # Original triplet loss
+            # Original triplet loss (remains unchanged for SEG)
             trip_loss = criterion_tip(feature_map, normal_text_features_ahchor, abnormal_text_features_ahchor)
+            
+            # ===== Multi-Abnormal Regularizations =====
+            # A) L_pull: Pull learned prototypes toward mean(normal_batch)
+            pull_weight = getattr(args, 'pull_weight', 0.0)
+            L_pull = torch.tensor(0.0, device=device)
+            if pull_weight > 0:
+                # Compute mean of batch features (use spatial mean for SEG)
+                z_batch_mean = feature_map_norm.mean(dim=(0, 1))  # [D]
+                w_n = normal_text_features_ahchor.squeeze(0)  # [D]
+                cos_sim = (z_batch_mean * w_n).sum()
+                L_pull = pull_weight * (1 - cos_sim)
+            
+            # B) L_rep: Repulsion among learned prototypes (encourage diversity)
+            rep_weight = getattr(args, 'rep_weight', 0.0)
+            rep_gamma = getattr(args, 'rep_gamma', 0.3)
+            L_rep = torch.tensor(0.0, device=device)
+            if rep_weight > 0 and len(abnormal_learned) > 1:
+                # Compute pairwise cosine similarities
+                sim_matrix = abnormal_learned @ abnormal_learned.T  # [K, K]
+                # Only upper triangle (exclude diagonal)
+                K = len(abnormal_learned)
+                mask = torch.triu(torch.ones(K, K, device=device), diagonal=1)
+                pairwise_sims = sim_matrix[mask > 0]
+                # Penalize similarities above threshold gamma
+                L_rep = rep_weight * torch.relu(pairwise_sims - rep_gamma).mean()
+            
+            # C) L_margin: Hard negative triplet margin
+            margin_weight = getattr(args, 'margin_weight', 0.0)
+            L_margin = torch.tensor(0.0, device=device)
+            if margin_weight > 0:
+                # Use TripletLoss with hard negatives from multi-abnormal prototypes
+                # Combine learned and manual as negative set
+                # Ensure abnormal_manual is 2D [K_manual, D]
+                if abnormal_manual.dim() == 3:
+                    abnormal_manual = abnormal_manual.squeeze(0)
+                # Concatenate learned prototypes and manual prompts: [K_learned + K_manual, D]
+                negative_set = torch.cat([abnormal_learned, abnormal_manual], dim=0)
+                L_margin = margin_weight * criterion_tip(
+                    feature_map_norm.reshape(-1, D),  # Flatten to [B*H*W, D]
+                    normal_text_features_ahchor.expand(B * HW, -1),  # [B*H*W, D]
+                    negative_set  # [K_total, D] - all abnormal prototypes
+                )
             
             # Fusion-Aware Training: pixel-level fusion with spatial mean
             # feature_map: [B, H*W, D]
@@ -119,8 +179,10 @@ def fit(model,
             feature_map_mean = feature_map_normalized.mean(dim=(0, 1), keepdim=True)  # [1, 1, D]
             
             # Fused normal prototype: p_fused = (1-λ)*p_learned + λ*mean(v_train_pixels)
-            normal_fused = (1 - args.fusion_lambda) * normal_text_features_ahchor.unsqueeze(1) + \
-                           args.fusion_lambda * feature_map_mean
+            fusion_lambda = getattr(args, 'fusion_lambda', 0.0)
+            fusion_loss_weight = getattr(args, 'fusion_loss_weight', 0.0)
+            normal_fused = (1 - fusion_lambda) * normal_text_features_ahchor.unsqueeze(1) + \
+                           fusion_lambda * feature_map_mean
             normal_fused = F.normalize(normal_fused, dim=-1)  # [1, 1, D]
             
             # Triplet loss with fused prototype
@@ -131,7 +193,7 @@ def fit(model,
             )
             
             # Combined loss
-            loss = loss_v2t + trip_loss + trip_loss_fused * args.fusion_loss_weight
+            loss = loss_v2t + trip_loss + trip_loss_fused * fusion_loss_weight + L_pull + L_rep + L_margin
 
             loss.backward()
             optimizer.step()
@@ -313,6 +375,22 @@ def get_args():
                         help="Fusion weight for fusion-aware training: p_fused = (1-λ)*p_learned + λ*p_img")
     parser.add_argument("--fusion-loss-weight", type=float, default=0.5,
                         help="Weight for fusion-aware triplet loss")
+    
+    # Multi-Abnormal Prototypes regularization parameters
+    parser.add_argument("--pull-weight", type=float, default=0.1,
+                        help="L_pull weight: pull learned prototypes toward batch mean")
+    parser.add_argument("--rep-weight", type=float, default=0.05,
+                        help="L_rep weight: repulsion among learned prototypes")
+    parser.add_argument("--margin-weight", type=float, default=0.1,
+                        help="L_margin weight: hard negative triplet margin")
+    parser.add_argument("--margin-value", type=float, default=0.03,
+                        help="Hard negative margin value (m in triplet loss)")
+    parser.add_argument("--rep-gamma", type=float, default=0.3,
+                        help="Repulsion threshold γ (penalize similarities > γ)")
+    parser.add_argument("--topk-abnormal", type=int, default=2,
+                        help="Top-k aggregation for abnormal prototypes (k=1: max, k>1: top-k mean)")
+    parser.add_argument("--filter-threshold-delta", type=float, default=0.03,
+                        help="Prototype filtering threshold offset")
 
     # dataloader configuration
     parser.add_argument("--num-workers", type=int, default=0,
